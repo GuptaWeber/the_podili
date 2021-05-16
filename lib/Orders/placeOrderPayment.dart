@@ -20,7 +20,8 @@ class PaymentPage extends StatefulWidget {
   final double totalAmount;
   final AddressModel model;
 
-  PaymentPage({Key key, this.addressId, this.totalAmount, this.model}) : super(key: key);
+  PaymentPage({Key key, this.addressId, this.totalAmount, this.model})
+      : super(key: key);
 
   @override
   _PaymentPageState createState() => _PaymentPageState();
@@ -30,9 +31,9 @@ class _PaymentPageState extends State<PaymentPage> {
   int _payment_method = 0;
   Razorpay _razorpay;
   TwilioFlutter twilioFlutter;
-  int i =0;
-  List productList = EcommerceApp.sharedPreferences
-      .getStringList(EcommerceApp.userCartList);
+  int i = 0;
+  List productList =
+      EcommerceApp.sharedPreferences.getStringList(EcommerceApp.userCartList);
   List phonenumbers = ['+918501014199', '+919848208168', '+918106089784'];
 
   @override
@@ -43,11 +44,10 @@ class _PaymentPageState extends State<PaymentPage> {
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
 
-    twilioFlutter =
-        TwilioFlutter(accountSid: 'AC35db7389289340fd2a6cd6c2bd51602f',
-            authToken: 'e5095bc755b9aa4beb50baf74a6b10a4',
-            twilioNumber: '+12027594159');
-
+    twilioFlutter = TwilioFlutter(
+        accountSid: 'AC35db7389289340fd2a6cd6c2bd51602f',
+        authToken: 'e5095bc755b9aa4beb50baf74a6b10a4',
+        twilioNumber: '+12027594159');
   }
 
   @override
@@ -158,14 +158,13 @@ class _PaymentPageState extends State<PaymentPage> {
                   padding: EdgeInsets.all(8.0),
                   child: Column(
                     children: [
+                      // Table(
+                      //   children: [
+                      //     TableRow(
 
-                      Table(
-                        children: [
-                          TableRow(
-
-                          )
-                        ],
-                      ),
+                      //     )
+                      //   ],
+                      // ),
 
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -209,24 +208,22 @@ class _PaymentPageState extends State<PaymentPage> {
               ),
               TextButton(
                   onPressed: () {
-
-                  if(_payment_method == 1){
-                    openCheckout();
-                  }else if(_payment_method == 2){
-                    addOrderDetails();
-                  }else {
-                    Fluttertoast.showToast(
-                        msg: "Please Select a Payment Method",
-                        timeInSecForIos: 4);
-                  }
-
+                    if (_payment_method == 1) {
+                      openCheckout();
+                    } else if (_payment_method == 2) {
+                      addOrderDetails();
+                    } else {
+                      Fluttertoast.showToast(
+                          msg: "Please Select a Payment Method",
+                          timeInSecForIos: 4);
+                    }
                   },
-
                   style: TextButton.styleFrom(
                       primary: Colors.purple,
                       backgroundColor: Colors.green,
                       elevation: 5,
-                      textStyle: TextStyle(fontSize: 24, fontStyle: FontStyle.italic)),
+                      textStyle:
+                          TextStyle(fontSize: 24, fontStyle: FontStyle.italic)),
                   child: Text(
                     "Place Order",
                     style: TextStyle(fontSize: 30.0, color: Colors.white),
@@ -239,17 +236,15 @@ class _PaymentPageState extends State<PaymentPage> {
   }
 
   addOrderDetails() {
-
     String productDescription = '';
 
-    for(i=1; i<productList.length; i++){
+    for (i = 1; i < productList.length; i++) {
       productDescription = productDescription + productList[i] + ' ';
     }
 
-
     writeOrderDetailsForUser({
       EcommerceApp.addressID: widget.addressId,
-      EcommerceApp.totalAmount: widget.totalAmount+40,
+      EcommerceApp.totalAmount: widget.totalAmount + 40,
       "orderBy": EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID),
       EcommerceApp.productID: EcommerceApp.sharedPreferences
           .getStringList(EcommerceApp.userCartList),
@@ -260,7 +255,7 @@ class _PaymentPageState extends State<PaymentPage> {
 
     writeOrderDetailsForAdmin({
       EcommerceApp.addressID: widget.addressId,
-      EcommerceApp.totalAmount: widget.totalAmount+40,
+      EcommerceApp.totalAmount: widget.totalAmount + 40,
       "orderBy": EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID),
       EcommerceApp.productID: EcommerceApp.sharedPreferences
           .getStringList(EcommerceApp.userCartList),
@@ -270,9 +265,9 @@ class _PaymentPageState extends State<PaymentPage> {
     }).whenComplete(() => {emptyCartNow()});
 
     phonenumbers.forEach((phone) {
-      sendSms(phone, "${widget.model.name} has ordered ${productDescription} at a price ${widget.totalAmount + 40} with Cash on Delivery! contact at ${widget.model.phoneNumber}");
+      sendSms(phone,
+          "${widget.model.name} has ordered ${productDescription} at a price ${widget.totalAmount + 40} with Cash on Delivery! contact at ${widget.model.phoneNumber}");
     });
-
   }
 
   emptyCartNow() {
@@ -308,7 +303,6 @@ class _PaymentPageState extends State<PaymentPage> {
             EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID) +
                 data['orderTime'])
         .setData(data);
-
   }
 
   Future writeOrderDetailsForAdmin(Map<String, dynamic> data) async {
@@ -322,21 +316,25 @@ class _PaymentPageState extends State<PaymentPage> {
   }
 
   void openCheckout() async {
-
     String productDescription = '';
 
-    for(i=1; i<productList.length; i++){
+    for (i = 1; i < productList.length; i++) {
       productDescription = productDescription + productList[i] + ' ';
     }
 
-    print(productDescription);
+    print(widget.model.phoneNumber);
+
+    debugPrint(widget.model.phoneNumber);
 
     var options = {
       'key': 'rzp_test_Y0GRKKJ2grMEYj',
-      'amount': (widget.totalAmount+40) * 100,
+      'amount': (widget.totalAmount + 40) * 100,
       'name': widget.model.name,
       'description': productDescription,
-      'prefill': {'contact': widget.model.phoneNumber, 'email': 'venkatsrinu601@gmail.com'},
+      'prefill': {
+        'contact': widget.model.phoneNumber,
+        'email': 'venkatsrinu601@gmail.com'
+      },
       'external': {
         'wallets': ['paytm']
       }
@@ -352,18 +350,16 @@ class _PaymentPageState extends State<PaymentPage> {
   void _handlePaymentSuccess(PaymentSuccessResponse response) {
     String productDescription = '';
 
-    for(i=1; i<productList.length; i++){
+    for (i = 1; i < productList.length; i++) {
       productDescription = productDescription + productList[i] + ' ';
     }
-
-
 
     Fluttertoast.showToast(
         msg: "Payment Successful" + response.paymentId, timeInSecForIos: 4);
 
     writeOrderDetailsForUser({
       EcommerceApp.addressID: widget.addressId,
-      EcommerceApp.totalAmount: widget.totalAmount+40,
+      EcommerceApp.totalAmount: widget.totalAmount + 40,
       "orderBy": EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID),
       EcommerceApp.productID: EcommerceApp.sharedPreferences
           .getStringList(EcommerceApp.userCartList),
@@ -375,7 +371,7 @@ class _PaymentPageState extends State<PaymentPage> {
 
     writeOrderDetailsForAdmin({
       EcommerceApp.addressID: widget.addressId,
-      EcommerceApp.totalAmount: widget.totalAmount+40,
+      EcommerceApp.totalAmount: widget.totalAmount + 40,
       "orderBy": EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID),
       EcommerceApp.productID: EcommerceApp.sharedPreferences
           .getStringList(EcommerceApp.userCartList),
@@ -385,18 +381,18 @@ class _PaymentPageState extends State<PaymentPage> {
       'paymentId': response.paymentId
     }).whenComplete(() => {emptyCartNow()});
 
-
     phonenumbers.forEach((phone) {
-      sendSms(phone, "${widget.model.name} has ordered ${productDescription} at a price ${widget.totalAmount + 40} and paid online! contact at ${widget.model.phoneNumber}");
+      sendSms(phone,
+          "${widget.model.name} has ordered ${productDescription} at a price ${widget.totalAmount + 40} and paid online! contact at ${widget.model.phoneNumber}");
     });
-
-
-
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
     Fluttertoast.showToast(
-        msg: "Payment Not Done, Error in Payment" + response.code.toString() + " - " + response.message,
+        msg: "Payment Not Done, Error in Payment" +
+            response.code.toString() +
+            " - " +
+            response.message,
         timeInSecForIos: 4);
     _onOrderError();
   }
@@ -420,7 +416,11 @@ class _PaymentPageState extends State<PaymentPage> {
           content: SingleChildScrollView(
             child: ListBody(
               children: [
-                Icon(Icons.check_circle, color: Colors.green, size: 100,),
+                Icon(
+                  Icons.check_circle,
+                  color: Colors.green,
+                  size: 100,
+                ),
                 Text('Your Order has been Placed Successfully!'),
               ],
             ),
@@ -429,14 +429,14 @@ class _PaymentPageState extends State<PaymentPage> {
             TextButton(
               child: Text('Home'),
               onPressed: () {
-                Route route = MaterialPageRoute(builder: (c)=> StoreHome());
+                Route route = MaterialPageRoute(builder: (c) => StoreHome());
                 Navigator.pushReplacement(context, route);
               },
             ),
             TextButton(
               child: Text('My Orders'),
               onPressed: () {
-                Route route = MaterialPageRoute(builder: (c)=> MyOrders());
+                Route route = MaterialPageRoute(builder: (c) => MyOrders());
                 Navigator.pushReplacement(context, route);
               },
             ),
@@ -456,7 +456,11 @@ class _PaymentPageState extends State<PaymentPage> {
           content: SingleChildScrollView(
             child: ListBody(
               children: [
-                Icon(Icons.cancel_rounded, color: Colors.red, size: 100,),
+                Icon(
+                  Icons.cancel_rounded,
+                  color: Colors.red,
+                  size: 100,
+                ),
                 Text('Your Order has failed!'),
               ],
             ),
@@ -465,7 +469,7 @@ class _PaymentPageState extends State<PaymentPage> {
             TextButton(
               child: Text('Home'),
               onPressed: () {
-                Route route = MaterialPageRoute(builder: (c)=> StoreHome());
+                Route route = MaterialPageRoute(builder: (c) => StoreHome());
                 Navigator.pushReplacement(context, route);
               },
             ),
@@ -480,5 +484,4 @@ class _PaymentPageState extends State<PaymentPage> {
       },
     );
   }
-
 }

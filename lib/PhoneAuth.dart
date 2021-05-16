@@ -63,7 +63,7 @@ class _PhoneAuthState extends State<PhoneAuth> {
           .then((AuthResult authRes) {
         _firebaseUser = authRes.user;
         print(_firebaseUser.toString());
-        saveUserInfoToFireStore(_firebaseUser);
+        checkUser(_firebaseUser);
         Route route = MaterialPageRoute(builder: (_) => StoreHome());
         Navigator.pushReplacement(context, route);
       }).catchError((e) => _handleError(e));
@@ -76,6 +76,16 @@ class _PhoneAuthState extends State<PhoneAuth> {
     } catch (e) {
       _handleError(e);
     }
+  }
+
+  checkUser(FirebaseUser fUser) {
+    Firestore.instance.collection("users").getDocuments().then((snapshot) {
+      snapshot.documents.forEach((result) {
+        if (result.data["phonenumber"] != fUser.phoneNumber) {
+          saveUserInfoToFireStore(_firebaseUser);
+        }
+      });
+    });
   }
 
   Future saveUserInfoToFireStore(FirebaseUser fUser) async {
