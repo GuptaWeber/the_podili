@@ -16,35 +16,36 @@ import 'package:e_shop/Config/config.dart';
 
 import '../Widgets/customTextField.dart';
 
-
-
 class Register extends StatefulWidget {
   @override
   _RegisterState createState() => _RegisterState();
 }
 
-
-
-class _RegisterState extends State<Register>
-{
-  final TextEditingController _nameTextEditingController = TextEditingController();
-  final TextEditingController _emailTextEditingController = TextEditingController();
-  final TextEditingController _passwordTextEditingController = TextEditingController();
-  final TextEditingController _cPasswordTextEditingController = TextEditingController();
+class _RegisterState extends State<Register> {
+  final TextEditingController _nameTextEditingController =
+      TextEditingController();
+  final TextEditingController _emailTextEditingController =
+      TextEditingController();
+  final TextEditingController _passwordTextEditingController =
+      TextEditingController();
+  final TextEditingController _cPasswordTextEditingController =
+      TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   String userImageUrl = "";
   File _imageFile;
 
-
   @override
   Widget build(BuildContext context) {
-    double _screenWidth = MediaQuery.of(context).size.width, _screenHeight = MediaQuery.of(context).size.height;
+    double _screenWidth = MediaQuery.of(context).size.width,
+        _screenHeight = MediaQuery.of(context).size.height;
     return SingleChildScrollView(
       child: Container(
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
-            SizedBox(height: 30.0,),
+            SizedBox(
+              height: 30.0,
+            ),
             InkWell(
               onTap: () {
                 _selectAndPickImage();
@@ -52,13 +53,20 @@ class _RegisterState extends State<Register>
               child: CircleAvatar(
                 radius: _screenWidth * 0.15,
                 backgroundColor: Colors.white,
-                backgroundImage: _imageFile==null ? null : FileImage(_imageFile),
+                backgroundImage:
+                    _imageFile == null ? null : FileImage(_imageFile),
                 child: _imageFile == null
-                ? Icon(Icons.add_photo_alternate, size: _screenWidth * 0.15, color: Colors.grey,)
-                : null,
+                    ? Icon(
+                        Icons.add_photo_alternate,
+                        size: _screenWidth * 0.15,
+                        color: Colors.grey,
+                      )
+                    : null,
               ),
             ),
-            SizedBox(height: 8.0,),
+            SizedBox(
+              height: 8.0,
+            ),
             Form(
               key: _formKey,
               child: Column(
@@ -77,13 +85,13 @@ class _RegisterState extends State<Register>
                   ),
                   CustomTextField(
                     controller: _passwordTextEditingController,
-                    data: Icons.person,
+                    data: Icons.lock_open,
                     hintText: "Password",
                     isObsecure: true,
                   ),
                   CustomTextField(
                     controller: _cPasswordTextEditingController,
-                    data: Icons.person,
+                    data: Icons.lock,
                     hintText: "Confirm Password",
                     isObsecure: true,
                   ),
@@ -91,8 +99,18 @@ class _RegisterState extends State<Register>
               ),
             ),
             ElevatedButton(
-                onPressed: () { uploadAndSaveImage(); },
-                child: Text("Sign up", style: TextStyle(color: Colors.white),),
+              onPressed: () {
+                uploadAndSaveImage();
+              },
+              child: Text(
+                "Sign up",
+                style: TextStyle(color: Colors.white),
+              ),
+              style: ElevatedButton.styleFrom(
+                  primary: Colors.black,
+                  padding: EdgeInsets.symmetric(horizontal: 30, vertical: 12),
+                  textStyle:
+                      TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
             ),
             SizedBox(
               height: 30.0,
@@ -102,69 +120,68 @@ class _RegisterState extends State<Register>
               width: _screenWidth * 0.8,
               color: Colors.pink,
             ),
-            SizedBox(
-              height: 15.0
-            )
+            SizedBox(height: 15.0)
           ],
         ),
       ),
     );
   }
 
-  Future<void> _selectAndPickImage() async{
+  Future<void> _selectAndPickImage() async {
     print('Selected');
-    _imageFile = File(await ImagePicker().getImage(source: ImageSource.gallery).then((pickedFile) => pickedFile.path));
+    _imageFile = File(await ImagePicker()
+        .getImage(source: ImageSource.gallery)
+        .then((pickedFile) => pickedFile.path));
     // _imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
   }
 
   Future<void> uploadAndSaveImage() async {
-    if(_imageFile == null){
+    if (_imageFile == null) {
       showDialog(
-        context: context,
-        builder: (c)
-          {
-            return ErrorAlertDialog(message: "Please select an Image File",);
-          }
-      );
+          context: context,
+          builder: (c) {
+            return ErrorAlertDialog(
+              message: "Please select an Image File",
+            );
+          });
     } else {
-
-      _passwordTextEditingController.text == _cPasswordTextEditingController.text
+      _passwordTextEditingController.text ==
+              _cPasswordTextEditingController.text
           ? _emailTextEditingController.text.isNotEmpty &&
-    _passwordTextEditingController.text.isNotEmpty &&
-    _cPasswordTextEditingController.text.isNotEmpty &&
-    _nameTextEditingController.text.isNotEmpty
-
-          ? uploadToStorage()
-          : displayDialog("Please fill up the registration complete form..")
+                  _passwordTextEditingController.text.isNotEmpty &&
+                  _cPasswordTextEditingController.text.isNotEmpty &&
+                  _nameTextEditingController.text.isNotEmpty
+              ? uploadToStorage()
+              : displayDialog("Please fill up the registration complete form..")
           : displayDialog("Password do not match.");
     }
   }
 
-  displayDialog(String msg){
-    showDialog
-      (
-        context: context,
-        builder: (c)
-        {
-          return ErrorAlertDialog(message: msg,);
-        }
-    );
-  }
-
-  uploadToStorage() async{
+  displayDialog(String msg) {
     showDialog(
         context: context,
-        builder: (c)
-        {
-          return LoadingAlertDialog(message: "Authenticating, Please wait..",);
-        }
-    );
+        builder: (c) {
+          return ErrorAlertDialog(
+            message: msg,
+          );
+        });
+  }
+
+  uploadToStorage() async {
+    showDialog(
+        context: context,
+        builder: (c) {
+          return LoadingAlertDialog(
+            message: "Authenticating, Please wait..",
+          );
+        });
     String imageFileName = DateTime.now().millisecondsSinceEpoch.toString();
-    StorageReference storageReference = FirebaseStorage.instance.ref().child(imageFileName);
+    StorageReference storageReference =
+        FirebaseStorage.instance.ref().child(imageFileName);
     StorageUploadTask storageUploadTask = storageReference.putFile(_imageFile);
     StorageTaskSnapshot taskSnapshot = await storageUploadTask.onComplete;
 
-    await taskSnapshot.ref.getDownloadURL().then((urlImage){
+    await taskSnapshot.ref.getDownloadURL().then((urlImage) {
       userImageUrl = urlImage;
       _registerUser();
     });
@@ -174,26 +191,28 @@ class _RegisterState extends State<Register>
   void _registerUser() async {
     FirebaseUser firebaseUser;
 
-    await _auth.createUserWithEmailAndPassword
-      (
-        email: _emailTextEditingController.text.trim(),
-        password: _passwordTextEditingController.text.trim(),
-    ).then((auth){
+    await _auth
+        .createUserWithEmailAndPassword(
+      email: _emailTextEditingController.text.trim(),
+      password: _passwordTextEditingController.text.trim(),
+    )
+        .then((auth) {
       firebaseUser = auth.user;
-    }).catchError((error){
+    }).catchError((error) {
       Navigator.pop(context);
       showDialog(
-        context: context,
-        builder: (c){
-          return ErrorAlertDialog(message: error.message.toString(),);
-        }
-      );
+          context: context,
+          builder: (c) {
+            return ErrorAlertDialog(
+              message: error.message.toString(),
+            );
+          });
     });
 
-    if(firebaseUser!= null){
-      saveUserInfoToFireStore(firebaseUser).then((value){
+    if (firebaseUser != null) {
+      saveUserInfoToFireStore(firebaseUser).then((value) {
         Navigator.pop(context);
-        Route route = MaterialPageRoute(builder: (c)=> StoreHome());
+        Route route = MaterialPageRoute(builder: (c) => StoreHome());
         Navigator.pushReplacement(context, route);
       });
     }
@@ -201,44 +220,21 @@ class _RegisterState extends State<Register>
 
   Future saveUserInfoToFireStore(FirebaseUser fUser) async {
     Firestore.instance.collection("users").document(fUser.uid).setData({
-      "uid" : fUser.uid,
+      "uid": fUser.uid,
       "email": fUser.email,
       "name": _nameTextEditingController.text.trim(),
       "url": userImageUrl,
-      EcommerceApp.userCartList : ["garbageValue"]
+      EcommerceApp.userCartList: ["garbageValue"]
     });
 
     await EcommerceApp.sharedPreferences.setString("uid", fUser.uid);
-    await EcommerceApp.sharedPreferences.setString(EcommerceApp.userEmail, fUser.email);
-    await EcommerceApp.sharedPreferences.setString(EcommerceApp.userName, _nameTextEditingController.text.trim());
-    await EcommerceApp.sharedPreferences.setString(EcommerceApp.userAvatarUrl, userImageUrl);
-    await EcommerceApp.sharedPreferences.setStringList(EcommerceApp.userCartList, ["garbageValue"]);
+    await EcommerceApp.sharedPreferences
+        .setString(EcommerceApp.userEmail, fUser.email);
+    await EcommerceApp.sharedPreferences.setString(
+        EcommerceApp.userName, _nameTextEditingController.text.trim());
+    await EcommerceApp.sharedPreferences
+        .setString(EcommerceApp.userAvatarUrl, userImageUrl);
+    await EcommerceApp.sharedPreferences
+        .setStringList(EcommerceApp.userCartList, ["garbageValue"]);
   }
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
