@@ -46,7 +46,9 @@ class _CartPageState extends State<CartPage> {
             Fluttertoast.showToast(msg: "Your cart is Empty");
           } else {
             Route route = MaterialPageRoute(builder: (c) {
-              return Address(totalAmount: totalAmount);
+              return Address(
+                totalAmount: totalAmount,
+              );
             });
             Navigator.pushReplacement(context, route);
           }

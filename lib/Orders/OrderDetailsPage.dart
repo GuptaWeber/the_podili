@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_shop/Address/address.dart';
 import 'package:e_shop/Config/config.dart';
+import 'package:e_shop/Orders/myOrders.dart';
 import 'package:e_shop/Orders/simpleOrderCart.dart';
 import 'package:e_shop/Store/storehome.dart';
 import 'package:e_shop/Widgets/loadingWidget.dart';
@@ -33,6 +34,7 @@ class OrderDetails extends StatelessWidget {
               Map dataMap;
               if(snapshot.hasData){
                 dataMap = snapshot.data.data;
+                print(dataMap["orderTime"]);
               }
               return snapshot.hasData
                   ? Container(
@@ -52,7 +54,7 @@ class OrderDetails extends StatelessWidget {
                     ),
                     Padding(
                         padding: EdgeInsets.all(4.0),
-                      child: Text("Order ID: " + getOrderId),
+                      child: Text("Order ID: " + orderID),
                     ),
                     Padding(
                         padding: EdgeInsets.all(4.0),
@@ -87,7 +89,7 @@ class OrderDetails extends StatelessWidget {
                           .get(),
                       builder: (c, snap){
                         return snap.hasData
-                            ? ShippingDetails(model: AddressModel.fromJson(snap.data.data),)
+                            ? ShippingDetails(model: AddressModel.fromJson(snap.data.data), orderId : orderID)
                             : Center(child: circularProgress(),);
                       },
                     )
@@ -185,7 +187,8 @@ class PaymentDetailsCard extends StatelessWidget {
 class ShippingDetails extends StatelessWidget {
 
   final AddressModel model;
-  ShippingDetails({Key key, this.model}) : super(key: key);
+  final String orderId;
+  ShippingDetails({Key key, this.model, this.orderId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -196,14 +199,14 @@ class ShippingDetails extends StatelessWidget {
       children: [
         SizedBox(height: 20.0,),
         Padding(
-            padding: EdgeInsets.symmetric(horizontal: 90.0, vertical: 5.0),
+            padding: EdgeInsets.symmetric(horizontal: 40.0, vertical: 5.0),
           child: Text(
             "Shipment Details :",
             style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold,),
           ),
         ),
         Container(
-          padding: EdgeInsets.symmetric(horizontal: 90.0, vertical: 5.0),
+          padding: EdgeInsets.symmetric(horizontal: 40.0, vertical: 5.0),
           width: screenWidth,
           child: Table(
             children: [
@@ -259,7 +262,7 @@ class ShippingDetails extends StatelessWidget {
             child: Center(
               child: InkWell(
                 onTap: (){
-                  confirmeduserOrderReceived(context, getOrderId);
+                  confirmeduserOrderReceived(context, orderId);
                 },
                 child: Container(
                   decoration: new BoxDecoration(
@@ -297,7 +300,7 @@ class ShippingDetails extends StatelessWidget {
 
     getOrderId = "";
 
-    Route route = MaterialPageRoute(builder: (c) => StoreHome());
+    Route route = MaterialPageRoute(builder: (c) => MyOrders());
     Navigator.pushReplacement(context, route);
 
     Fluttertoast.showToast(msg: "Order has been Received, Confirmed.");

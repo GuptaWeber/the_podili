@@ -135,6 +135,8 @@ class _AddressCardState extends State<AddressCard> {
     double screenWidth = MediaQuery.of(context).size.width;
     return InkWell(
       onTap: (){
+        print(widget.value);
+        print("pora Pulka");
         Provider.of<AddressChanger>(context, listen: false).displayResult(widget.value);
       },
       child: Card(
@@ -217,7 +219,7 @@ class _AddressCardState extends State<AddressCard> {
 
                       addressId : widget.addressId,
                       totalAmount: widget.totalAmount,
-
+                      model: widget.model
 
                 ) );
                 Navigator.push(context, route);

@@ -14,6 +14,7 @@ import 'Counters/changeAddresss.dart';
 import 'Counters/totalMoney.dart';
 import 'Store/storehome.dart';
 import 'Store/home.dart';
+import 'PhoneAuth.dart';
 
 import 'package:e_shop/Services/AuthService.dart';
 
@@ -68,7 +69,7 @@ class _SplashScreenState extends State<SplashScreen> {
         Route route = MaterialPageRoute(builder: (_) => StoreHome());
         Navigator.pushReplacement(context, route);
       } else {
-        Route route = MaterialPageRoute(builder: (_) => AuthenticScreen());
+        Route route = MaterialPageRoute(builder: (_) => PhoneAuth());
         Navigator.pushReplacement(context, route);
       }
     });
