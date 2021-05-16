@@ -4,7 +4,6 @@ import 'package:e_shop/Models/item.dart';
 import 'package:flutter/material.dart';
 import '../Store/storehome.dart';
 
-int counter = 0;
 class OrderCard extends StatelessWidget {
 
   final int itemCount;
@@ -17,14 +16,11 @@ class OrderCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return  InkWell(
       onTap: (){
-        Route route;
-        if(counter == 0){
-          counter = counter + 1;
-          route = MaterialPageRoute(builder: (c){
+        Route route = MaterialPageRoute(builder: (c){
+          print(orderID);
             return OrderDetails(orderID: orderID);
           });
-        }
-        print(route);
+
         Navigator.push(context, route);
       },
       child: Container(
