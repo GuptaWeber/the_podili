@@ -36,12 +36,15 @@ flutter:
     - family: Signatra
       fonts:
         - asset: assets/fonts/Signatra.ttf
+        - asset: assets/fonts/GoblinOne-Regular.ttf 
 
   assets:
     - images/welcome.png
     - images/login.png
     - images/admin.png
     - images/cash.png
+    - images/logo.png
+    - data/
 
 
 

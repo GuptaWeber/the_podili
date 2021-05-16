@@ -6,14 +6,12 @@ import 'package:e_shop/Config/config.dart';
 
 import 'register.dart';
 
-
 class AuthenticScreen extends StatefulWidget {
   @override
   _AuthenticScreenState createState() => _AuthenticScreenState();
 }
 
 class _AuthenticScreenState extends State<AuthenticScreen> {
-
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -23,38 +21,40 @@ class _AuthenticScreenState extends State<AuthenticScreen> {
           flexibleSpace: Container(
             decoration: new BoxDecoration(
               gradient: new LinearGradient(
-                colors: [Colors.pink, Colors.lightGreenAccent],
+                colors: [Colors.yellow.shade300, Colors.yellow.shade300],
                 begin: const FractionalOffset(0.0, 0.0),
                 end: const FractionalOffset(1.0, 0.0),
-                stops: [0.0,1.0],
+                stops: [0.0, 1.0],
                 tileMode: TileMode.clamp,
               ),
             ),
           ),
           title: Text(
             "Podili",
-            style: TextStyle(fontSize: 55.0, color: Colors.white, fontFamily: "Signatra"),
+            style: TextStyle(
+                fontSize: 24.0, color: Colors.black, fontFamily: "Goblin One"),
           ),
           centerTitle: true,
           bottom: TabBar(
             tabs: [
               Tab(
-                icon: Icon(Icons.lock, color: Colors.white),
+                icon: Icon(Icons.lock, color: Colors.black),
                 text: "Login",
               ),
               Tab(
-                icon: Icon(Icons.perm_contact_calendar, color: Colors.white),
+                icon: Icon(Icons.perm_contact_calendar, color: Colors.black),
                 text: "Register",
               )
             ],
-            indicatorColor: Colors.white38,
-            indicatorWeight: 5.0,
+            labelColor: Colors.black,
+            indicatorColor: Colors.black,
+            indicatorWeight: 2.0,
           ),
         ),
         body: Container(
           decoration: BoxDecoration(
             gradient: new LinearGradient(
-              colors: [Colors.pink, Colors.lightGreenAccent],
+              colors: [Colors.yellow.shade300, Colors.yellow.shade300],
               begin: Alignment.topRight,
               end: Alignment.bottomLeft,
             ),
@@ -70,28 +70,3 @@ class _AuthenticScreenState extends State<AuthenticScreen> {
     );
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

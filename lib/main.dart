@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_shop/Authentication/register.dart';
 import 'package:e_shop/Counters/ItemQuantity.dart';
+import 'package:e_shop/Store/product_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -11,13 +13,18 @@ import 'Counters/cartitemcounter.dart';
 import 'Counters/changeAddresss.dart';
 import 'Counters/totalMoney.dart';
 import 'Store/storehome.dart';
+import 'Store/home.dart';
 
-Future<void> main() async
-{
+import 'package:e_shop/Services/AuthService.dart';
+
+import 'package:firebase_core/firebase_core.dart';
+
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   EcommerceApp.auth = FirebaseAuth.instance;
   EcommerceApp.sharedPreferences = await SharedPreferences.getInstance();
   EcommerceApp.firestore = Firestore.instance;
+  WidgetsFlutterBinding.ensureInitialized();
 
   runApp(MyApp());
 }
@@ -38,8 +45,7 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             primaryColor: Colors.green,
           ),
-          home: SplashScreen()
-      ),
+          home: SplashScreen()),
     );
   }
 }
@@ -49,23 +55,20 @@ class SplashScreen extends StatefulWidget {
   _SplashScreenState createState() => _SplashScreenState();
 }
 
-
-class _SplashScreenState extends State<SplashScreen>
-{
+class _SplashScreenState extends State<SplashScreen> {
   @override
-  void initState(){
+  void initState() {
     super.initState();
     displaySplash();
   }
 
-  displaySplash(){
+  displaySplash() {
     Timer(Duration(seconds: 3), () async {
-      if(await EcommerceApp.auth.currentUser() != null){
-        Route route = MaterialPageRoute(builder: (_)=>StoreHome());
+      if (await EcommerceApp.auth.currentUser() != null) {
+        Route route = MaterialPageRoute(builder: (_) => StoreHome());
         Navigator.pushReplacement(context, route);
-      }
-      else{
-        Route route = MaterialPageRoute(builder: (_)=>AuthenticScreen());
+      } else {
+        Route route = MaterialPageRoute(builder: (_) => AuthenticScreen());
         Navigator.pushReplacement(context, route);
       }
     });
@@ -74,31 +77,36 @@ class _SplashScreenState extends State<SplashScreen>
   Widget build(BuildContext context) {
     return Material(
         child: Container(
-          decoration: new BoxDecoration(                  
-              gradient: new LinearGradient(
-                colors: [Colors.pink, Colors.lightGreenAccent],
-                begin: const FractionalOffset(0.0, 0.0),
-                end: const FractionalOffset(1.0, 0.0),
-                stops: [0.0,1.0],
-                tileMode: TileMode.clamp,
-
-              )
-          ),
-
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Image.asset("images/welcome.png"),
-                SizedBox(height: 20.0,),
-                Text(
-                  "Welcome to Podili",
-                  style: TextStyle(color: Colors.white),
-                )
-              ],
+      decoration: new BoxDecoration(
+          gradient: new LinearGradient(
+        colors: [Colors.yellow.shade300, Colors.yellow.shade300],
+        begin: const FractionalOffset(0.0, 0.0),
+        end: const FractionalOffset(1.0, 0.0),
+        stops: [0.0, 1.0],
+        tileMode: TileMode.clamp,
+      )),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset(
+              "images/logo.png",
+              width: 100,
+              height: 100,
             ),
-          ),
-        )
-    );
+            // SizedBox(
+            //   height: 20.0,
+            // ),
+            Text(
+              "Welcome to Podili",
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold),
+            )
+          ],
+        ),
+      ),
+    ));
   }
 }

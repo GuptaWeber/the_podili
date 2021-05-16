@@ -4,9 +4,7 @@ import 'package:e_shop/Models/item.dart';
 import 'package:flutter/material.dart';
 import 'package:e_shop/Store/storehome.dart';
 
-
 class ProductPage extends StatefulWidget {
-
   final ItemModel itemModel;
   ProductPage({this.itemModel});
 
@@ -14,16 +12,11 @@ class ProductPage extends StatefulWidget {
   _ProductPageState createState() => _ProductPageState();
 }
 
-
-
 class _ProductPageState extends State<ProductPage> {
-
   int quantityOfItems = 1;
 
   @override
-  Widget build(BuildContext context)
-  {
-
+  Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
 
     return SafeArea(
@@ -33,7 +26,7 @@ class _ProductPageState extends State<ProductPage> {
         body: ListView(
           children: [
             Container(
-              padding: EdgeInsets.all(8.0),
+              padding: EdgeInsets.all(4.0),
               width: MediaQuery.of(context).size.width,
               color: Colors.white,
               child: Column(
@@ -53,8 +46,8 @@ class _ProductPageState extends State<ProductPage> {
                       ),
                     ],
                   ),
-                  Container(
-                    padding: EdgeInsets.all(20.0),
+                  Padding(
+                    padding: EdgeInsets.only(top: 20, left: 0),
                     child: Center(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -66,16 +59,14 @@ class _ProductPageState extends State<ProductPage> {
                           SizedBox(
                             height: 10.0,
                           ),
-
                           Text(
                             widget.itemModel.longDescription,
                           ),
                           SizedBox(
                             height: 10.0,
                           ),
-
                           Text(
-                            "₹ "+ widget.itemModel.price.toString(),
+                            "₹ " + widget.itemModel.price.toString(),
                             style: boldTextStyle,
                           ),
                           SizedBox(
@@ -86,24 +77,29 @@ class _ProductPageState extends State<ProductPage> {
                     ),
                   ),
                   Padding(
-                      padding: EdgeInsets.only(top:8.0),
+                    padding: EdgeInsets.only(top: 8.0),
                     child: Center(
                       child: InkWell(
-                        onTap: () => checkItemInCart(widget.itemModel.shortInfo, context),
+                        onTap: () => checkItemInCart(
+                            widget.itemModel.shortInfo, context),
                         child: Container(
                           decoration: new BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
                             gradient: new LinearGradient(
-                              colors: [Colors.pink, Colors.lightGreenAccent],
+                              colors: [Colors.black, Colors.black],
                               begin: const FractionalOffset(0.0, 0.0),
                               end: const FractionalOffset(1.0, 0.0),
-                              stops: [0.0,1.0],
+                              stops: [0.0, 1.0],
                               tileMode: TileMode.clamp,
                             ),
                           ),
-                          width: MediaQuery.of(context).size.width - 40.0,
+                          width: MediaQuery.of(context).size.width - 80.0,
                           height: 50.0,
                           child: Center(
-                            child: Text("Add to Cart", style: TextStyle(color: Colors.white),),
+                            child: Text(
+                              "Add to Cart",
+                              style: TextStyle(color: Colors.white),
+                            ),
                           ),
                         ),
                       ),
@@ -117,7 +113,6 @@ class _ProductPageState extends State<ProductPage> {
       ),
     );
   }
-
 }
 
 const boldTextStyle = TextStyle(fontWeight: FontWeight.bold, fontSize: 20);
