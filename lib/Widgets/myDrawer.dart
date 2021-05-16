@@ -7,15 +7,13 @@ import 'package:e_shop/Orders/myOrders.dart';
 import 'package:e_shop/Store/storehome.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import '../PhoneAuth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class MyDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      
-          
-        
-      
       child: ListView(
         children: [
           Container(
@@ -165,11 +163,15 @@ class MyDrawer extends StatelessWidget {
                     style: TextStyle(color: Colors.black),
                   ),
                   onTap: () {
-                    EcommerceApp.auth.signOut().then((c) {
-                      Route route =
-                          MaterialPageRoute(builder: (c) => AuthenticScreen());
-                      Navigator.pushReplacement(context, route);
-                    });
+                    _logout();
+                    Route route =
+                        MaterialPageRoute(builder: (_) => PhoneAuth());
+                    Navigator.pushReplacement(context, route);
+                    // EcommerceApp.auth.signOut().then((c) {
+                    //   Route route =
+                    //       MaterialPageRoute(builder: (c) => AuthenticScreen());
+                    //   Navigator.pushReplacement(context, route);
+                    // });
                   },
                 ),
                 // Divider(
@@ -183,5 +185,15 @@ class MyDrawer extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+Future<void> _logout() async {
+  /// Method to Logout the `FirebaseUser` (`_firebaseUser`)
+  try {
+    // signout code
+    await FirebaseAuth.instance.signOut();
+  } catch (e) {
+    print(e.toString());
   }
 }
