@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'Config/config.dart';
 import 'Store/storehome.dart';
 
@@ -64,6 +65,7 @@ class _PhoneAuthState extends State<PhoneAuth> {
         _firebaseUser = authRes.user;
         print(_firebaseUser.toString());
         checkUser(_firebaseUser);
+
         Route route = MaterialPageRoute(builder: (_) => StoreHome());
         Navigator.pushReplacement(context, route);
       }).catchError((e) => _handleError(e));
@@ -74,6 +76,11 @@ class _PhoneAuthState extends State<PhoneAuth> {
       // Route route = MaterialPageRoute(builder: (_) => StoreHome());
       // Navigator.pushReplacement(context, route);
     } catch (e) {
+      Fluttertoast.showToast(
+          msg: "Invalid OTP",
+          backgroundColor: Colors.black,
+          textColor: Colors.white);
+
       _handleError(e);
     }
   }
@@ -108,47 +115,59 @@ class _PhoneAuthState extends State<PhoneAuth> {
         .setStringList(EcommerceApp.userCartList, ["garbageValue"]);
   }
 
-  Future<void> _logout() async {
-    /// Method to Logout the `FirebaseUser` (`_firebaseUser`)
-    try {
-      // signout code
-      await FirebaseAuth.instance.signOut();
-      _firebaseUser = null;
-      setState(() {
-        _status += 'Signed out\n';
-      });
-    } catch (e) {
-      _handleError(e);
-    }
-  }
+  // Future<void> _logout() async {
+  //   /// Method to Logout the `FirebaseUser` (`_firebaseUser`)
+  //   try {
+  //     // signout code
+  //     await FirebaseAuth.instance.signOut();
+  //     _firebaseUser = null;
+  //     setState(() {
+  //       _status += 'Signed out\n';
+  //     });
+  //   } catch (e) {
+  //     _handleError(e);
+  //   }
+  // }
 
   Future<void> _submitPhoneNumber() async {
     /// NOTE: Either append your phone number country code or add in the code itself
     /// Since I'm in India we use "+91 " as prefix `phoneNumber`
     String phoneNumber = "+91 " + _phoneNumberController.text.toString().trim();
-    print(phoneNumber);
+    // print(phoneNumber);
 
     /// The below functions are the callbacks, separated so as to make code more redable
     void verificationCompleted(AuthCredential phoneAuthCredential) {
-      print('verificationCompleted');
+      // print('verificationCompleted');
+      Fluttertoast.showToast(
+          msg: "Verified Successfully",
+          backgroundColor: Colors.black,
+          textColor: Colors.white);
       setState(() {
         _status += 'verificationCompleted\n';
       });
       this._phoneAuthCredential = phoneAuthCredential;
-      print(phoneAuthCredential);
+      // print(phoneAuthCredential);
     }
 
     void verificationFailed(AuthException error) {
-      print('verificationFailed');
+      // print('verificationFailed');
+      Fluttertoast.showToast(
+          msg: "Verification Failed",
+          backgroundColor: Colors.black,
+          textColor: Colors.white);
       _handleError(error);
     }
 
     void codeSent(String verificationId, [int code]) {
-      print('codeSent');
+      // print('codeSent');
+      Fluttertoast.showToast(
+          msg: "OTP Sent",
+          backgroundColor: Colors.black,
+          textColor: Colors.white);
       this._verificationId = verificationId;
-      print(verificationId);
+      // print(verificationId);
       this._code = code;
-      print(code.toString());
+      // print(code.toString());
       setState(() {
         _status += 'Code Sent\n';
       });
@@ -159,7 +178,11 @@ class _PhoneAuthState extends State<PhoneAuth> {
       setState(() {
         _status += 'codeAutoRetrievalTimeout\n';
       });
-      print(verificationId);
+      Fluttertoast.showToast(
+          msg: "Time Out Resend OTP",
+          backgroundColor: Colors.black,
+          textColor: Colors.white);
+      // print(verificationId);
     }
 
     await FirebaseAuth.instance.verifyPhoneNumber(
@@ -205,28 +228,49 @@ class _PhoneAuthState extends State<PhoneAuth> {
     });
   }
 
-  void _displayUser() {
-    setState(() {
-      _status += _firebaseUser.toString() + '\n';
-    });
-  }
+  // void _displayUser() {
+  //   setState(() {
+  //     _status += _firebaseUser.toString() + '\n';
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        actions: [
-          GestureDetector(
-            child: Icon(Icons.refresh),
-            onTap: _reset,
-          ),
-        ],
-      ),
+      // appBar: AppBar(
+      //   actions: [
+      //     GestureDetector(
+      //       child: Icon(Icons.refresh),
+      //       onTap: _reset,
+      //     ),
+      //   ],
+      // ),
+
+      backgroundColor: Colors.yellow.shade300,
       body: ListView(
         padding: EdgeInsets.all(16),
         // mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          SizedBox(height: 24),
+          SizedBox(height: 64),
+          Image.asset(
+            "images/logo.png",
+            width: 100,
+            height: 100,
+          ),
+          // SizedBox(
+          //   height: 20.0,
+          // ),
+          Padding(
+            padding: EdgeInsets.only(left: 89, top: 10, bottom: 50),
+            child: Text(
+              "Welcome to Podili",
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold),
+            ),
+          ),
+
           Row(
             children: <Widget>[
               Expanded(
@@ -244,13 +288,16 @@ class _PhoneAuthState extends State<PhoneAuth> {
                 flex: 1,
                 child: MaterialButton(
                   onPressed: _submitPhoneNumber,
-                  child: Text('Submit'),
-                  color: Theme.of(context).accentColor,
+                  child: Text(
+                    'Send',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  color: Colors.black,
                 ),
               ),
             ],
           ),
-          SizedBox(height: 48),
+          SizedBox(height: 28),
           Row(
             children: <Widget>[
               Expanded(
@@ -268,32 +315,36 @@ class _PhoneAuthState extends State<PhoneAuth> {
                 flex: 1,
                 child: MaterialButton(
                   onPressed: _submitPhoneNumber,
-                  child: Text('Resend'),
-                  color: Theme.of(context).accentColor,
+                  child: Text(
+                    'Resend',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  color: Colors.black,
                 ),
               ),
             ],
           ),
-          SizedBox(height: 48),
-          Text('$_status'),
-          SizedBox(height: 48),
+          SizedBox(height: 28),
+          // Text('$_status'),
           MaterialButton(
+            height: 50,
             onPressed: _submitOTP,
-            child: Text('Login'),
-            color: Theme.of(context).accentColor,
+            child: Text(
+              'Login',
+              style: TextStyle(color: Colors.white),
+            ),
+            color: Colors.black,
           ),
-          SizedBox(height: 24),
-          MaterialButton(
-            onPressed: _logout,
-            child: Text('Logout'),
-            color: Theme.of(context).accentColor,
+          SizedBox(
+            height: 30,
           ),
-          SizedBox(height: 24),
-          MaterialButton(
-            onPressed: _displayUser,
-            child: Text('FirebaseUser'),
-            color: Theme.of(context).accentColor,
-          )
+          GestureDetector(
+            child: Icon(
+              Icons.refresh,
+              size: 40,
+            ),
+            onTap: _reset,
+          ),
         ],
       ),
     );
