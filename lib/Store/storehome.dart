@@ -339,13 +339,26 @@ class _StoreHomeState extends State<StoreHome> {
                                 ),
                                 Column(
                                   children: <Widget>[
-                                    ClipOval(
-                                        child: Image.network(
-                                      'https://review.chinabrands.com/chinabrands/seo/image/20181116/wholesalegroceries.jpg',
-                                      height: 90,
-                                      width: 90,
-                                      fit: BoxFit.cover,
-                                    )),
+                                    InkWell(
+                                        onTap: () {
+                                          // ScaffoldMessenger.of(context)
+                                          //     .showSnackBar(SnackBar(
+                                          //   content: Text('Tap'),
+                                          // ));
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    Home('Groceries')),
+                                          );
+                                        },
+                                        child: ClipOval(
+                                            child: Image.network(
+                                          'https://review.chinabrands.com/chinabrands/seo/image/20181116/wholesalegroceries.jpg',
+                                          height: 90,
+                                          width: 90,
+                                          fit: BoxFit.cover,
+                                        ))),
                                     SizedBox(
                                       height: 5.0,
                                     ),
@@ -354,13 +367,26 @@ class _StoreHomeState extends State<StoreHome> {
                                 ),
                                 Column(
                                   children: <Widget>[
-                                    ClipOval(
-                                        child: Image.network(
-                                      'https://fyi.extension.wisc.edu/safefood/files/2019/04/CDC_produce.png',
-                                      height: 90,
-                                      width: 90,
-                                      fit: BoxFit.cover,
-                                    )),
+                                    InkWell(
+                                        onTap: () {
+                                          // ScaffoldMessenger.of(context)
+                                          //     .showSnackBar(SnackBar(
+                                          //   content: Text('Tap'),
+                                          // ));
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    Home('Food')),
+                                          );
+                                        },
+                                        child: ClipOval(
+                                            child: Image.network(
+                                          'https://fyi.extension.wisc.edu/safefood/files/2019/04/CDC_produce.png',
+                                          height: 90,
+                                          width: 90,
+                                          fit: BoxFit.cover,
+                                        ))),
                                     SizedBox(
                                       height: 5.0,
                                     ),
@@ -379,13 +405,26 @@ class _StoreHomeState extends State<StoreHome> {
                               children: <Widget>[
                                 Column(
                                   children: <Widget>[
-                                    ClipOval(
-                                        child: Image.network(
-                                      'https://img.huffingtonpost.com/asset/5cd366a42300003100b78725.jpeg',
-                                      height: 90,
-                                      width: 90,
-                                      fit: BoxFit.cover,
-                                    )),
+                                    InkWell(
+                                        onTap: () {
+                                          // ScaffoldMessenger.of(context)
+                                          //     .showSnackBar(SnackBar(
+                                          //   content: Text('Tap'),
+                                          // ));
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    Home('Meat')),
+                                          );
+                                        },
+                                        child: ClipOval(
+                                            child: Image.network(
+                                          'https://img.huffingtonpost.com/asset/5cd366a42300003100b78725.jpeg',
+                                          height: 90,
+                                          width: 90,
+                                          fit: BoxFit.cover,
+                                        ))),
                                     SizedBox(
                                       height: 5.0,
                                     ),
@@ -394,13 +433,26 @@ class _StoreHomeState extends State<StoreHome> {
                                 ),
                                 Column(
                                   children: <Widget>[
-                                    ClipOval(
-                                        child: Image.network(
-                                      'https://www.empr.com/wp-content/uploads/sites/7/2018/12/medicine-bottles-pills-tablets_762263.jpg',
-                                      height: 90,
-                                      width: 90,
-                                      fit: BoxFit.cover,
-                                    )),
+                                    InkWell(
+                                        onTap: () {
+                                          // ScaffoldMessenger.of(context)
+                                          //     .showSnackBar(SnackBar(
+                                          //   content: Text('Tap'),
+                                          // ));
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    Home('Medicines')),
+                                          );
+                                        },
+                                        child: ClipOval(
+                                            child: Image.network(
+                                          'https://www.empr.com/wp-content/uploads/sites/7/2018/12/medicine-bottles-pills-tablets_762263.jpg',
+                                          height: 90,
+                                          width: 90,
+                                          fit: BoxFit.cover,
+                                        ))),
                                     SizedBox(
                                       height: 5.0,
                                     ),
@@ -409,13 +461,26 @@ class _StoreHomeState extends State<StoreHome> {
                                 ),
                                 Column(
                                   children: <Widget>[
-                                    ClipOval(
-                                        child: Image.network(
-                                      'https://www.heritagefoods.in/static/images/detailslider/milk/tonemilk.png',
-                                      height: 90,
-                                      width: 90,
-                                      fit: BoxFit.cover,
-                                    )),
+                                    InkWell(
+                                        onTap: () {
+                                          // ScaffoldMessenger.of(context)
+                                          //     .showSnackBar(SnackBar(
+                                          //   content: Text('Tap'),
+                                          // ));
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    Home('Milk Products')),
+                                          );
+                                        },
+                                        child: ClipOval(
+                                            child: Image.network(
+                                          'https://www.heritagefoods.in/static/images/detailslider/milk/tonemilk.png',
+                                          height: 90,
+                                          width: 90,
+                                          fit: BoxFit.cover,
+                                        ))),
                                     SizedBox(
                                       height: 5.0,
                                     ),
@@ -434,13 +499,26 @@ class _StoreHomeState extends State<StoreHome> {
                               children: <Widget>[
                                 Column(
                                   children: <Widget>[
-                                    ClipOval(
-                                        child: Image.network(
-                                      'https://img1.10bestmedia.com/Images/Photos/380699/GettyImages-855447930_54_990x660.jpg',
-                                      height: 90,
-                                      width: 90,
-                                      fit: BoxFit.cover,
-                                    )),
+                                    InkWell(
+                                        onTap: () {
+                                          // ScaffoldMessenger.of(context)
+                                          //     .showSnackBar(SnackBar(
+                                          //   content: Text('Tap'),
+                                          // ));
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    Home('Ice Creams')),
+                                          );
+                                        },
+                                        child: ClipOval(
+                                            child: Image.network(
+                                          'https://img1.10bestmedia.com/Images/Photos/380699/GettyImages-855447930_54_990x660.jpg',
+                                          height: 90,
+                                          width: 90,
+                                          fit: BoxFit.cover,
+                                        ))),
                                     SizedBox(
                                       height: 5.0,
                                     ),
@@ -449,13 +527,26 @@ class _StoreHomeState extends State<StoreHome> {
                                 ),
                                 Column(
                                   children: <Widget>[
-                                    ClipOval(
-                                        child: Image.network(
-                                      'https://i.pinimg.com/originals/4c/90/69/4c906919db5ec51de6a7bcafc76e2812.png',
-                                      height: 90,
-                                      width: 90,
-                                      fit: BoxFit.cover,
-                                    )),
+                                    InkWell(
+                                        onTap: () {
+                                          // ScaffoldMessenger.of(context)
+                                          //     .showSnackBar(SnackBar(
+                                          //   content: Text('Tap'),
+                                          // ));
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    Home('Cool Drinks')),
+                                          );
+                                        },
+                                        child: ClipOval(
+                                            child: Image.network(
+                                          'https://i.pinimg.com/originals/4c/90/69/4c906919db5ec51de6a7bcafc76e2812.png',
+                                          height: 90,
+                                          width: 90,
+                                          fit: BoxFit.cover,
+                                        ))),
                                     SizedBox(
                                       height: 5.0,
                                     ),
@@ -464,13 +555,26 @@ class _StoreHomeState extends State<StoreHome> {
                                 ),
                                 Column(
                                   children: <Widget>[
-                                    ClipOval(
-                                        child: Image.network(
-                                      'https://www.zinmobi.com/wp-content/uploads/2015/05/online-ordering.jpg',
-                                      height: 90,
-                                      width: 90,
-                                      fit: BoxFit.cover,
-                                    )),
+                                    InkWell(
+                                        onTap: () {
+                                          // ScaffoldMessenger.of(context)
+                                          //     .showSnackBar(SnackBar(
+                                          //   content: Text('Tap'),
+                                          // ));
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    Home('Fast Food')),
+                                          );
+                                        },
+                                        child: ClipOval(
+                                            child: Image.network(
+                                          'https://www.zinmobi.com/wp-content/uploads/2015/05/online-ordering.jpg',
+                                          height: 90,
+                                          width: 90,
+                                          fit: BoxFit.cover,
+                                        ))),
                                     SizedBox(
                                       height: 5.0,
                                     ),

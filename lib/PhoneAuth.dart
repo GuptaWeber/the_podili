@@ -89,7 +89,6 @@ class _PhoneAuthState extends State<PhoneAuth> {
     Firestore.instance.collection("users").getDocuments().then((snapshot) {
       snapshot.documents.forEach((result) {
         if (result.data["phonenumber"] != fUser.phoneNumber) {
-          print('F of X, Y');
           saveUserInfoToFireStore(_firebaseUser);
         }
       });
