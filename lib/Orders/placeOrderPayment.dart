@@ -282,6 +282,8 @@ class _PaymentPageState extends State<PaymentPage> {
 
   addOrderDetails() {
     String productDescription = '';
+    // String orderID= EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID) +
+    //     data['orderTime'];
 
     for (i = 1; i < productList.length; i++) {
       productDescription = productDescription + productList[i] + ' ';
@@ -291,6 +293,7 @@ class _PaymentPageState extends State<PaymentPage> {
       EcommerceApp.addressID: widget.addressId,
       EcommerceApp.totalAmount: widget.totalAmount + 20,
       "orderBy": EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID),
+      "orderID":'',
       "prefferedTime": preferredTime,
       EcommerceApp.cancellationStatus: "notCancelled",
       EcommerceApp.userOrderConfirmation: "Not Received",

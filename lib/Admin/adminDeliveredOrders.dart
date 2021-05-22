@@ -1,6 +1,9 @@
+import 'dart:collection';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_shop/Admin/adminOrderCard.dart';
 import 'package:e_shop/Config/config.dart';
+import 'package:e_shop/Models/order.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../Widgets/loadingWidget.dart';
@@ -11,67 +14,138 @@ class AdminDeliveredOrders extends StatefulWidget {
   _MyOrdersState createState() => _MyOrdersState();
 }
 
-
 class _MyOrdersState extends State<AdminDeliveredOrders> {
+  DocumentSnapshot documentSnapshot;
+  List<OrderModel> dataOrders;
   @override
   Widget build(BuildContext context) {
-
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          iconTheme: IconThemeData(color: Colors.white),
-          flexibleSpace: Container(
-            decoration: new BoxDecoration(
-              gradient: new LinearGradient(
-                colors: [Colors.pink, Colors.lightGreenAccent],
-                begin: const FractionalOffset(0.0, 0.0),
-                end: const FractionalOffset(1.0, 0.0),
-                stops: [0.0,1.0],
-                tileMode: TileMode.clamp,
+          appBar: AppBar(
+            iconTheme: IconThemeData(color: Colors.white),
+            flexibleSpace: Container(
+              decoration: new BoxDecoration(
+                gradient: new LinearGradient(
+                  colors: [Colors.pink, Colors.lightGreenAccent],
+                  begin: const FractionalOffset(0.0, 0.0),
+                  end: const FractionalOffset(1.0, 0.0),
+                  stops: [0.0, 1.0],
+                  tileMode: TileMode.clamp,
+                ),
               ),
             ),
+            centerTitle: true,
+            title: Text(
+              "My Orders",
+              style: TextStyle(color: Colors.white),
+            ),
+            actions: [
+              IconButton(
+                  icon: Icon(
+                    Icons.arrow_drop_down_circle,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    SystemNavigator.pop();
+                  })
+            ],
           ),
-          centerTitle: true,
-          title: Text("My Orders", style: TextStyle(color: Colors.white),),
-          actions: [
-            IconButton(
-                icon: Icon(Icons.arrow_drop_down_circle, color: Colors.white,),
-                onPressed: (){
-                  SystemNavigator.pop();
-                })
-          ],
-        ),
-        body: Container(
+          body: Container(
+            // child: ListView.builder(itemBuilder: itemBuilder),
 
-          child: MaterialButton(
-            onPressed: (){
+            //
+            // child: FutureBuilder(
+            //   future: getDocuments(),
+            //   builder: (BuildContext context, AsyncSnapshot snapshot){
+            //     return snapshot.hasData? ListView.builder(
+            //       itemCount: snapshot.data.documents.length,
+            //       itemBuilder: (c, index){
+            //         return FutureBuilder<QuerySnapshot>(
+            //             future: Firestore.instance
+            //                 .collection("items")
+            //                 .where("shortInfo", whereIn: snapshot.data.documents[index].data[EcommerceApp.productID])
+            //                 .getDocuments(),
+            //
+            //             builder: (c, snap){
+            //               return snap.hasData
+            //                   ? OrderCard(
+            //                 itemCount: snap.data.documents.length,
+            //                 data: snap.data.documents,
+            //                 orderID: snapshot.data[index].add,
+            //                 orderStatus: snapshot.data.documents[index].data['orderStatus'],
+            //                 cancellationStatus: snapshot.data.documents[index].data['cancellationStatus'],
+            //               )
+            //                   : Center(child: circularProgress(),);
+            //             }
+            //
+            //         );
+            //       },
+            //     ):Container(
+            //       child: Text("Loading....."),
+            //     );
+            //   },
+            // ),
 
-            },
+            child: MaterialButton(
+              onPressed: (){
+               print(getDocuments());
+              },
+              child: Text("Yup!"),
+            ),
+          )
+          // StreamBuilder<QuerySnapshot>(
+          //   stream: Firestore.instance
+          //       .collection(EcommerceApp.collectionUser)
+          //       .snapshots(),
+          //
+          //   // builder: (c, snapshot){
+          //   //
+          //   //   print(snapshot.data.documents[9].data['uid']);
+          //   //   //
+          //   //   // return snapshot.hasData?
+          //   //   //
+          //   //   //     : Center(child: circularProgress(),);
+          //   // }
+          //
+          // ),
           ),
-
-        )
-        // StreamBuilder<QuerySnapshot>(
-        //   stream: Firestore.instance
-        //       .collection(EcommerceApp.collectionUser)
-        //       .snapshots(),
-        //
-        //   // builder: (c, snapshot){
-        //   //
-        //   //   print(snapshot.data.documents[9].data['uid']);
-        //   //   //
-        //   //   // return snapshot.hasData?
-        //   //   //
-        //   //   //     : Center(child: circularProgress(),);
-        //   // }
-        //
-        // ),
-      ),
     );
   }
 
-   getDocuments() async {
+ Future<List<OrderModel>> getDocuments() async {
+    int i = 0;
 
+    List<DocumentSnapshot> snaps = await Firestore.instance
+        .collection("users")
+        .getDocuments()
+        .then((value) => value.documents);
+    List<OrderModel> orders = [];
 
+    // print(snaps[0].data.collection("orders"));
 
+    for (i = 0; i < snaps.length; i++) {
+      print(snaps[i].data["uid"]);
+      List weber = await EcommerceApp.firestore
+          .collection(EcommerceApp.collectionUser)
+          .document(snaps[i].data["uid"])
+          .collection(EcommerceApp.collectionOrders)
+          .orderBy('orderTime', descending: true)
+          .getDocuments()
+          .then((value) => value.documents);
+      // print(element.data['paymentDetails']);
+      weber.length != 0
+          ? weber.forEach((element) {
+              orders.add(OrderModel.fromJson(element.data));
+            })
+          : print('bla');
+
+      // orders.add(element.data);
+      // print(element.data.runtimeType);
+      // weber.length!=0? weber.forEach((element) {orders.add(element);}) : print('');
+    }
+
+    print(orders.length);
+
+    return orders;
   }
 }
