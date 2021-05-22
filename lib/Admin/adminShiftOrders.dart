@@ -42,7 +42,7 @@ class _MyOrdersState extends State<AdminShiftOrders> {
         ),
         body: StreamBuilder<QuerySnapshot>(
           stream: Firestore.instance
-            .collection("orders")
+            .collection(EcommerceApp.collectionUser)
             .snapshots(),
 
           builder: (c, snapshot){

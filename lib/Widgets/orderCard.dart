@@ -9,15 +9,16 @@ class OrderCard extends StatelessWidget {
   final int itemCount;
   final List<DocumentSnapshot> data;
   final String orderID;
+  final String cancellationStatus;
+  final String orderStatus;
 
-  OrderCard({Key key, this.itemCount, this.data, this.orderID}) : super(key: key);
+  OrderCard({Key key, this.itemCount, this.data, this.orderID, this.cancellationStatus, this.orderStatus}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return  InkWell(
       onTap: (){
         Route route = MaterialPageRoute(builder: (c){
-          print(orderID);
             return OrderDetails(orderID: orderID);
           });
 
@@ -41,7 +42,7 @@ class OrderCard extends StatelessWidget {
           physics: NeverScrollableScrollPhysics(),
           itemBuilder: (c, index){
             ItemModel model = ItemModel.fromJson(data[index].data);
-            return sourceOrderInfo(model, context);
+            return sourceOrderInfo(model, context, cancellationStatus, orderStatus);
           }
         ),
       ),
@@ -51,9 +52,12 @@ class OrderCard extends StatelessWidget {
 
 
 
-Widget sourceOrderInfo(ItemModel model, BuildContext context,
+Widget sourceOrderInfo(ItemModel model, BuildContext context, String cancellationStatus, String orderStatus,
     {Color background})
 {
+
+  print(cancellationStatus);
+
   width =  MediaQuery.of(context).size.width;
 
   return  Container(
@@ -122,7 +126,42 @@ Widget sourceOrderInfo(ItemModel model, BuildContext context,
                     )
                   ],
                 ),
-
+                // SizedBox(height: 30.0,),
+                 isCancelled(cancellationStatus)? Container(
+                  margin: const EdgeInsets.fromLTRB(0, 20, 10, 0),
+                  padding: const EdgeInsets.all(2.0),
+                  decoration:BoxDecoration(
+                    color: Colors.red,
+                    border: Border.all(
+                        width: 3.0,
+                       color: Colors.red
+                    ),
+                    borderRadius: BorderRadius.all(
+                        Radius.circular(20.0) //         <--- border radius here
+                    ),
+                  ), //       <--- BoxDecoration here
+                  child: Text(
+                    "Order Cancelled",
+                    style: TextStyle(fontSize: 15.0, color: Colors.white),
+                  ),
+                ) : Container(
+                   margin: const EdgeInsets.fromLTRB(0, 20, 10, 0),
+                   padding: const EdgeInsets.all(2.0),
+                   decoration:BoxDecoration(
+                     color: Colors.green,
+                     border: Border.all(
+                         width: 3.0,
+                         color: Colors.green
+                     ),
+                     borderRadius: BorderRadius.all(
+                         Radius.circular(20.0) //         <--- border radius here
+                     ),
+                   ), //       <--- BoxDecoration here
+                   child: Text(
+                     orderStatus,
+                     style: TextStyle(fontSize: 15.0, color: Colors.white),
+                   ),
+                 ),
                 Flexible(
                   child: Container(),
                 ),
@@ -137,4 +176,9 @@ Widget sourceOrderInfo(ItemModel model, BuildContext context,
       ],
     ),
   );
+}
+
+bool isCancelled(String cancelStatus) {
+
+  return cancelStatus=='cancelled';
 }

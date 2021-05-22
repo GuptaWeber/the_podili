@@ -1,6 +1,9 @@
+import 'package:e_shop/Admin/adminDeliveredOrders.dart';
+import 'package:e_shop/Admin/adminShiftOrders.dart';
 import 'package:e_shop/Authentication/authenication.dart';
 import 'package:e_shop/Config/config.dart';
 import 'package:e_shop/Address/addAddress.dart';
+import 'package:e_shop/Orders/delivery_timeline.dart';
 import 'package:e_shop/Store/Search.dart';
 import 'package:e_shop/Store/cart.dart';
 import 'package:e_shop/Orders/myOrders.dart';
@@ -13,6 +16,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 class MyDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+
+    print( EcommerceApp.sharedPreferences.getString(EcommerceApp.isAdmin));
+    print('Weber');
+
     return Drawer(
       child: ListView(
         children: [
@@ -29,26 +36,25 @@ class MyDrawer extends StatelessWidget {
             ),
             child: Column(
               children: [
-                Material(
-                  borderRadius: BorderRadius.all(Radius.circular(80.0)),
-                  elevation: 8.0,
-                  child: Container(
-                    height: 160.0,
-                    width: 160.0,
-                    child: CircleAvatar(
-                      backgroundImage: NetworkImage(
-                        EcommerceApp.sharedPreferences
-                            .getString(EcommerceApp.userAvatarUrl),
-                      ),
-                    ),
-                  ),
-                ),
+                // Material(
+                //   borderRadius: BorderRadius.all(Radius.circular(80.0)),
+                //   elevation: 8.0,
+                //   child: Container(
+                //     height: 160.0,
+                //     width: 160.0,
+                //     child: CircleAvatar(
+                //       backgroundImage: NetworkImage(
+                //         EcommerceApp.sharedPreferences
+                //             .getString(EcommerceApp.userAvatarUrl),
+                //       ),
+                //     ),
+                //   ),
+                // ),
                 SizedBox(
                   height: 10.0,
                 ),
                 Text(
-                  EcommerceApp.sharedPreferences
-                      .getString(EcommerceApp.userName),
+                  "Welcome User",
                   style: TextStyle(
                       color: Colors.black,
                       fontSize: 35.0,
@@ -151,6 +157,96 @@ class MyDrawer extends StatelessWidget {
                     Navigator.push(context, route);
                   },
                 ),
+
+                EcommerceApp.sharedPreferences.getString(EcommerceApp.isAdmin)== '1' ? Container(
+                  child: Column(
+                    children: [
+                      Text(
+                        "Admin Dashboard",
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 35.0,
+                            fontFamily: "Signatra"),
+                      ),
+                      Divider(
+                        height: 5.0,
+                        color: Colors.white,
+                        thickness: 1.0,
+                      ),
+
+                      ListTile(
+                        leading: Icon(Icons.add, color: Colors.black),
+                        title: Text(
+                          "Add A New Product",
+                          style: TextStyle(color: Colors.black),
+                        ),
+                        onTap: () {
+                          Route route =
+                          MaterialPageRoute(builder: (c) => AddAddress());
+                          Navigator.push(context, route);
+                        },
+                      ),
+
+                      Divider(
+                        height: 5.0,
+                        color: Colors.white,
+                        thickness: 1.0,
+                      ),
+
+                      ListTile(
+                        leading: Icon(Icons.edit, color: Colors.black),
+                        title: Text(
+                          "Update Product",
+                          style: TextStyle(color: Colors.black),
+                        ),
+                        onTap: () {
+                          Route route =
+                          MaterialPageRoute(builder: (c) => AddAddress());
+                          Navigator.push(context, route);
+                        },
+                      ),
+
+                      Divider(
+                        height: 5.0,
+                        color: Colors.white,
+                        thickness: 1.0,
+                      ),
+
+                      ListTile(
+                        leading: Icon(Icons.list, color: Colors.black),
+                        title: Text(
+                          "Manage Orders",
+                          style: TextStyle(color: Colors.black),
+                        ),
+                        onTap: () {
+                          Route route =
+                          MaterialPageRoute(builder: (c) => AdminShiftOrders());
+                          Navigator.push(context, route);
+                        },
+                      ),
+
+                      Divider(
+                        height: 5.0,
+                        color: Colors.white,
+                        thickness: 1.0,
+                      ),
+
+                      ListTile(
+                        leading: Icon(Icons.done, color: Colors.black),
+                        title: Text(
+                          "Delivered Orders",
+                          style: TextStyle(color: Colors.black),
+                        ),
+                        onTap: () {
+                          Route route =
+                          MaterialPageRoute(builder: (c) => AdminDeliveredOrders());
+                          Navigator.push(context, route);
+                        },
+                      ),
+                    ],
+                  ),
+                ): Container(),
+
                 Divider(
                   height: 5.0,
                   color: Colors.white,

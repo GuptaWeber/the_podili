@@ -30,6 +30,7 @@ class _PaymentPageState extends State<PaymentPage> {
   int _payment_method = 0;
   Razorpay _razorpay;
   TwilioFlutter twilioFlutter;
+  String preferredTime = '7 AM';
   int i =0;
   List productList = EcommerceApp.sharedPreferences
       .getStringList(EcommerceApp.userCartList);
@@ -45,7 +46,7 @@ class _PaymentPageState extends State<PaymentPage> {
 
     twilioFlutter =
         TwilioFlutter(accountSid: 'AC35db7389289340fd2a6cd6c2bd51602f',
-            authToken: 'e5095bc755b9aa4beb50baf74a6b10a4',
+            authToken: '00fea30f08e9073b200ce07c40aa1948',
             twilioNumber: '+12027594159');
 
   }
@@ -83,6 +84,7 @@ class _PaymentPageState extends State<PaymentPage> {
                   padding: const EdgeInsets.all(20.0),
                   child: Column(
                     children: [
+
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -112,7 +114,7 @@ class _PaymentPageState extends State<PaymentPage> {
                             textAlign: TextAlign.left,
                           ),
                           Text(
-                            "40.0",
+                            "20.0",
                             style: TextStyle(
                                 fontSize: 20,
                                 color: Colors.green,
@@ -140,7 +142,7 @@ class _PaymentPageState extends State<PaymentPage> {
                             textAlign: TextAlign.left,
                           ),
                           Text(
-                            "${widget.totalAmount + 40}",
+                            "${widget.totalAmount + 20}",
                             style: TextStyle(
                                 fontSize: 20,
                                 color: Colors.green,
@@ -159,11 +161,37 @@ class _PaymentPageState extends State<PaymentPage> {
                   child: Column(
                     children: [
 
-                      Table(
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          TableRow(
 
-                          )
+                          Text(
+                            "Choose Delivery Time : ",
+                            style: TextStyle(fontSize: 20),
+                          ),
+                    DropdownButton<String>(
+                    value: preferredTime,
+                    icon: const Icon(Icons.arrow_downward),
+                    iconSize: 24,
+                    elevation: 16,
+                    style: const TextStyle(color: Colors.deepPurple),
+                    underline: Container(
+                      height: 2,
+                      color: Colors.deepPurpleAccent,
+                    ),
+                    onChanged: (newValue) {
+                      setState(() {
+                        preferredTime = newValue;
+                      });
+                    },
+                    items: <String>['7 AM', '8 AM', '9 AM', '10 AM', '11 AM', '12 PM', '1 PM', '2 PM', '3 PM', '4 PM', '5 PM', '6 PM', '7 PM', '8 PM', '9 PM']
+                        .map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                  )
                         ],
                       ),
 
@@ -249,8 +277,12 @@ class _PaymentPageState extends State<PaymentPage> {
 
     writeOrderDetailsForUser({
       EcommerceApp.addressID: widget.addressId,
-      EcommerceApp.totalAmount: widget.totalAmount+40,
+      EcommerceApp.totalAmount: widget.totalAmount+20,
       "orderBy": EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID),
+      "prefferedTime" : preferredTime,
+      EcommerceApp.cancellationStatus: "notCancelled",
+      EcommerceApp.userOrderConfirmation: "Not Received",
+      EcommerceApp.orderStatus : "placed",
       EcommerceApp.productID: EcommerceApp.sharedPreferences
           .getStringList(EcommerceApp.userCartList),
       EcommerceApp.paymentDetails: "Cash on Delivery",
@@ -260,8 +292,12 @@ class _PaymentPageState extends State<PaymentPage> {
 
     writeOrderDetailsForAdmin({
       EcommerceApp.addressID: widget.addressId,
-      EcommerceApp.totalAmount: widget.totalAmount+40,
+      EcommerceApp.totalAmount: widget.totalAmount+20,
       "orderBy": EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID),
+      "prefferedTime" : preferredTime,
+      EcommerceApp.orderStatus : "placed",
+      EcommerceApp.cancellationStatus: "notCancelled",
+      EcommerceApp.userOrderConfirmation: "Not Received",
       EcommerceApp.productID: EcommerceApp.sharedPreferences
           .getStringList(EcommerceApp.userCartList),
       EcommerceApp.paymentDetails: "Cash on Delivery",
@@ -270,7 +306,7 @@ class _PaymentPageState extends State<PaymentPage> {
     }).whenComplete(() => {emptyCartNow()});
 
     phonenumbers.forEach((phone) {
-      sendSms(phone, "${widget.model.name} has ordered ${productDescription} at a price ${widget.totalAmount + 40} with Cash on Delivery! contact at ${widget.model.phoneNumber}");
+      sendSms(phone, "${widget.model.name} has ordered ${productDescription} at a price ${widget.totalAmount + 20} with Cash on Delivery! contact at ${widget.model.phoneNumber}");
     });
 
   }
@@ -333,7 +369,7 @@ class _PaymentPageState extends State<PaymentPage> {
 
     var options = {
       'key': 'rzp_test_Y0GRKKJ2grMEYj',
-      'amount': (widget.totalAmount+40) * 100,
+      'amount': (widget.totalAmount+20) * 100,
       'name': widget.model.name,
       'description': productDescription,
       'prefill': {'contact': widget.model.phoneNumber, 'email': 'venkatsrinu601@gmail.com'},
@@ -363,8 +399,12 @@ class _PaymentPageState extends State<PaymentPage> {
 
     writeOrderDetailsForUser({
       EcommerceApp.addressID: widget.addressId,
-      EcommerceApp.totalAmount: widget.totalAmount+40,
+      EcommerceApp.totalAmount: widget.totalAmount+20,
       "orderBy": EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID),
+      "prefferedTime" : preferredTime,
+      EcommerceApp.orderStatus : "placed",
+      EcommerceApp.cancellationStatus: "notCancelled",
+      EcommerceApp.userOrderConfirmation: "Not Received",
       EcommerceApp.productID: EcommerceApp.sharedPreferences
           .getStringList(EcommerceApp.userCartList),
       EcommerceApp.paymentDetails: "Online Payment",
@@ -375,8 +415,12 @@ class _PaymentPageState extends State<PaymentPage> {
 
     writeOrderDetailsForAdmin({
       EcommerceApp.addressID: widget.addressId,
-      EcommerceApp.totalAmount: widget.totalAmount+40,
+      EcommerceApp.totalAmount: widget.totalAmount+20,
       "orderBy": EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID),
+      "prefferedTime" : preferredTime,
+      EcommerceApp.orderStatus : "placed",
+      EcommerceApp.cancellationStatus: "notCancelled",
+      EcommerceApp.userOrderConfirmation: "Not Received",
       EcommerceApp.productID: EcommerceApp.sharedPreferences
           .getStringList(EcommerceApp.userCartList),
       EcommerceApp.paymentDetails: "Online Payment",
@@ -387,7 +431,7 @@ class _PaymentPageState extends State<PaymentPage> {
 
 
     phonenumbers.forEach((phone) {
-      sendSms(phone, "${widget.model.name} has ordered ${productDescription} at a price ${widget.totalAmount + 40} and paid online! contact at ${widget.model.phoneNumber}");
+      sendSms(phone, "${widget.model.name} has ordered ${productDescription} at a price ${widget.totalAmount + 20} and paid online! contact at ${widget.model.phoneNumber}");
     });
 
 

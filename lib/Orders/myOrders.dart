@@ -18,20 +18,20 @@ class _MyOrdersState extends State<MyOrders> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          iconTheme: IconThemeData(color: Colors.white),
+          iconTheme: IconThemeData(color: Colors.black),
           flexibleSpace: Container(
             decoration: new BoxDecoration(
               gradient: new LinearGradient(
-                colors: [Colors.pink, Colors.lightGreenAccent],
+                colors: [Colors.yellow.shade300, Colors.yellow.shade300],
                 begin: const FractionalOffset(0.0, 0.0),
                 end: const FractionalOffset(1.0, 0.0),
-                stops: [0.0,1.0],
+                stops: [0.0, 1.0],
                 tileMode: TileMode.clamp,
               ),
             ),
           ),
           centerTitle: true,
-          title: Text("My Orders", style: TextStyle(color: Colors.white),),
+          title: Text("My Orders", style: TextStyle(color: Colors.black),),
           actions: [
             IconButton(
                 icon: Icon(Icons.arrow_drop_down_circle, color: Colors.white,),
@@ -44,7 +44,7 @@ class _MyOrdersState extends State<MyOrders> {
           stream: EcommerceApp.firestore
             .collection(EcommerceApp.collectionUser)
             .document(EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
-            .collection(EcommerceApp.collectionOrders).snapshots(),
+            .collection(EcommerceApp.collectionOrders).orderBy('orderTime', descending: true).snapshots(),
 
           builder: (c, snapshot){
             return snapshot.hasData
@@ -63,6 +63,8 @@ class _MyOrdersState extends State<MyOrders> {
                               itemCount: snap.data.documents.length,
                               data: snap.data.documents,
                               orderID: snapshot.data.documents[index].documentID,
+                              orderStatus: snapshot.data.documents[index].data['orderStatus'],
+                              cancellationStatus: snapshot.data.documents[index].data['cancellationStatus'],
                             )
                                 : Center(child: circularProgress(),);
                           }

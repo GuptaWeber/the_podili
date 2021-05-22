@@ -199,6 +199,7 @@ class AdminShippingDetails extends StatelessWidget {
                   children: [
                     KeyText(msg: "Name",),
                     Text(model.name),
+
                   ]
               ),
 

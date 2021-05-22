@@ -1,105 +1,64 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_showcase/flutter_showcase.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
-class ShowcaseDeliveryTimeline extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Showcase(
-      title: 'Delivery Timeline',
-      app: _DeliveryTimelineApp(),
-      description:
-      'A simple timeline with few steps to show the current status of '
-          'an order.',
-      template: SimpleTemplate(reverse: false),
-      theme: TemplateThemeData(
-        frameTheme: FrameThemeData(
-          statusBarBrightness: Brightness.dark,
-          frameColor: const Color(0xFF215C3F),
-        ),
-        flutterLogoColor: FlutterLogoColor.original,
-        brightness: Brightness.dark,
-        backgroundColor: const Color(0xFFE9E9E9),
-        titleTextStyle: GoogleFonts.neuton(
-          fontSize: 80,
-          fontWeight: FontWeight.bold,
-          color: const Color(0xFF2C7B54),
-        ),
-        descriptionTextStyle: GoogleFonts.yantramanav(
-          fontSize: 24,
-          height: 1.2,
-          color: const Color(0xFF2C7B54),
-        ),
-        buttonTextStyle: const TextStyle(
-          color: Colors.white,
-          fontWeight: FontWeight.bold,
-          letterSpacing: 2,
-        ),
-        buttonIconTheme: const IconThemeData(color: Colors.white),
-        buttonTheme: ButtonThemeData(
-          buttonColor: const Color(0xFF2C7B54),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(50),
-          ),
-          padding: const EdgeInsets.all(16),
-        ),
-      ),
-      links: [
-        LinkData.github('https://github.com/JHBitencourt/timeline_tile'),
-      ],
-      logoLink: LinkData(
-        icon: Image.asset(
-          'assets/built_by_jhb_black.png',
-          fit: BoxFit.fitHeight,
-        ),
-        url: 'https://github.com/JHBitencourt',
-      ),
-    );
-  }
-}
+// class DeliveryTimeline extends StatefulWidget {
+//   @override
+//   _DeliveryTimelineState createState() => _DeliveryTimelineState();
+// }
+//
+// class _DeliveryTimelineState extends State<DeliveryTimeline> {
+//
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       color: const Color(0xFF379A69),
+//       child: Theme(
+//         data: Theme.of(context).copyWith(
+//           accentColor: const Color(0xFF27AA69).withOpacity(0.2),
+//         ),
+//         child: SafeArea(
+//           child: Scaffold(
+//             appBar: AppBar(
+//               iconTheme: IconThemeData(color: Colors.white),
+//               flexibleSpace: Container(
+//                 decoration: new BoxDecoration(
+//                   gradient: new LinearGradient(
+//                     colors: [Colors.pink, Colors.lightGreenAccent],
+//                     begin: const FractionalOffset(0.0, 0.0),
+//                     end: const FractionalOffset(1.0, 0.0),
+//                     stops: [0.0,1.0],
+//                     tileMode: TileMode.clamp,
+//                   ),
+//                 ),
+//               ),
+//               centerTitle: true,
+//               title: Text("Tracking Details", style: TextStyle(color: Colors.white),),
+//             ),
+//             backgroundColor: Colors.white,
+//             body: Column(
+//               children: <Widget>[
+//                 _Header(),
+//                 Expanded(child: _TimelineDelivery()),
+//               ],
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
 
-class _DeliveryTimelineApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Delivery TimelineTile',
-      builder: Frame.builder,
-      home: _DeliveryTimeline(),
-    );
-  }
-}
+class TimelineDelivery extends StatelessWidget {
+  final String orderStatus;
 
-class _DeliveryTimeline extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: const Color(0xFF379A69),
-      child: Theme(
-        data: Theme.of(context).copyWith(
-          accentColor: const Color(0xFF27AA69).withOpacity(0.2),
-        ),
-        child: SafeArea(
-          child: Scaffold(
-            appBar: _AppBar(),
-            backgroundColor: Colors.white,
-            body: Column(
-              children: <Widget>[
-                _Header(),
-                Expanded(child: _TimelineDelivery()),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
+  TimelineDelivery({Key key, this.orderStatus}) : super(key: key);
 
-class _TimelineDelivery extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+     List<Color> colors = shippingColors(orderStatus);
+
     return Center(
       child: ListView(
         shrinkWrap: true,
@@ -108,9 +67,9 @@ class _TimelineDelivery extends StatelessWidget {
             alignment: TimelineAlign.manual,
             lineXY: 0.1,
             isFirst: true,
-            indicatorStyle: const IndicatorStyle(
+            indicatorStyle: IndicatorStyle(
               width: 20,
-              color: Color(0xFF27AA69),
+              color: colors[0],
               padding: EdgeInsets.all(6),
             ),
             endChild: const _RightChild(
@@ -118,16 +77,16 @@ class _TimelineDelivery extends StatelessWidget {
               title: 'Order Placed',
               message: 'We have received your order.',
             ),
-            beforeLineStyle: const LineStyle(
-              color: Color(0xFF27AA69),
+            beforeLineStyle: LineStyle(
+              color: colors[1],
             ),
           ),
           TimelineTile(
             alignment: TimelineAlign.manual,
             lineXY: 0.1,
-            indicatorStyle: const IndicatorStyle(
+            indicatorStyle: IndicatorStyle(
               width: 20,
-              color: Color(0xFF27AA69),
+              color: colors[2],
               padding: EdgeInsets.all(6),
             ),
             endChild: const _RightChild(
@@ -135,52 +94,153 @@ class _TimelineDelivery extends StatelessWidget {
               title: 'Order Confirmed',
               message: 'Your order has been confirmed.',
             ),
-            beforeLineStyle: const LineStyle(
-              color: Color(0xFF27AA69),
+            beforeLineStyle: LineStyle(
+              color: colors[3],
             ),
           ),
           TimelineTile(
             alignment: TimelineAlign.manual,
             lineXY: 0.1,
-            indicatorStyle: const IndicatorStyle(
+            indicatorStyle: IndicatorStyle(
               width: 20,
-              color: Color(0xFF2B619C),
+              color: colors[4],
               padding: EdgeInsets.all(6),
             ),
-            endChild: const _RightChild(
+            endChild: _RightChild(
               asset: 'assets/delivery/order_processed.png',
-              title: 'Order Processed',
-              message: 'We are preparing your order.',
+              title: 'Order Packed',
+              message: 'Your order has been Packed.',
             ),
-            beforeLineStyle: const LineStyle(
-              color: Color(0xFF27AA69),
+            beforeLineStyle: LineStyle(
+              color: colors[5],
             ),
-            afterLineStyle: const LineStyle(
-              color: Color(0xFFDADADA),
+          ),
+          TimelineTile(
+            alignment: TimelineAlign.manual,
+            lineXY: 0.1,
+            indicatorStyle: IndicatorStyle(
+              width: 20,
+              color: colors[6],
+              padding: EdgeInsets.all(6),
+            ),
+            endChild: _RightChild(
+              asset: 'assets/delivery/order_shipped.png',
+              title: 'Order Shipped',
+              message: 'Your Order has been Shipped.',
+            ),
+            beforeLineStyle: LineStyle(
+              color: colors[7],
+            ),
+            afterLineStyle: LineStyle(
+              color: colors[8],
             ),
           ),
           TimelineTile(
             alignment: TimelineAlign.manual,
             lineXY: 0.1,
             isLast: true,
-            indicatorStyle: const IndicatorStyle(
+            indicatorStyle: IndicatorStyle(
               width: 20,
-              color: Color(0xFFDADADA),
+              color: colors[9],
               padding: EdgeInsets.all(6),
             ),
-            endChild: const _RightChild(
-              disabled: true,
+            endChild: _RightChild(
               asset: 'assets/delivery/ready_to_pickup.png',
-              title: 'Ready to Pickup',
-              message: 'Your order is ready for pickup.',
+              title: 'Order Delivered',
+              message: 'Your order is delivered.',
             ),
-            beforeLineStyle: const LineStyle(
-              color: Color(0xFFDADADA),
+            beforeLineStyle: LineStyle(
+              color: colors[10],
             ),
           ),
         ],
       ),
     );
+  }
+
+  List<Color> shippingColors(String orderStatus) {
+    String status = orderStatus;
+    List<Color> orderColors = [];
+
+    switch (status.toLowerCase()) {
+      case 'placed':
+        orderColors = [
+          Color(0xFF27AA69),
+          Color(0xFF27AA69),
+          Color(0xFF2B619C),
+          Color(0xFFDADADA),
+          Color(0xFFDADADA),
+          Color(0xFFDADADA),
+          Color(0xFFDADADA),
+          Color(0xFFDADADA),
+          Color(0xFFDADADA),
+          Color(0xFFDADADA),
+          Color(0xFFDADADA),
+        ];
+        break;
+      case 'confirmed':
+        orderColors = [
+          Color(0xFF27AA69),
+          Color(0xFF27AA69),
+          Color(0xFF27AA69),
+          Color(0xFF27AA69),
+          Color(0xFF2B619C),
+          Color(0xFFDADADA),
+          Color(0xFFDADADA),
+          Color(0xFFDADADA),
+          Color(0xFFDADADA),
+          Color(0xFFDADADA),
+          Color(0xFFDADADA),
+        ];
+        break;
+      case 'packed':
+        orderColors = [
+          Color(0xFF27AA69),
+          Color(0xFF27AA69),
+          Color(0xFF27AA69),
+          Color(0xFF27AA69),
+          Color(0xFF27AA69),
+          Color(0xFF27AA69),
+          Color(0xFF2B619C),
+          Color(0xFFDADADA),
+          Color(0xFFDADADA),
+          Color(0xFFDADADA),
+          Color(0xFFDADADA),
+        ];
+        break;
+      case 'shipped':
+        orderColors = [
+          Color(0xFF27AA69),
+          Color(0xFF27AA69),
+          Color(0xFF27AA69),
+          Color(0xFF27AA69),
+          Color(0xFF27AA69),
+          Color(0xFF27AA69),
+          Color(0xFF27AA69),
+          Color(0xFF27AA69),
+          Color(0xFF2B619C),
+          Color(0xFFDADADA),
+          Color(0xFFDADADA),
+        ];
+        break;
+      case 'delivered':
+        orderColors = [
+          Color(0xFF27AA69),
+          Color(0xFF27AA69),
+          Color(0xFF27AA69),
+          Color(0xFF27AA69),
+          Color(0xFF27AA69),
+          Color(0xFF27AA69),
+          Color(0xFF27AA69),
+          Color(0xFF27AA69),
+          Color(0xFF27AA69),
+          Color(0xFF27AA69),
+          Color(0xFF27AA69),
+        ];
+        break;
+    }
+
+    return orderColors;
   }
 }
 
@@ -205,10 +265,10 @@ class _RightChild extends StatelessWidget {
       child: Row(
         children: <Widget>[
           Opacity(
-            child: Image.asset(asset, height: 50),
+            child: Image.asset(asset, height: 35),
             opacity: disabled ? 0.5 : 1,
           ),
-          const SizedBox(width: 16),
+          const SizedBox(width: 14),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
@@ -219,7 +279,7 @@ class _RightChild extends StatelessWidget {
                   color: disabled
                       ? const Color(0xFFBABABA)
                       : const Color(0xFF636564),
-                  fontSize: 18,
+                  fontSize: 16,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -230,7 +290,7 @@ class _RightChild extends StatelessWidget {
                   color: disabled
                       ? const Color(0xFFD5D5D5)
                       : const Color(0xFF636564),
-                  fontSize: 16,
+                  fontSize: 14,
                 ),
               ),
             ],
@@ -239,102 +299,4 @@ class _RightChild extends StatelessWidget {
       ),
     );
   }
-}
-
-class _Header extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        color: Color(0xFFF9F9F9),
-        border: Border(
-          bottom: BorderSide(
-            color: Color(0xFFE9E9E9),
-            width: 3,
-          ),
-        ),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Row(
-          children: <Widget>[
-            Expanded(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Text(
-                    'ESTIMATED TIME',
-                    style: GoogleFonts.yantramanav(
-                      color: const Color(0xFFA2A2A2),
-                      fontSize: 16,
-                    ),
-                  ),
-                  Text(
-                    '30 minutes',
-                    style: GoogleFonts.yantramanav(
-                      color: const Color(0xFF636564),
-                      fontSize: 16,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Text(
-                    'ORDER NUMBER',
-                    style: GoogleFonts.yantramanav(
-                      color: const Color(0xFFA2A2A2),
-                      fontSize: 16,
-                    ),
-                  ),
-                  Text(
-                    '#2482011',
-                    style: GoogleFonts.yantramanav(
-                      color: const Color(0xFF636564),
-                      fontSize: 16,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _AppBar extends StatelessWidget implements PreferredSizeWidget {
-  @override
-  Widget build(BuildContext context) {
-    return AppBar(
-      backgroundColor: const Color(0xFF27AA69),
-      leading: const Icon(Icons.menu),
-      actions: <Widget>[
-        Center(
-          child: Padding(
-            padding: const EdgeInsets.only(right: 16),
-            child: Text(
-              'CANCEL',
-              style: GoogleFonts.neuton(
-                color: Colors.white,
-                fontSize: 16,
-              ),
-            ),
-          ),
-        ),
-      ],
-      title: Text(
-        'Track Order',
-        style: GoogleFonts.neuton(
-            color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
-      ),
-    );
-  }
-
-  @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
