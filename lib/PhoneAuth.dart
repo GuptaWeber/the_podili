@@ -38,7 +38,7 @@ class _PhoneAuthState extends State<PhoneAuth> {
     this._firebaseUser = await FirebaseAuth.instance.currentUser();
     setState(() {
       _status =
-      (_firebaseUser == null) ? 'Not Logged In\n' : 'Already LoggedIn\n';
+          (_firebaseUser == null) ? 'Not Logged In\n' : 'Already LoggedIn\n';
     });
   }
 
@@ -86,13 +86,17 @@ class _PhoneAuthState extends State<PhoneAuth> {
   }
 
   checkUser(FirebaseUser fUser) {
+    int f = 0;
     Firestore.instance.collection("users").getDocuments().then((snapshot) {
       snapshot.documents.forEach((result) {
-        if (result.data["phonenumber"] != fUser.phoneNumber) {
-          saveUserInfoToFireStore(_firebaseUser);
+        if (result.data["phonenumber"] == fUser.phoneNumber) {
+          f = 1;
         }
       });
     });
+    if (f == 0) {
+      saveUserInfoToFireStore(_firebaseUser);
+    }
   }
 
   Future saveUserInfoToFireStore(FirebaseUser fUser) async {
