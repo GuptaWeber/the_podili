@@ -20,11 +20,13 @@ class _PhoneAuthState extends State<PhoneAuth> {
   AuthCredential _phoneAuthCredential;
   String _verificationId;
   int _code;
+  int f;
 
   @override
   void initState() {
     super.initState();
     _getFirebaseUser();
+    f = 0;
   }
 
   void _handleError(e) {
@@ -86,23 +88,33 @@ class _PhoneAuthState extends State<PhoneAuth> {
   }
 
   checkUser(FirebaseUser fUser) {
-    int f = 0;
-    Firestore.instance.collection("users").getDocuments().then((snapshot) {
-      snapshot.documents.forEach((result) {
-        if (result.data["phonenumber"] == fUser.phoneNumber) {
-          f = 1;
-        }
-      });
+    Firestore.instance
+        .collection("users")
+        .where("phonenumber", isEqualTo: fUser.phoneNumber)
+        .getDocuments()
+        .then((snapshot) {
+      // snapshot.documents.forEach((result) {
+      //   if (result.data["phonenumber"] == fUser.phoneNumber) {
+      //     print(result.data["phonenumber"]);
+      //     print(fUser.phoneNumber);
+
+      //   }
+      // });
+      if (snapshot.documents.isEmpty) {
+        saveUserInfoToFireStore(fUser);
+      }
+      if (snapshot.documents.isNotEmpty) {
+        saveUserInfoToSharedPreferences(fUser);
+      }
     });
-    if (f == 0) {
-      saveUserInfoToFireStore(_firebaseUser);
-    }
   }
 
   Future saveUserInfoToFireStore(FirebaseUser fUser) async {
     Firestore.instance.collection("users").document(fUser.uid).setData({
       "uid": fUser.uid,
       "phonenumber": fUser.phoneNumber,
+      "isAdmin": "0",
+
       // "name": _nameTextEditingController.text.trim(),
       // "url": userImageUrl,
       EcommerceApp.userCartList: ["garbageValue"]
@@ -111,6 +123,29 @@ class _PhoneAuthState extends State<PhoneAuth> {
     await EcommerceApp.sharedPreferences.setString("uid", fUser.uid);
     await EcommerceApp.sharedPreferences
         .setString(EcommerceApp.phoneNumber, fUser.phoneNumber);
+
+    await EcommerceApp.sharedPreferences.setString("isAdmin", "0");
+    // await EcommerceApp.sharedPreferences.setString(
+    //     EcommerceApp.userName, _nameTextEditingController.text.trim());
+    // await EcommerceApp.sharedPreferences
+    //     .setString(EcommerceApp.userAvatarUrl, userImageUrl);
+    await EcommerceApp.sharedPreferences
+        .setStringList(EcommerceApp.userCartList, ["garbageValue"]);
+  }
+
+  Future saveUserInfoToSharedPreferences(FirebaseUser fUser) async {
+    // print(f);
+    // Firestore.instance.collection("users").document(fUser.uid).get()
+    DocumentSnapshot variable =
+        await Firestore.instance.collection('users').document(fUser.uid).get();
+
+    await EcommerceApp.sharedPreferences.setString("uid", fUser.uid);
+    await EcommerceApp.sharedPreferences
+        .setString(EcommerceApp.phoneNumber, fUser.phoneNumber);
+
+    await EcommerceApp.sharedPreferences
+        .setString("isAdmin", variable["isAdmin"]);
+
     // await EcommerceApp.sharedPreferences.setString(
     //     EcommerceApp.userName, _nameTextEditingController.text.trim());
     // await EcommerceApp.sharedPreferences
@@ -137,6 +172,8 @@ class _PhoneAuthState extends State<PhoneAuth> {
     /// NOTE: Either append your phone number country code or add in the code itself
     /// Since I'm in India we use "+91 " as prefix `phoneNumber`
     String phoneNumber = "+91 " + _phoneNumberController.text.toString().trim();
+
+    String isAdmin = "0";
     // print(phoneNumber);
 
     /// The below functions are the callbacks, separated so as to make code more redable
