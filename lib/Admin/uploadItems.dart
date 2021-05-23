@@ -1,7 +1,9 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_shop/Admin/adminShiftOrders.dart';
+import 'package:e_shop/Widgets/customAppBar.dart';
 import 'package:e_shop/Widgets/loadingWidget.dart';
+import 'package:e_shop/Widgets/myDrawer.dart';
 import 'package:e_shop/main.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -38,44 +40,8 @@ class _UploadPageState extends State<UploadPage>
 
   displayAdminHomeScreen() {
     return Scaffold(
-      appBar: AppBar(
-        flexibleSpace: Container(
-          decoration: new BoxDecoration(
-            gradient: new LinearGradient(
-              colors: [Colors.pink, Colors.lightGreenAccent],
-              begin: const FractionalOffset(0.0, 0.0),
-              end: const FractionalOffset(1.0, 0.0),
-              stops: [0.0, 1.0],
-              tileMode: TileMode.clamp,
-            ),
-          ),
-        ),
-        leading: IconButton(
-          icon: Icon(
-            Icons.border_color,
-            color: Colors.white,
-          ),
-          onPressed: () {
-            Route route = MaterialPageRoute(builder: (c) => AdminShiftOrders());
-            Navigator.pushReplacement(context, route);
-          },
-        ),
-        actions: [
-          FlatButton(
-            onPressed: () {
-              Route route = MaterialPageRoute(builder: (c) => SplashScreen());
-              Navigator.pushReplacement(context, route);
-            },
-            child: Text(
-              "Logout",
-              style: TextStyle(
-                  color: Colors.pink,
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.bold),
-            ),
-          )
-        ],
-      ),
+      appBar: MyAppBar(),
+      drawer: MyDrawer(),
       body: getAdminHomeScreenBody(),
     );
   }
@@ -309,7 +275,6 @@ class _UploadPageState extends State<UploadPage>
                 'Ice Creams',
                 'Medicines',
                 'Cool Drinks',
-                'Medicines'
               ].map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,

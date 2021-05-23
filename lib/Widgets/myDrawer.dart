@@ -1,5 +1,8 @@
+import 'package:e_shop/Admin/addNewItem.dart';
 import 'package:e_shop/Admin/adminDeliveredOrders.dart';
 import 'package:e_shop/Admin/adminShiftOrders.dart';
+import 'package:e_shop/Admin/displayItems.dart';
+import 'package:e_shop/Admin/uploadItems.dart';
 import 'package:e_shop/Authentication/authenication.dart';
 import 'package:e_shop/Config/config.dart';
 import 'package:e_shop/Address/addAddress.dart';
@@ -182,7 +185,7 @@ class MyDrawer extends StatelessWidget {
                         ),
                         onTap: () {
                           Route route =
-                          MaterialPageRoute(builder: (c) => AddAddress());
+                          MaterialPageRoute(builder: (c) => AddNewItem());
                           Navigator.push(context, route);
                         },
                       ),
@@ -201,7 +204,7 @@ class MyDrawer extends StatelessWidget {
                         ),
                         onTap: () {
                           Route route =
-                          MaterialPageRoute(builder: (c) => AddAddress());
+                          MaterialPageRoute(builder: (c) => DisplayItems());
                           Navigator.push(context, route);
                         },
                       ),
@@ -262,7 +265,7 @@ class MyDrawer extends StatelessWidget {
                     _logout();
                     Route route =
                         MaterialPageRoute(builder: (_) => PhoneAuth());
-                    Navigator.pushReplacement(context, route);
+                    Navigator.pushAndRemoveUntil(context, route, (route) => false);
                     // EcommerceApp.auth.signOut().then((c) {
                     //   Route route =
                     //       MaterialPageRoute(builder: (c) => AuthenticScreen());
