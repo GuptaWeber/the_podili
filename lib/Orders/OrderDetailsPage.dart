@@ -21,6 +21,7 @@ class OrderDetails extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(orderID + "WEBERR R R R R ");
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
@@ -36,6 +37,7 @@ class OrderDetails extends StatelessWidget {
               Map dataMap;
               if (snapshot.hasData) {
                 dataMap = snapshot.data.data;
+                print(dataMap);
               }
               return snapshot.hasData
                   ? Container(

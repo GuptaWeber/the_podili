@@ -1,114 +1,328 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_shop/Address/address.dart';
-import 'package:e_shop/Admin/uploadItems.dart';
+import 'package:e_shop/Admin/adminDeliveredOrders.dart';
+import 'package:e_shop/Admin/adminShiftOrders.dart';
 import 'package:e_shop/Config/config.dart';
+import 'package:e_shop/Orders/delivery_timeline.dart';
+import 'package:e_shop/Orders/myOrders.dart';
 import 'package:e_shop/Orders/simpleOrderCart.dart';
+import 'package:e_shop/Store/storehome.dart';
 import 'package:e_shop/Widgets/loadingWidget.dart';
-import 'package:e_shop/Widgets/orderCard.dart';
 import 'package:e_shop/Models/address.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 
-String getOrderId="";
-class AdminOrderDetails extends StatelessWidget {
-  final String orderID;
-  final String addressID;
-  final String orderBy;
+String getOrderId = "";
 
-  AdminOrderDetails({Key key, this.orderID, this.orderBy, this.addressID}) : super(key: key);
+class AdminOrderDetails extends StatefulWidget {
+  final String orderID;
+  final String orderBy;
+  final String orderStatus;
+
+  AdminOrderDetails({Key key, this.orderID, this.orderBy, this.orderStatus}) : super(key: key);
+
+  @override
+  _AdminOrderDetailsState createState() => _AdminOrderDetailsState();
+}
+
+class _AdminOrderDetailsState extends State<AdminOrderDetails> {
+  String _orderStatus;
+
+  @override
+  void initState() {
+    _orderStatus = widget.orderStatus;
+  }
 
   @override
   Widget build(BuildContext context) {
-    getOrderId = orderID;
+
     return SafeArea(
       child: Scaffold(
         body: SingleChildScrollView(
           child: FutureBuilder<DocumentSnapshot>(
+
             future: EcommerceApp.firestore
+                .collection(EcommerceApp.collectionUser)
+                .document(widget.orderBy)
                 .collection(EcommerceApp.collectionOrders)
-                .document(getOrderId)
+                .document(widget.orderID)
                 .get(),
-            builder: (c,snapshot){
+            builder: (c, snapshot) {
               Map dataMap;
-              if(snapshot.hasData){
+              if (snapshot.hasData) {
                 dataMap = snapshot.data.data;
+                print(snapshot.data['isSuccess']);
+              }else{
+                print(widget.orderBy);
+                print(widget.orderID);
+                print(snapshot.hasData);
               }
               return snapshot.hasData
                   ? Container(
                 child: Column(
                   children: [
-                    AdminStatusBanner(status: dataMap[EcommerceApp.isSuccess],),
-                    SizedBox(height: 10.0,),
+                    StatusBanner(
+                      status: dataMap[EcommerceApp.isSuccess],
+                    ),
+                    SizedBox(
+                      height: 10.0,
+                    ),
                     Padding(
                       padding: EdgeInsets.all(4.0),
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          " Order Total : ₹ "+ dataMap[EcommerceApp.totalAmount].toString(),
-                          style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold,),
+                          " Order Total : ₹ " +
+                              dataMap[EcommerceApp.totalAmount]
+                                  .toString(),
+                          style: TextStyle(
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
                     Padding(
                       padding: EdgeInsets.all(4.0),
-                      child: Text("Order ID: " + getOrderId),
+                      child: Text("Order ID: " + widget.orderID),
                     ),
                     Padding(
                       padding: EdgeInsets.all(4.0),
                       child: Text(
-                        "Ordered at: " + DateFormat("dd MMMM, yyyy - hh:mm aa")
-                            .format(DateTime.fromMicrosecondsSinceEpoch(int.parse(dataMap["orderTime"]))),
-                        style: TextStyle(color: Colors.grey, fontSize: 16.0),
+                        "Ordered at: " +
+                            DateFormat("dd MMMM, yyyy - hh:mm aa").format(
+                                DateTime.fromMicrosecondsSinceEpoch(
+                                    int.parse(dataMap["orderTime"]) *
+                                        1000)),
+                        style:
+                        TextStyle(color: Colors.grey, fontSize: 16.0),
                       ),
                     ),
-                    Divider(height: 2.0,),
+                    Padding(
+                      padding: EdgeInsets.all(4),
+                      child: Text(
+                        "Preffered Time to Deliver : ${dataMap['prefferedTime']}",
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(4),
+                      child: Text(
+                        "Order Type : ${dataMap['paymentDetails']}",
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,  color: Colors.green),
+                      ),
+                    ),
+                    dataMap['paymentDetails'] == "Online Payment"? Padding(
+                      padding: EdgeInsets.all(4),
+                      child: Text(
+                        "Payment ID : ${dataMap['paymentId']}",
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, ),
+                      ),
+                    ) : Container(),
+                    SizedBox(
+                      height: 25.0,
+                    ),
+                    dataMap['cancellationStatus'] == "notCancelled"? Card(
+                      margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                      child: Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Column(
+                          children: [
+                            Text("UPDATE TRACKING DETAILS", style: TextStyle(fontSize: 24),),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "Order Placed : ",
+                                  style: TextStyle(fontSize: 20),
+                                ),
+                                Radio<String>(
+                                  value: "placed",
+                                  groupValue: _orderStatus,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _orderStatus = value;
+                                    });
+                                    updateOrderStatus(context, _orderStatus);
+                                  },
+                                ),
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "Order Confirmed : ",
+                                  style: TextStyle(fontSize: 20),
+                                ),
+                                Radio<String>(
+                                  value: 'confirmed',
+                                  groupValue: _orderStatus,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _orderStatus = value;
+                                    });
+                                    updateOrderStatus(context, _orderStatus);
+                                  },
+                                ),
+                              ],
+                            ),
+
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "Order Packed : ",
+                                  style: TextStyle(fontSize: 20),
+                                ),
+                                Radio<String>(
+                                  value: 'packed',
+                                  groupValue: _orderStatus,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _orderStatus = value;
+                                    });
+                                    updateOrderStatus(context, _orderStatus);
+                                  },
+                                ),
+                              ],
+                            ),
+
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "Order Shipped : ",
+                                  style: TextStyle(fontSize: 20),
+                                ),
+                                Radio<String>(
+                                  value: 'shipped',
+                                  groupValue: _orderStatus,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _orderStatus = value;
+                                    });
+                                    updateOrderStatus(context, _orderStatus);
+                                  },
+                                ),
+                              ],
+                            ),
+
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "Order Delivered : ",
+                                  style: TextStyle(fontSize: 20),
+                                ),
+                                Radio<String>(
+                                  value: 'delivered',
+                                  groupValue: _orderStatus,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _orderStatus = value;
+                                    });
+                                    updateOrderStatus(context, _orderStatus);
+                                  },
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      )
+                    ) : Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Center(
+                        child: Container( margin:EdgeInsets.all(10) ,child: Text("Order Cancelled", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white, backgroundColor: Colors.red),)),
+                      ),
+                    ),
+                    Divider(
+                      height: 2.0,
+                    ),
                     FutureBuilder<QuerySnapshot>(
                       future: EcommerceApp.firestore
                           .collection("items")
-                          .where("shortInfo", whereIn: dataMap[EcommerceApp.productID])
+                          .where("shortInfo",
+                          whereIn: dataMap[EcommerceApp.productID])
                           .getDocuments(),
-                      builder: (c, dataSnapshot){
+                      builder: (c, dataSnapshot) {
                         return dataSnapshot.hasData
                             ? SimpleOrderCard(
-                          itemCount: dataSnapshot.data.documents.length,
+                          itemCount:
+                          dataSnapshot.data.documents.length,
                           data: dataSnapshot.data.documents,
                         )
-                            : Center(child: circularProgress(),);
+                            : Center(
+                          child: circularProgress(),
+                        );
                       },
                     ),
-                    Divider(height: 2.0,),
+                    Divider(
+                      height: 2.0,
+                    ),
                     FutureBuilder<DocumentSnapshot>(
                       future: EcommerceApp.firestore
                           .collection(EcommerceApp.collectionUser)
-                          .document(orderBy)
+                          .document(widget.orderBy)
                           .collection(EcommerceApp.subCollectionAddress)
-                          .document(addressID)
+                          .document(dataMap[EcommerceApp.addressID])
                           .get(),
-                      builder: (c, snap){
+                      builder: (c, snap) {
                         return snap.hasData
-                            ? AdminShippingDetails(model: AddressModel.fromJson(snap.data.data),)
-                            : Center(child: circularProgress(),);
+                            ? ShippingDetails(
+                            model:
+                            AddressModel.fromJson(snap.data.data),
+                            orderId: widget.orderID,
+                            orderTime: dataMap["orderTime"],
+                            cancellationStatus : dataMap['cancellationStatus']
+                        )
+                            : Center(
+                          child: circularProgress(),
+                        );
                       },
                     )
                   ],
                 ),
               )
-                  : Center(child: circularProgress(),);
+                  : Center(
+                child: circularProgress(),
+              );
             },
           ),
         ),
       ),
     );
   }
+
+  updateOrderStatus(BuildContext context, String status){
+
+    EcommerceApp.firestore
+        .collection(EcommerceApp.collectionUser)
+        .document(widget.orderBy)
+        .collection(EcommerceApp.collectionOrders)
+        .document(widget.orderID)
+        .updateData({"orderStatus": status}).whenComplete(() {
+      getOrderId = "";
+
+      Route route = MaterialPageRoute(builder: (c) => AdminShiftOrders());
+      Navigator.pushAndRemoveUntil(context, route,(route) => false);
+
+      Fluttertoast.showToast(msg: "Order Status Updated Successfully!");
+
+    });
+
+
+
+  }
+
 }
 
-class AdminStatusBanner extends StatelessWidget {
-
+class StatusBanner extends StatelessWidget {
   final bool status;
 
-  AdminStatusBanner({Key key, this.status}) : super(key: key);
+  StatusBanner({Key key, this.status}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -124,7 +338,7 @@ class AdminStatusBanner extends StatelessWidget {
           colors: [Colors.pink, Colors.lightGreenAccent],
           begin: const FractionalOffset(0.0, 0.0),
           end: const FractionalOffset(1.0, 0.0),
-          stops: [0.0,1.0],
+          stops: [0.0, 1.0],
           tileMode: TileMode.clamp,
         ),
       ),
@@ -133,8 +347,8 @@ class AdminStatusBanner extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           GestureDetector(
-            onTap: (){
-              SystemNavigator.pop();
+            onTap: () {
+              // SystemNavigator.pop();
             },
             child: Container(
               child: Icon(
@@ -143,12 +357,16 @@ class AdminStatusBanner extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(width: 20.0,),
+          SizedBox(
+            width: 20.0,
+          ),
           Text(
-            "Order Shipped "+ msg,
+            "Order Placed " + msg,
             style: TextStyle(color: Colors.white),
           ),
-          SizedBox(width: 5.0,),
+          SizedBox(
+            width: 5.0,
+          ),
           CircleAvatar(
             radius: 8.0,
             backgroundColor: Colors.grey,
@@ -168,11 +386,21 @@ class AdminStatusBanner extends StatelessWidget {
   }
 }
 
+class PaymentDetailsCard extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
 
-class AdminShippingDetails extends StatelessWidget {
-
+class ShippingDetails extends StatelessWidget {
   final AddressModel model;
-  AdminShippingDetails({Key key, this.model}) : super(key: key);
+  final String orderId;
+  final String orderTime;
+  final String cancellationStatus;
+
+  ShippingDetails({Key key, this.model, this.orderId, this.orderTime, this.cancellationStatus})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -181,113 +409,180 @@ class AdminShippingDetails extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: 20.0,),
+        SizedBox(
+          height: 20.0,
+        ),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 90.0, vertical: 5.0),
+          padding: EdgeInsets.symmetric(horizontal: 40.0, vertical: 5.0),
           child: Text(
             "Shipment Details :",
-            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold,),
+            style: TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
         Container(
-          padding: EdgeInsets.symmetric(horizontal: 90.0, vertical: 5.0),
+          padding: EdgeInsets.symmetric(horizontal: 40.0, vertical: 5.0),
           width: screenWidth,
           child: Table(
             children: [
-
-              TableRow(
-                  children: [
-                    KeyText(msg: "Name",),
-                    Text(model.name),
-
-                  ]
-              ),
-
-              TableRow(
-                  children: [
-                    KeyText(msg: "Phone Number",),
-                    Text(model.phoneNumber),
-                  ]
-              ),
-
-              TableRow(
-                  children: [
-                    KeyText(msg: "Flat Number",),
-                    Text(model.flatNumber),
-                  ]
-              ),
-
-              TableRow(
-                  children: [
-                    KeyText(msg: "State",),
-                    Text(model.state),
-                  ]
-              ),
-
-              TableRow(
-                  children: [
-                    KeyText(msg: "City",),
-                    Text(model.city),
-                  ]
-              ),
-
-              TableRow(
-                  children: [
-                    KeyText(msg: "Pin Code",),
-                    Text(model.pincode),
-                  ]
-              ),
-
+              TableRow(children: [
+                KeyText(
+                  msg: "Name",
+                ),
+                Text(model.name),
+              ]),
+              TableRow(children: [
+                KeyText(
+                  msg: "Phone Number",
+                ),
+                Text(model.phoneNumber),
+              ]),
+              TableRow(children: [
+                KeyText(
+                  msg: "Flat Number",
+                ),
+                Text(model.flatNumber),
+              ]),
+              TableRow(children: [
+                KeyText(
+                  msg: "State",
+                ),
+                Text(model.state),
+              ]),
+              TableRow(children: [
+                KeyText(
+                  msg: "City",
+                ),
+                Text(model.city),
+              ]),
+              TableRow(children: [
+                KeyText(
+                  msg: "Pin Code",
+                ),
+                Text(model.pincode),
+              ]),
             ],
           ),
         ),
-
-        Padding(
+        cancellationStatus == 'notCancelled' ?  Padding(
           padding: EdgeInsets.all(10.0),
-          child: Center(
-            child: InkWell(
-              onTap: (){
-                confirmParcelShifted(context, getOrderId);
-              },
-              child: Container(
-                decoration: new BoxDecoration(
-                  gradient: new LinearGradient(
-                    colors: [Colors.pink, Colors.lightGreenAccent],
-                    begin: const FractionalOffset(0.0, 0.0),
-                    end: const FractionalOffset(1.0, 0.0),
-                    stops: [0.0,1.0],
-                    tileMode: TileMode.clamp,
-                  ),
-                ),
-                width: MediaQuery.of(context).size.width - 40.0,
-                height: 50.0,
-                child: Center(
-                  child: Text(
-                    "Confirmed || Parcel Shipped",
-                    style: TextStyle(color: Colors.white, fontSize: 15.0),
-                  ),
+          child: Column(
+            children: [
+              Center(
+                child: InkWell(
+                  onTap: () {
+                    confirmAdminOrderDelivered(context, orderId);
+                  },
+                  child: cancellationStatus == 'notCancelled' ? Container(
+                    decoration: new BoxDecoration(
+                      gradient: new LinearGradient(
+                        colors: [Colors.pink, Colors.lightGreenAccent],
+                        begin: const FractionalOffset(0.0, 0.0),
+                        end: const FractionalOffset(1.0, 0.0),
+                        stops: [0.0, 1.0],
+                        tileMode: TileMode.clamp,
+                      ),
+                    ),
+                    width: MediaQuery.of(context).size.width - 40.0,
+                    height: 50.0,
+                    child: Center(
+                      child: Text(
+                        "Confirmed || Items Delivered",
+                        style: TextStyle(color: Colors.white, fontSize: 15.0),
+                      ),
+                    ),
+                  ) : Text("Order Cancelled", style: TextStyle(fontSize: 20, color: Colors.red),),
                 ),
               ),
-            ),
+              SizedBox(
+                height: 20,
+              ),
+              getMinutesfromOrderTime(int.parse(orderTime),
+                  DateTime.now().millisecondsSinceEpoch)
+                  ? ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  onPrimary: Colors.black87,
+                  primary: Colors.redAccent,
+                  minimumSize:
+                  Size(MediaQuery.of(context).size.width - 40.0, 50),
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(2)),
+                  ),
+                ),
+                onPressed: () {
+                  cancelOrder(context, orderId,int.parse(orderTime));
+                },
+                child: Text(
+                  'Cancel Order',
+                  style: TextStyle(color: Colors.white, fontSize: 15),
+                ),
+              )
+                  : Container(),
+            ],
           ),
-        )
+        ) : Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Center(
+            child: Container( margin:EdgeInsets.all(10) ,child: Text("Order Cancelled", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white, backgroundColor: Colors.red),)),
+          ),
+        ),
       ],
     );
   }
 
-  confirmParcelShifted(BuildContext context, String mOrderId){
+  bool getMinutesfromOrderTime(int orderTime, int currentTime) {
+    int difference;
+    double difference_minutes;
+    int one_day = 1000 * 60 * 60 * 24;
+
+    print(orderTime);
+    print(currentTime);
+
+    difference = currentTime - orderTime;
+
+    difference_minutes = (difference / one_day) * 24 * 60;
+    print((difference / one_day) * 24 * 60);
+
+    return 5 > difference_minutes;
+  }
+
+  confirmAdminOrderDelivered(BuildContext context, String mOrderId) {
     EcommerceApp.firestore
+        .collection(EcommerceApp.collectionUser)
+        .document(
+        EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
         .collection(EcommerceApp.collectionOrders)
         .document(mOrderId)
-        .delete();
+        .updateData({"adminOrderConfirmation": "delivered"});
 
     getOrderId = "";
 
-    Route route = MaterialPageRoute(builder: (c) => UploadPage());
+    Route route = MaterialPageRoute(builder: (c) => AdminShiftOrders());
     Navigator.pushReplacement(context, route);
 
-    Fluttertoast.showToast(msg: "Parcel has been Shifted, Confirmed.");
+    Fluttertoast.showToast(msg: "Order has been Received, Confirmed.");
   }
 
-}
+  cancelOrder(BuildContext context, String mOrderId, int orderTime) {
+    if(getMinutesfromOrderTime(orderTime, DateTime.now().millisecondsSinceEpoch)){
+      EcommerceApp.firestore
+          .collection(EcommerceApp.collectionUser)
+          .document(
+          EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
+          .collection(EcommerceApp.collectionOrders)
+          .document(mOrderId)
+          .updateData({"cancellationStatus": "cancelled"});
 
+      getOrderId = "";
+
+      Route route = MaterialPageRoute(builder: (c) => MyOrders());
+      Navigator.pushReplacement(context, route);
+
+      Fluttertoast.showToast(msg: "Order has been Canceled.");
+    }
+
+  }
+}

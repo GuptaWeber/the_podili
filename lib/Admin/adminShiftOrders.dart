@@ -1,6 +1,9 @@
+import 'dart:collection';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_shop/Admin/adminOrderCard.dart';
 import 'package:e_shop/Config/config.dart';
+import 'package:e_shop/Models/order.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../Widgets/loadingWidget.dart';
@@ -11,71 +14,144 @@ class AdminShiftOrders extends StatefulWidget {
   _MyOrdersState createState() => _MyOrdersState();
 }
 
-
 class _MyOrdersState extends State<AdminShiftOrders> {
+  DocumentSnapshot documentSnapshot;
+  List<OrderModel> dataOrders;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          iconTheme: IconThemeData(color: Colors.white),
-          flexibleSpace: Container(
-            decoration: new BoxDecoration(
-              gradient: new LinearGradient(
-                colors: [Colors.pink, Colors.lightGreenAccent],
-                begin: const FractionalOffset(0.0, 0.0),
-                end: const FractionalOffset(1.0, 0.0),
-                stops: [0.0,1.0],
-                tileMode: TileMode.clamp,
+        child: Scaffold(
+          appBar: AppBar(
+            iconTheme: IconThemeData(color: Colors.white),
+            flexibleSpace: Container(
+              decoration: new BoxDecoration(
+                gradient: new LinearGradient(
+                  colors: [Colors.pink, Colors.lightGreenAccent],
+                  begin: const FractionalOffset(0.0, 0.0),
+                  end: const FractionalOffset(1.0, 0.0),
+                  stops: [0.0, 1.0],
+                  tileMode: TileMode.clamp,
+                ),
               ),
             ),
+            centerTitle: true,
+            title: Text(
+              "Manage Orders",
+              style: TextStyle(color: Colors.white),
+            ),
+            actions: [
+              IconButton(
+                  icon: Icon(
+                    Icons.arrow_drop_down_circle,
+                    color: Colors.white,
+                  ),
+                  onPressed: () {
+                    SystemNavigator.pop();
+                  })
+            ],
           ),
-          centerTitle: true,
-          title: Text("My Orders", style: TextStyle(color: Colors.white),),
-          actions: [
-            IconButton(
-                icon: Icon(Icons.arrow_drop_down_circle, color: Colors.white,),
-                onPressed: (){
-                  SystemNavigator.pop();
-                })
-          ],
-        ),
-        body: StreamBuilder<QuerySnapshot>(
-          stream: Firestore.instance
-            .collection(EcommerceApp.collectionUser)
-            .snapshots(),
+          body: Container(
+            // child: ListView.builder(itemBuilder: itemBuilder),
 
-          builder: (c, snapshot){
-            return snapshot.hasData
-                ? ListView.builder(
-              itemCount: snapshot.data.documents.length,
-              itemBuilder: (c, index){
-                return FutureBuilder<QuerySnapshot>(
-                    future: Firestore.instance
-                        .collection("items")
-                        .where("shortInfo", whereIn: snapshot.data.documents[index].data[EcommerceApp.productID])
-                        .getDocuments(),
 
-                    builder: (c, snap){
-                      return snap.hasData
-                          ? AdminOrderCard(
-                        itemCount: snap.data.documents.length,
-                        data: snap.data.documents,
-                        orderID: snapshot.data.documents[index].documentID,
-                        orderBy: snapshot.data.documents[index].data["orderBy"],
-                        addressID: snapshot.data.documents[index].data["addressID"] ,
-                      )
-                          : Center(child: circularProgress(),);
-                    }
+            child: FutureBuilder(
+              future: getDocuments(),
+              builder: (BuildContext context, AsyncSnapshot snapshot){
+                return snapshot.hasData? ListView.builder(
+                  itemCount: snapshot.data.length,
+                  itemBuilder: (c, index){
+                    return FutureBuilder<QuerySnapshot>(
+                        future: Firestore.instance
+                            .collection("items")
+                            .where("shortInfo", whereIn: snapshot.data[index].productIDs)
+                            .getDocuments(),
 
+                        builder: (c, snap){
+                          return snap.hasData
+                              ? AdminOrderCard(
+                            itemCount: snap.data.documents.length,
+                            data: snap.data.documents,
+                            orderID: snapshot.data[index].orderID,
+                            orderStatus: snapshot.data[index].orderStatus,
+                            cancellationStatus: snapshot.data[index].cancellationStatus,
+                            orderBy: snapshot.data[index].orderBy,
+                            addressID: snapshot.data[index].addressID,
+                          )
+                              : Center(child: circularProgress(),);
+                        }
+
+                    );
+                  },
+                ):Container(
+                  child: Text("Loading....."),
                 );
               },
-            )
-                : Center(child: circularProgress(),);
-          }
-          ,
-        ),
-      ),
+            ),
+
+            //   child: MaterialButton(
+            //     onPressed: (){
+            //      print(getDocuments());
+            //     },
+            //     child: Text("Yup!"),
+            //   ),
+            // )
+            // StreamBuilder<QuerySnapshot>(
+            //   stream: Firestore.instance
+            //       .collection(EcommerceApp.collectionUser)
+            //       .snapshots(),
+            //
+            //   // builder: (c, snapshot){
+            //   //
+            //   //   print(snapshot.data.documents[9].data['uid']);
+            //   //   //
+            //   //   // return snapshot.hasData?
+            //   //   //
+            //   //   //     : Center(child: circularProgress(),);
+            //   // }
+            //
+            // ),
+          ),
+        )
     );
+  }
+
+  Future<List<OrderModel>> getDocuments() async {
+    int i = 0;
+
+    List<DocumentSnapshot> snaps = await Firestore.instance
+        .collection("users")
+        .getDocuments()
+        .then((value) => value.documents);
+    List<OrderModel> orders = [];
+
+    // print(snaps[0].data.collection("orders"));
+
+    for (i = 0; i < snaps.length; i++) {
+      print(snaps[i].data["uid"]);
+      List weber = await EcommerceApp.firestore
+          .collection(EcommerceApp.collectionUser)
+          .document(snaps[i].data["uid"])
+          .collection(EcommerceApp.collectionOrders)
+          .orderBy('orderTime', descending: true)
+          .getDocuments()
+          .then((value) => value.documents);
+      // print(element.data['paymentDetails']);
+      weber.length != 0
+          ? weber.forEach((element) {
+
+            if(element.data['orderStatus']!='delivered'){
+              orders.add(OrderModel.fromJson(element.data));
+            }
+      })
+          : print('bla');
+
+      // orders.add(element.data);
+      // print(element.data.runtimeType);
+      // weber.length!=0? weber.forEach((element) {orders.add(element);}) : print('');
+    }
+
+    print(orders.length);
+
+    return orders;
   }
 }

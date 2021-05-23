@@ -5,6 +5,7 @@ String addressID;
 String cancellationStatus;
 bool isSuccess;
 String orderBy;
+String orderID;
 String orderStatus;
 String orderTime;
 String paymentId;
@@ -19,6 +20,7 @@ String userOrderConfirmation;
     this.cancellationStatus,
     this.isSuccess,
     this.orderBy,
+    this.orderID,
     this.orderStatus,
     this.orderTime,
     this.paymentId,
@@ -35,9 +37,9 @@ String userOrderConfirmation;
     cancellationStatus = json['cancellationStatus'];
     isSuccess = json['isSuccess'];
     orderBy = json['orderBy'];
+    orderID = json['orderID'];
     orderStatus = json['orderStatus'];
     orderTime = json['orderTime'];
-    orderStatus = json['orderStatus'];
     paymentId = json['paymentId'];
     paymentDetails = json['paymentDetails'];
     prefferedTime = json['prefferedTime'];
@@ -52,7 +54,10 @@ String userOrderConfirmation;
     data['addressID'] = this.addressID;
     data['isSuccess'] = this.isSuccess;
     data['orderBy'] = this.orderBy;
-    data['orderStatus'] = this.orderStatus;
+
+    if (this.orderID != null) {
+      data['orderID'] = this.orderID;
+    }
 
     if (this.orderTime != null) {
       data['orderTime'] = this.orderTime;

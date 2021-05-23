@@ -282,8 +282,8 @@ class _PaymentPageState extends State<PaymentPage> {
 
   addOrderDetails() {
     String productDescription = '';
-    // String orderID= EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID) +
-    //     data['orderTime'];
+    String orderID= EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID) +
+        DateTime.now().millisecondsSinceEpoch.toString();
 
     for (i = 1; i < productList.length; i++) {
       productDescription = productDescription + productList[i] + ' ';
@@ -293,7 +293,7 @@ class _PaymentPageState extends State<PaymentPage> {
       EcommerceApp.addressID: widget.addressId,
       EcommerceApp.totalAmount: widget.totalAmount + 20,
       "orderBy": EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID),
-      "orderID":'',
+      "orderID":orderID,
       "prefferedTime": preferredTime,
       EcommerceApp.cancellationStatus: "notCancelled",
       EcommerceApp.userOrderConfirmation: "Not Received",
@@ -309,6 +309,7 @@ class _PaymentPageState extends State<PaymentPage> {
       EcommerceApp.addressID: widget.addressId,
       EcommerceApp.totalAmount: widget.totalAmount + 20,
       "orderBy": EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID),
+      "orderID":orderID,
       "prefferedTime": preferredTime,
       EcommerceApp.orderStatus: "placed",
       EcommerceApp.cancellationStatus: "notCancelled",
@@ -355,18 +356,14 @@ class _PaymentPageState extends State<PaymentPage> {
         .document(
             EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
         .collection(EcommerceApp.collectionOrders)
-        .document(
-            EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID) +
-                data['orderTime'])
+        .document(data['orderID'])
         .setData(data);
   }
 
   Future writeOrderDetailsForAdmin(Map<String, dynamic> data) async {
     await EcommerceApp.firestore
         .collection(EcommerceApp.collectionOrders)
-        .document(
-            EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID) +
-                data['orderTime'])
+        .document(data['orderID'])
         .setData(data);
     _onOrderSuccess();
   }
@@ -405,6 +402,8 @@ class _PaymentPageState extends State<PaymentPage> {
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) {
     String productDescription = '';
+    String orderID= EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID) +
+        DateTime.now().millisecondsSinceEpoch.toString();
 
     for (i = 1; i < productList.length; i++) {
       productDescription = productDescription + productList[i] + ' ';
@@ -417,6 +416,7 @@ class _PaymentPageState extends State<PaymentPage> {
       EcommerceApp.addressID: widget.addressId,
       EcommerceApp.totalAmount: widget.totalAmount + 20,
       "orderBy": EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID),
+      "orderID":orderID,
       "prefferedTime": preferredTime,
       EcommerceApp.cancellationStatus: "notCancelled",
       EcommerceApp.userOrderConfirmation: "Not Received",
@@ -433,6 +433,7 @@ class _PaymentPageState extends State<PaymentPage> {
       EcommerceApp.addressID: widget.addressId,
       EcommerceApp.totalAmount: widget.totalAmount + 20,
       "orderBy": EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID),
+      "orderID":orderID,
       "prefferedTime": preferredTime,
       EcommerceApp.orderStatus: "placed",
       EcommerceApp.cancellationStatus: "notCancelled",

@@ -36,7 +36,7 @@ class _MyOrdersState extends State<AdminDeliveredOrders> {
             ),
             centerTitle: true,
             title: Text(
-              "My Orders",
+              "Delivered Orders",
               style: TextStyle(color: Colors.white),
             ),
             actions: [
@@ -53,46 +53,48 @@ class _MyOrdersState extends State<AdminDeliveredOrders> {
           body: Container(
             // child: ListView.builder(itemBuilder: itemBuilder),
 
-            //
-            // child: FutureBuilder(
-            //   future: getDocuments(),
-            //   builder: (BuildContext context, AsyncSnapshot snapshot){
-            //     return snapshot.hasData? ListView.builder(
-            //       itemCount: snapshot.data.documents.length,
-            //       itemBuilder: (c, index){
-            //         return FutureBuilder<QuerySnapshot>(
-            //             future: Firestore.instance
-            //                 .collection("items")
-            //                 .where("shortInfo", whereIn: snapshot.data.documents[index].data[EcommerceApp.productID])
-            //                 .getDocuments(),
-            //
-            //             builder: (c, snap){
-            //               return snap.hasData
-            //                   ? OrderCard(
-            //                 itemCount: snap.data.documents.length,
-            //                 data: snap.data.documents,
-            //                 orderID: snapshot.data[index].add,
-            //                 orderStatus: snapshot.data.documents[index].data['orderStatus'],
-            //                 cancellationStatus: snapshot.data.documents[index].data['cancellationStatus'],
-            //               )
-            //                   : Center(child: circularProgress(),);
-            //             }
-            //
-            //         );
-            //       },
-            //     ):Container(
-            //       child: Text("Loading....."),
-            //     );
-            //   },
-            // ),
 
-            child: MaterialButton(
-              onPressed: (){
-               print(getDocuments());
+            child: FutureBuilder(
+              future: getDocuments(),
+              builder: (BuildContext context, AsyncSnapshot snapshot){
+                return snapshot.hasData? ListView.builder(
+                  itemCount: snapshot.data.length,
+                  itemBuilder: (c, index){
+                    return FutureBuilder<QuerySnapshot>(
+                        future: Firestore.instance
+                            .collection("items")
+                            .where("shortInfo", whereIn: snapshot.data[index].productIDs)
+                            .getDocuments(),
+
+                        builder: (c, snap){
+                          return snap.hasData
+                              ? AdminOrderCard(
+                            itemCount: snap.data.documents.length,
+                            data: snap.data.documents,
+                            orderID: snapshot.data[index].orderID,
+                            orderStatus: snapshot.data[index].orderStatus,
+                            cancellationStatus: snapshot.data[index].cancellationStatus,
+                            orderBy: snapshot.data[index].orderBy,
+                            addressID: snapshot.data[index].addressID,
+                          )
+                              : Center(child: circularProgress(),);
+                        }
+
+                    );
+                  },
+                ):Container(
+                  child: Text("Loading....."),
+                );
               },
-              child: Text("Yup!"),
             ),
-          )
+
+          //   child: MaterialButton(
+          //     onPressed: (){
+          //      print(getDocuments());
+          //     },
+          //     child: Text("Yup!"),
+          //   ),
+          // )
           // StreamBuilder<QuerySnapshot>(
           //   stream: Firestore.instance
           //       .collection(EcommerceApp.collectionUser)
@@ -109,6 +111,7 @@ class _MyOrdersState extends State<AdminDeliveredOrders> {
           //
           // ),
           ),
+      )
     );
   }
 
@@ -135,7 +138,10 @@ class _MyOrdersState extends State<AdminDeliveredOrders> {
       // print(element.data['paymentDetails']);
       weber.length != 0
           ? weber.forEach((element) {
-              orders.add(OrderModel.fromJson(element.data));
+
+        if(element.data['orderStatus']=='delivered'){
+          orders.add(OrderModel.fromJson(element.data));
+        }
             })
           : print('bla');
 
