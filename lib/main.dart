@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:e_shop/Authentication/register.dart';
+
 import 'package:e_shop/Counters/ItemQuantity.dart';
+import 'package:e_shop/Screens/LoginPage.dart';
+
 import 'package:e_shop/Store/product_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -12,11 +14,10 @@ import 'package:e_shop/Config/config.dart';
 import 'Counters/cartitemcounter.dart';
 import 'Counters/changeAddresss.dart';
 import 'Counters/totalMoney.dart';
+import 'Services/AuthService.dart';
 import 'Store/storehome.dart';
 import 'Store/home.dart';
 import 'PhoneAuth.dart';
-
-import 'package:e_shop/Services/AuthService.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 
@@ -70,6 +71,7 @@ class _SplashScreenState extends State<SplashScreen> {
         Navigator.pushReplacement(context, route);
       } else {
         Route route = MaterialPageRoute(builder: (_) => PhoneAuth());
+        // Route route = MaterialPageRoute(builder: (_) => LoginPage());
         Navigator.pushReplacement(context, route);
       }
     });

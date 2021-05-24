@@ -19,7 +19,7 @@ class _PhoneAuthState extends State<PhoneAuth> {
 
   AuthCredential _phoneAuthCredential;
   String _verificationId;
-  int _code;
+  int _code = 0;
   int f;
 
   @override
@@ -188,6 +188,7 @@ class _PhoneAuthState extends State<PhoneAuth> {
       });
       this._phoneAuthCredential = phoneAuthCredential;
       // print(phoneAuthCredential);
+      _login();
     }
 
     void verificationFailed(AuthException error) {
@@ -330,7 +331,7 @@ class _PhoneAuthState extends State<PhoneAuth> {
                 child: MaterialButton(
                   onPressed: _submitPhoneNumber,
                   child: Text(
-                    'Send',
+                    'Verify',
                     style: TextStyle(color: Colors.white),
                   ),
                   color: Colors.black,
@@ -339,32 +340,34 @@ class _PhoneAuthState extends State<PhoneAuth> {
             ],
           ),
           SizedBox(height: 28),
-          Row(
-            children: <Widget>[
-              Expanded(
-                flex: 2,
-                child: TextField(
-                  controller: _otpController,
-                  decoration: InputDecoration(
-                    hintText: 'OTP',
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-              ),
-              Spacer(),
-              Expanded(
-                flex: 1,
-                child: MaterialButton(
-                  onPressed: _submitPhoneNumber,
-                  child: Text(
-                    'Resend',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  color: Colors.black,
-                ),
-              ),
-            ],
-          ),
+          _code != 0
+              ? Row(
+                  children: <Widget>[
+                    Expanded(
+                      flex: 2,
+                      child: TextField(
+                        controller: _otpController,
+                        decoration: InputDecoration(
+                          hintText: 'OTP',
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                    ),
+                    Spacer(),
+                    Expanded(
+                      flex: 1,
+                      child: MaterialButton(
+                        onPressed: _submitPhoneNumber,
+                        child: Text(
+                          'Resend',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        color: Colors.black,
+                      ),
+                    ),
+                  ],
+                )
+              : Container(),
           SizedBox(height: 28),
           // Text('$_status'),
           MaterialButton(
