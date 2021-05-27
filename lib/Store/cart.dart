@@ -397,7 +397,7 @@ class _CartPageState extends State<CartPage> {
     List cartWithQuantity = tempCartList
         .map((element) => element != 'garbageValue'
             ? element + " Quantity :" + quantity[c++].toString() + ", "
-            : 'garbageValue')
+            : '')
         .toList();
     print(tempCartList);
 
