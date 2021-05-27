@@ -7,6 +7,7 @@ import 'package:e_shop/Authentication/authenication.dart';
 import 'package:e_shop/Config/config.dart';
 import 'package:e_shop/Address/addAddress.dart';
 import 'package:e_shop/Orders/delivery_timeline.dart';
+import 'package:e_shop/Services/serviceRequests.dart';
 import 'package:e_shop/Store/Search.dart';
 import 'package:e_shop/Store/cart.dart';
 import 'package:e_shop/Orders/myOrders.dart';
@@ -243,6 +244,25 @@ class MyDrawer extends StatelessWidget {
                         onTap: () {
                           Route route =
                           MaterialPageRoute(builder: (c) => AdminDeliveredOrders());
+                          Navigator.push(context, route);
+                        },
+                      ),
+
+                      Divider(
+                        height: 5.0,
+                        color: Colors.white,
+                        thickness: 1.0,
+                      ),
+
+                      ListTile(
+                        leading: Icon(Icons.build_sharp, color: Colors.black),
+                        title: Text(
+                          "Service Requests",
+                          style: TextStyle(color: Colors.black),
+                        ),
+                        onTap: () {
+                          Route route =
+                          MaterialPageRoute(builder: (c) => ServiceRequests());
                           Navigator.push(context, route);
                         },
                       ),

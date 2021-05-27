@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_shop/Services/userService.dart';
 import 'package:e_shop/Store/cart.dart';
 import 'package:e_shop/Store/product_page.dart';
 import 'package:e_shop/Counters/cartitemcounter.dart';
@@ -585,6 +586,44 @@ class _StoreHomeState extends State<StoreHome> {
                             ),
                           ),
                         ),
+
+                        Container(
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: <Widget>[
+                                Column(
+                                  children: <Widget>[
+                                    InkWell(
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    UserService()
+                                            ),
+                                          );
+                                        },
+                                        child: ClipOval(
+                                            child: Image.network(
+                                              'https://firebasestorage.googleapis.com/v0/b/projectpodili.appspot.com/o/icon%2Fservices.png?alt=media&token=0977ff66-b869-4279-93ca-5b0ae86832cb',
+                                              height: 90,
+                                              width: 90,
+                                              fit: BoxFit.cover,
+                                            )
+                                        )),
+                                    SizedBox(
+                                      height: 5.0,
+                                    ),
+                                    Text('Services')
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+
                       ],
                     ))),
             StreamBuilder<QuerySnapshot>(
