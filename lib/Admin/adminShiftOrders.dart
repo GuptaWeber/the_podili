@@ -67,6 +67,10 @@ class _MyOrdersState extends State<AdminShiftOrders> {
                             .getDocuments(),
 
                         builder: (c, snap){
+
+                          print(snapshot.data[index].orderID);
+                          print(snapshot.data[index].orderBy);
+
                           return snap.hasData
                               ? AdminOrderCard(
                             itemCount: snap.data.documents.length,

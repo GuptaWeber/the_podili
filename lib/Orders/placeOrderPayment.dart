@@ -495,14 +495,14 @@ class _PaymentPageState extends State<PaymentPage> {
               child: Text('Home'),
               onPressed: () {
                 Route route = MaterialPageRoute(builder: (c) => StoreHome());
-                Navigator.pushReplacement(context, route);
+                Navigator.pushAndRemoveUntil(context, route, (route) => false);
               },
             ),
             TextButton(
               child: Text('My Orders'),
               onPressed: () {
                 Route route = MaterialPageRoute(builder: (c) => MyOrders());
-                Navigator.pushReplacement(context, route);
+                Navigator.pushAndRemoveUntil(context, route, (route) => false);
               },
             ),
           ],

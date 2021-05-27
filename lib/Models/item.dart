@@ -10,6 +10,7 @@ class ItemModel {
   String status;
   int price;
   int quantity;
+  bool isHide;
 
   ItemModel({
     this.title,
@@ -20,6 +21,7 @@ class ItemModel {
     this.thumbnailUrl,
     this.longDescription,
     this.status,
+    this.isHide
   });
 
   ItemModel.fromJson(Map<String, dynamic> json) {
@@ -32,6 +34,7 @@ class ItemModel {
     longDescription = json['longDescription'];
     status = json['status'];
     price = json['price'];
+    isHide = json['isHide'];
   }
 
   Map<String, dynamic> toJson() {
@@ -47,6 +50,7 @@ class ItemModel {
     data['thumbnailUrl'] = this.thumbnailUrl;
     data['longDescription'] = this.longDescription;
     data['status'] = this.status;
+    data['isHide'] = this.isHide;
     return data;
   }
 }

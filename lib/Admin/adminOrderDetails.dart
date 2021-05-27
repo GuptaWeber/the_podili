@@ -50,6 +50,8 @@ class _AdminOrderDetailsState extends State<AdminOrderDetails> {
                 .document(widget.orderID)
                 .get(),
             builder: (c, snapshot) {
+              print(widget.orderBy);
+              print(widget.orderID);
               Map dataMap;
               if (snapshot.hasData) {
                 dataMap = snapshot.data.data;

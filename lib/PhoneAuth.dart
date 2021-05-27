@@ -19,7 +19,7 @@ class _PhoneAuthState extends State<PhoneAuth> {
 
   AuthCredential _phoneAuthCredential;
   String _verificationId;
-  int _code;
+  int _code = 0;
   int f;
 
   @override
@@ -40,7 +40,7 @@ class _PhoneAuthState extends State<PhoneAuth> {
     this._firebaseUser = await FirebaseAuth.instance.currentUser();
     setState(() {
       _status =
-          (_firebaseUser == null) ? 'Not Logged In\n' : 'Already LoggedIn\n';
+      (_firebaseUser == null) ? 'Not Logged In\n' : 'Already LoggedIn\n';
     });
   }
 
@@ -67,9 +67,6 @@ class _PhoneAuthState extends State<PhoneAuth> {
         _firebaseUser = authRes.user;
         print(_firebaseUser.toString());
         checkUser(_firebaseUser);
-
-        Route route = MaterialPageRoute(builder: (_) => StoreHome());
-        Navigator.pushReplacement(context, route);
       }).catchError((e) => _handleError(e));
       setState(() {
         _status += 'Signed In\n';
@@ -131,20 +128,25 @@ class _PhoneAuthState extends State<PhoneAuth> {
     //     .setString(EcommerceApp.userAvatarUrl, userImageUrl);
     await EcommerceApp.sharedPreferences
         .setStringList(EcommerceApp.userCartList, ["garbageValue"]);
+
+    Route route = MaterialPageRoute(builder: (_) => StoreHome());
+    Navigator.pushReplacement(context, route);
   }
 
   Future saveUserInfoToSharedPreferences(FirebaseUser fUser) async {
     // print(f);
     // Firestore.instance.collection("users").document(fUser.uid).get()
     DocumentSnapshot variable =
-        await Firestore.instance.collection('users').document(fUser.uid).get();
+    await Firestore.instance.collection('users').document(fUser.uid).get();
 
     await EcommerceApp.sharedPreferences.setString("uid", fUser.uid);
     await EcommerceApp.sharedPreferences
         .setString(EcommerceApp.phoneNumber, fUser.phoneNumber);
 
+    print(variable['isAdmin']);
+
     await EcommerceApp.sharedPreferences
-        .setString("isAdmin", variable["isAdmin"]);
+        .setString("isAdmin", variable['isAdmin']);
 
     // await EcommerceApp.sharedPreferences.setString(
     //     EcommerceApp.userName, _nameTextEditingController.text.trim());
@@ -152,6 +154,9 @@ class _PhoneAuthState extends State<PhoneAuth> {
     //     .setString(EcommerceApp.userAvatarUrl, userImageUrl);
     await EcommerceApp.sharedPreferences
         .setStringList(EcommerceApp.userCartList, ["garbageValue"]);
+
+    Route route = MaterialPageRoute(builder: (_) => StoreHome());
+    Navigator.pushReplacement(context, route);
   }
 
   // Future<void> _logout() async {
@@ -188,6 +193,7 @@ class _PhoneAuthState extends State<PhoneAuth> {
       });
       this._phoneAuthCredential = phoneAuthCredential;
       // print(phoneAuthCredential);
+      _login();
     }
 
     void verificationFailed(AuthException error) {
@@ -330,7 +336,7 @@ class _PhoneAuthState extends State<PhoneAuth> {
                 child: MaterialButton(
                   onPressed: _submitPhoneNumber,
                   child: Text(
-                    'Send',
+                    'Verify',
                     style: TextStyle(color: Colors.white),
                   ),
                   color: Colors.black,
@@ -339,7 +345,8 @@ class _PhoneAuthState extends State<PhoneAuth> {
             ],
           ),
           SizedBox(height: 28),
-          Row(
+          _code != 0
+              ? Row(
             children: <Widget>[
               Expanded(
                 flex: 2,
@@ -364,7 +371,8 @@ class _PhoneAuthState extends State<PhoneAuth> {
                 ),
               ),
             ],
-          ),
+          )
+              : Container(),
           SizedBox(height: 28),
           // Text('$_status'),
           MaterialButton(

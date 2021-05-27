@@ -122,7 +122,7 @@ class _StoreHomeState extends State<StoreHome> {
                                         borderRadius: BorderRadius.circular(5),
                                         image: new DecorationImage(
                                           image: new NetworkImage(
-                                              'https://cdn.pixabay.com/photo/2017/01/26/02/06/platter-2009590_1280.jpg'),
+                                              'https://firebasestorage.googleapis.com/v0/b/projectpodili.appspot.com/o/slider%2Fslider1.jpg?alt=media&token=415ff589-df7d-4a89-b206-7f68c1785ca5'),
                                           fit: BoxFit.fitHeight,
                                         ),
                                       ),
@@ -160,7 +160,7 @@ class _StoreHomeState extends State<StoreHome> {
                                         borderRadius: BorderRadius.circular(5),
                                         image: new DecorationImage(
                                           image: new NetworkImage(
-                                              'https://cdn.pixabay.com/photo/2017/12/17/13/10/architecture-3024174_1280.jpg'),
+                                              'https://firebasestorage.googleapis.com/v0/b/projectpodili.appspot.com/o/slider%2Fslider2.jpg?alt=media&token=32f94291-e89f-4a18-9bdb-c356f7b720af'),
                                           fit: BoxFit.fitHeight,
                                         ),
                                       ),
@@ -198,7 +198,7 @@ class _StoreHomeState extends State<StoreHome> {
                                         borderRadius: BorderRadius.circular(5),
                                         image: new DecorationImage(
                                           image: new NetworkImage(
-                                              'https://cdn.pixabay.com/photo/2015/05/15/14/55/cafe-768771__480.jpg'),
+                                              'https://firebasestorage.googleapis.com/v0/b/projectpodili.appspot.com/o/slider%2Fslider3.jpg?alt=media&token=a8a03af7-41a6-4437-90d7-c4d1589df544'),
                                           fit: BoxFit.fitHeight,
                                         ),
                                       ),
@@ -236,7 +236,7 @@ class _StoreHomeState extends State<StoreHome> {
                                         borderRadius: BorderRadius.circular(5),
                                         image: new DecorationImage(
                                           image: new NetworkImage(
-                                              'https://cdn.pixabay.com/photo/2019/03/31/07/48/food-4092617__480.jpg'),
+                                              'https://firebasestorage.googleapis.com/v0/b/projectpodili.appspot.com/o/slider%2Fslider4.jpg?alt=media&token=e4b2c257-6879-48f4-982f-4f7d150f80e3'),
                                           fit: BoxFit.fitHeight,
                                         ),
                                       ),
@@ -274,7 +274,7 @@ class _StoreHomeState extends State<StoreHome> {
                                         borderRadius: BorderRadius.circular(5),
                                         image: new DecorationImage(
                                           image: new NetworkImage(
-                                              'https://cdn.pixabay.com/photo/2015/03/26/09/42/breakfast-690128__480.jpg'),
+                                              'https://firebasestorage.googleapis.com/v0/b/projectpodili.appspot.com/o/slider%2Fslider5.jpg?alt=media&token=44e3583e-6ea2-4dc6-bb02-d7c9464c4fce'),
                                           fit: BoxFit.fitHeight,
                                         ),
                                       ),
