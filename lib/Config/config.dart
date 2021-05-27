@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class EcommerceApp {
-  static const String appName = 'e-Shop';
+  static const String appName = 'Podili';
 
   static SharedPreferences sharedPreferences;
   static FirebaseUser user;
@@ -15,6 +15,7 @@ class EcommerceApp {
   static String collectionOrders = "orders";
   static String userCartList = 'userCart';
   static String subCollectionAddress = 'userAddress';
+  static String cartInfo = 'cartInfo';
 
   static final String userName = 'name';
   static final String userEmail = 'email';

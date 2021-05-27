@@ -295,6 +295,8 @@ class _PaymentPageState extends State<PaymentPage> {
       "orderBy": EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID),
       "orderID":orderID,
       "prefferedTime": preferredTime,
+      "cartInfo":
+      EcommerceApp.sharedPreferences.getString(EcommerceApp.cartInfo),
       EcommerceApp.cancellationStatus: "notCancelled",
       EcommerceApp.userOrderConfirmation: "Not Received",
       EcommerceApp.orderStatus: "placed",
@@ -311,6 +313,8 @@ class _PaymentPageState extends State<PaymentPage> {
       "orderBy": EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID),
       "orderID":orderID,
       "prefferedTime": preferredTime,
+      "cartInfo":
+      EcommerceApp.sharedPreferences.getString(EcommerceApp.cartInfo),
       EcommerceApp.orderStatus: "placed",
       EcommerceApp.cancellationStatus: "notCancelled",
       EcommerceApp.userOrderConfirmation: "Not Received",
@@ -417,6 +421,8 @@ class _PaymentPageState extends State<PaymentPage> {
       EcommerceApp.totalAmount: widget.totalAmount + 20,
       "orderBy": EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID),
       "orderID":orderID,
+      "cartInfo":
+      EcommerceApp.sharedPreferences.getString(EcommerceApp.cartInfo),
       "prefferedTime": preferredTime,
       EcommerceApp.cancellationStatus: "notCancelled",
       EcommerceApp.userOrderConfirmation: "Not Received",
@@ -434,6 +440,8 @@ class _PaymentPageState extends State<PaymentPage> {
       EcommerceApp.totalAmount: widget.totalAmount + 20,
       "orderBy": EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID),
       "orderID":orderID,
+      "cartInfo":
+      EcommerceApp.sharedPreferences.getString(EcommerceApp.cartInfo),
       "prefferedTime": preferredTime,
       EcommerceApp.orderStatus: "placed",
       EcommerceApp.cancellationStatus: "notCancelled",

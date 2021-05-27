@@ -626,30 +626,30 @@ class _StoreHomeState extends State<StoreHome> {
 
                       ],
                     ))),
-            StreamBuilder<QuerySnapshot>(
-                stream: Firestore.instance
-                    .collection("items")
-                    .limit(15)
-                    .orderBy("publishedDate", descending: true)
-                    .snapshots(),
-                builder: (context, dataSnapshot) {
-                  return !dataSnapshot.hasData
-                      ? SliverToBoxAdapter(
-                          child: Center(
-                            child: circularProgress(),
-                          ),
-                        )
-                      : SliverStaggeredGrid.countBuilder(
-                          crossAxisCount: 2,
-                          staggeredTileBuilder: (c) => StaggeredTile.fit(1),
-                          itemBuilder: (context, index) {
-                            ItemModel model = ItemModel.fromJson(
-                                dataSnapshot.data.documents[index].data);
-                            return sourceinfogrid(model, context);
-                          },
-                          itemCount: dataSnapshot.data.documents.length,
-                        );
-                }),
+            // StreamBuilder<QuerySnapshot>(
+            //     stream: Firestore.instance
+            //         .collection("items")
+            //         .limit(15)
+            //         .orderBy("publishedDate", descending: true)
+            //         .snapshots(),
+            //     builder: (context, dataSnapshot) {
+            //       return !dataSnapshot.hasData
+            //           ? SliverToBoxAdapter(
+            //               child: Center(
+            //                 child: circularProgress(),
+            //               ),
+            //             )
+            //           : SliverStaggeredGrid.countBuilder(
+            //               crossAxisCount: 2,
+            //               staggeredTileBuilder: (c) => StaggeredTile.fit(1),
+            //               itemBuilder: (context, index) {
+            //                 ItemModel model = ItemModel.fromJson(
+            //                     dataSnapshot.data.documents[index].data);
+            //                 return sourceinfogrid(model, context);
+            //               },
+            //               itemCount: dataSnapshot.data.documents.length,
+            //             );
+            //     }),
           ],
         ),
       ),

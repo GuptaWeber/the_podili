@@ -4,6 +4,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_shop/Admin/adminOrderCard.dart';
 import 'package:e_shop/Config/config.dart';
 import 'package:e_shop/Models/order.dart';
+import 'package:e_shop/Widgets/customAppBar.dart';
+import 'package:e_shop/Widgets/myDrawer.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../Widgets/loadingWidget.dart';
@@ -21,38 +24,10 @@ class _MyOrdersState extends State<AdminDeliveredOrders> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-          appBar: AppBar(
-            iconTheme: IconThemeData(color: Colors.white),
-            flexibleSpace: Container(
-              decoration: new BoxDecoration(
-                gradient: new LinearGradient(
-                  colors: [Colors.pink, Colors.lightGreenAccent],
-                  begin: const FractionalOffset(0.0, 0.0),
-                  end: const FractionalOffset(1.0, 0.0),
-                  stops: [0.0, 1.0],
-                  tileMode: TileMode.clamp,
-                ),
-              ),
-            ),
-            centerTitle: true,
-            title: Text(
-              "Delivered Orders",
-              style: TextStyle(color: Colors.white),
-            ),
-            actions: [
-              IconButton(
-                  icon: Icon(
-                    Icons.arrow_drop_down_circle,
-                    color: Colors.white,
-                  ),
-                  onPressed: () {
-                    SystemNavigator.pop();
-                  })
-            ],
-          ),
+        appBar: MyAppBar(),
+        drawer: MyDrawer(),
           body: Container(
             // child: ListView.builder(itemBuilder: itemBuilder),
-
 
             child: FutureBuilder(
               future: getDocuments(),
@@ -82,8 +57,10 @@ class _MyOrdersState extends State<AdminDeliveredOrders> {
 
                     );
                   },
-                ):Container(
-                  child: Text("Loading....."),
+                ):Center(
+                  child: Container(
+                    child: CupertinoActivityIndicator( radius: 30,),
+                  ),
                 );
               },
             ),

@@ -5,8 +5,10 @@ import 'package:e_shop/Orders/delivery_timeline.dart';
 import 'package:e_shop/Orders/myOrders.dart';
 import 'package:e_shop/Orders/simpleOrderCart.dart';
 import 'package:e_shop/Store/storehome.dart';
+import 'package:e_shop/Widgets/customAppBar.dart';
 import 'package:e_shop/Widgets/loadingWidget.dart';
 import 'package:e_shop/Models/address.dart';
+import 'package:e_shop/Widgets/myDrawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -23,6 +25,8 @@ class OrderDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        appBar: MyAppBar(),
+        drawer: MyDrawer(),
         body: SingleChildScrollView(
           child: FutureBuilder<DocumentSnapshot>(
             future: EcommerceApp.firestore
@@ -82,7 +86,18 @@ class OrderDetails extends StatelessWidget {
                           Padding(
                             padding: EdgeInsets.all(4),
                             child: Text(
-                              "Preffered Time to Deliver : ${dataMap['prefferedTime']}",
+                              "Preferred Time to Deliver : ${dataMap['prefferedTime']}",
+                              style: TextStyle(fontSize: 16),
+                            ),
+                          ),
+                          SizedBox(
+                            height: 25.0,
+                          ),
+
+                          Padding(
+                            padding: EdgeInsets.all(4),
+                            child: Text(
+                              "Order Info : ${dataMap['cartInfo']}",
                               style: TextStyle(fontSize: 16),
                             ),
                           ),
@@ -314,27 +329,9 @@ class ShippingDetails extends StatelessWidget {
             children: [
               Center(
                 child: InkWell(
-                  onTap: () {
-                    confirmeduserOrderReceived(context, orderId);
-                  },
+
                   child: cancellationStatus == 'notCancelled' ? Container(
-                    decoration: new BoxDecoration(
-                      gradient: new LinearGradient(
-                        colors: [Colors.pink, Colors.lightGreenAccent],
-                        begin: const FractionalOffset(0.0, 0.0),
-                        end: const FractionalOffset(1.0, 0.0),
-                        stops: [0.0, 1.0],
-                        tileMode: TileMode.clamp,
-                      ),
-                    ),
-                    width: MediaQuery.of(context).size.width - 40.0,
-                    height: 50.0,
-                    child: Center(
-                      child: Text(
-                        "Confirmed || Items Received",
-                        style: TextStyle(color: Colors.white, fontSize: 15.0),
-                      ),
-                    ),
+
                   ) : Text("Order Cancelled", style: TextStyle(fontSize: 20, color: Colors.red),),
                 ),
               ),

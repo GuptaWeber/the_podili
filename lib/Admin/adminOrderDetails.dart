@@ -7,8 +7,10 @@ import 'package:e_shop/Orders/delivery_timeline.dart';
 import 'package:e_shop/Orders/myOrders.dart';
 import 'package:e_shop/Orders/simpleOrderCart.dart';
 import 'package:e_shop/Store/storehome.dart';
+import 'package:e_shop/Widgets/customAppBar.dart';
 import 'package:e_shop/Widgets/loadingWidget.dart';
 import 'package:e_shop/Models/address.dart';
+import 'package:e_shop/Widgets/myDrawer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -40,6 +42,8 @@ class _AdminOrderDetailsState extends State<AdminOrderDetails> {
 
     return SafeArea(
       child: Scaffold(
+        drawer: MyDrawer(),
+        appBar: MyAppBar(),
         body: SingleChildScrollView(
           child: FutureBuilder<DocumentSnapshot>(
 
@@ -105,10 +109,11 @@ class _AdminOrderDetailsState extends State<AdminOrderDetails> {
                     Padding(
                       padding: EdgeInsets.all(4),
                       child: Text(
-                        "Preffered Time to Deliver : ${dataMap['prefferedTime']}",
+                        "Preferred Time to Deliver : ${dataMap['prefferedTime']}",
                         style: TextStyle(fontSize: 16),
                       ),
                     ),
+
                     Padding(
                       padding: EdgeInsets.all(4),
                       child: Text(
@@ -116,6 +121,7 @@ class _AdminOrderDetailsState extends State<AdminOrderDetails> {
                         style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,  color: Colors.green),
                       ),
                     ),
+
                     dataMap['paymentDetails'] == "Online Payment"? Padding(
                       padding: EdgeInsets.all(4),
                       child: Text(
@@ -123,6 +129,18 @@ class _AdminOrderDetailsState extends State<AdminOrderDetails> {
                         style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, ),
                       ),
                     ) : Container(),
+
+                    Padding(
+                      padding: EdgeInsets.all(4),
+                      child: Text(
+                        "Order Info : ${dataMap['cartInfo']}",
+                        style: TextStyle(fontSize: 16),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 25.0,
+                    ),
+
                     SizedBox(
                       height: 25.0,
                     ),
@@ -474,27 +492,9 @@ class ShippingDetails extends StatelessWidget {
             children: [
               Center(
                 child: InkWell(
-                  onTap: () {
-                    confirmAdminOrderDelivered(context, orderId);
-                  },
+
                   child: cancellationStatus == 'notCancelled' ? Container(
-                    decoration: new BoxDecoration(
-                      gradient: new LinearGradient(
-                        colors: [Colors.pink, Colors.lightGreenAccent],
-                        begin: const FractionalOffset(0.0, 0.0),
-                        end: const FractionalOffset(1.0, 0.0),
-                        stops: [0.0, 1.0],
-                        tileMode: TileMode.clamp,
-                      ),
-                    ),
-                    width: MediaQuery.of(context).size.width - 40.0,
-                    height: 50.0,
-                    child: Center(
-                      child: Text(
-                        "Confirmed || Items Delivered",
-                        style: TextStyle(color: Colors.white, fontSize: 15.0),
-                      ),
-                    ),
+
                   ) : Text("Order Cancelled", style: TextStyle(fontSize: 20, color: Colors.red),),
                 ),
               ),
