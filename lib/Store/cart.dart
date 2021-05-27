@@ -393,27 +393,31 @@ class _CartPageState extends State<CartPage> {
     //tempCartList.remove(shortInfoAsId);
     int c = 0;
     print(quantity);
+    String info = "";
     List cartWithQuantity = tempCartList
         .map((element) => element != 'garbageValue'
-            ? element + " Quantity:" + quantity[c++].toString()
+            ? element + " Quantity :" + quantity[c++].toString() + ", "
             : 'garbageValue')
         .toList();
     print(tempCartList);
 
-    EcommerceApp.firestore
-        .collection(EcommerceApp.collectionUser)
-        .document(
-            EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
-        .updateData({
-      EcommerceApp.userCartList: cartWithQuantity,
-    }).then((value) {
-      // Fluttertoast.showToast(msg: "Item Removed Successfully.");
-
-      EcommerceApp.sharedPreferences
-          .setStringList(EcommerceApp.userCartList, cartWithQuantity);
-
-      // Provider.of<CartItemCounter>(context, listen: false).displayResult();
-      // totalAmount = 0;
+    cartWithQuantity.forEach((element) {
+      info = info + element;
     });
+
+    // EcommerceApp.firestore
+    //     .collection(EcommerceApp.collectionUser)
+    //     .document(
+    //         EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
+    //     .updateData({
+    //   EcommerceApp.userCartList: cartWithQuantity,
+    // }).then((value) {
+    // Fluttertoast.showToast(msg: "Item Removed Successfully.");
+
+    EcommerceApp.sharedPreferences.setString(EcommerceApp.cartInfo, info);
+
+    // Provider.of<CartItemCounter>(context, listen: false).displayResult();
+    // totalAmount = 0;
+    // });
   }
 }

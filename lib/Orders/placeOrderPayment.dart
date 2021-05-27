@@ -289,6 +289,8 @@ class _PaymentPageState extends State<PaymentPage> {
 
     writeOrderDetailsForUser({
       EcommerceApp.addressID: widget.addressId,
+      "cartInfo":
+          EcommerceApp.sharedPreferences.getString(EcommerceApp.cartInfo),
       EcommerceApp.totalAmount: widget.totalAmount + 20,
       "orderBy": EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID),
       "prefferedTime": preferredTime,
