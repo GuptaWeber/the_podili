@@ -40,8 +40,8 @@ class _CartPageState extends State<CartPage> {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           if (EcommerceApp.sharedPreferences
-              .getStringList(EcommerceApp.userCartList)
-              .length ==
+                  .getStringList(EcommerceApp.userCartList)
+                  .length ==
               1) {
             Fluttertoast.showToast(msg: "Your cart is Empty");
           } else {
@@ -71,12 +71,12 @@ class _CartPageState extends State<CartPage> {
                       child: cartProvider.count == 0
                           ? Container()
                           : Text(
-                        "Total Price : ${amountProvider.totalAmount.toString()}",
-                        style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.w500),
-                      )),
+                              "Total Price : ${amountProvider.totalAmount.toString()}",
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 20.0,
+                                  fontWeight: FontWeight.w500),
+                            )),
                 );
               },
             ),
@@ -85,62 +85,62 @@ class _CartPageState extends State<CartPage> {
               stream: EcommerceApp.firestore
                   .collection("items")
                   .where("shortInfo",
-                  whereIn: EcommerceApp.sharedPreferences
-                      .getStringList(EcommerceApp.userCartList))
+                      whereIn: EcommerceApp.sharedPreferences
+                          .getStringList(EcommerceApp.userCartList))
                   .snapshots(),
               builder: (context, snapshot) {
                 return !snapshot.hasData
                     ? SliverToBoxAdapter(
-                  child: Center(
-                    child: circularProgress(),
-                  ),
-                )
+                        child: Center(
+                          child: circularProgress(),
+                        ),
+                      )
                     : snapshot.data.documents.length == 0
-                    ? beginBuildingCart()
-                    : SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                        (context, index) {
-                      ItemModel model = ItemModel.fromJson(
-                          snapshot.data.documents[index].data);
+                        ? beginBuildingCart()
+                        : SliverList(
+                            delegate: SliverChildBuilderDelegate(
+                              (context, index) {
+                                ItemModel model = ItemModel.fromJson(
+                                    snapshot.data.documents[index].data);
 
-                      if (index == 0) {
-                        totalAmount = 0;
-                        totalAmount = model.price * counter[index] +
-                            totalAmount;
-                      } else {
-                        totalAmount = model.price * counter[index] +
-                            totalAmount;
-                      }
-                      if (snapshot.data.documents.length - 1 ==
-                          index) {
-                        WidgetsBinding.instance
-                            .addPostFrameCallback((timeStamp) {
-                          Provider.of<TotalAmount>(context,
-                              listen: false)
-                              .display(totalAmount);
-                        });
-                      }
+                                if (index == 0) {
+                                  totalAmount = 0;
+                                  totalAmount = model.price * counter[index] +
+                                      totalAmount;
+                                } else {
+                                  totalAmount = model.price * counter[index] +
+                                      totalAmount;
+                                }
+                                if (snapshot.data.documents.length - 1 ==
+                                    index) {
+                                  WidgetsBinding.instance
+                                      .addPostFrameCallback((timeStamp) {
+                                    Provider.of<TotalAmount>(context,
+                                            listen: false)
+                                        .display(totalAmount);
+                                  });
+                                }
 
-                      return cartinfo(
-                        model,
-                        context,
-                        count,
-                        index,
-                        increment: (productPrice, i) => {
-                          increaseQuantity(productPrice, i),
-                        },
-                        decrement: (productPrice, i) => {
-                          decreaseQuantity(productPrice, i),
-                        },
-                        removeCartFunction: () =>
-                            removeItemFromUserCart(model.shortInfo),
-                      );
-                    },
-                    childCount: snapshot.hasData
-                        ? snapshot.data.documents.length
-                        : 0,
-                  ),
-                );
+                                return cartinfo(
+                                  model,
+                                  context,
+                                  count,
+                                  index,
+                                  increment: (productPrice, i) => {
+                                    increaseQuantity(productPrice, i),
+                                  },
+                                  decrement: (productPrice, i) => {
+                                    decreaseQuantity(productPrice, i),
+                                  },
+                                  removeCartFunction: () =>
+                                      removeItemFromUserCart(model.shortInfo),
+                                );
+                              },
+                              childCount: snapshot.hasData
+                                  ? snapshot.data.documents.length
+                                  : 0,
+                            ),
+                          );
               })
         ],
       ),
@@ -152,7 +152,7 @@ class _CartPageState extends State<CartPage> {
     return InkWell(
         onTap: () {
           Route route =
-          MaterialPageRoute(builder: (c) => ProductPage(itemModel: model));
+              MaterialPageRoute(builder: (c) => ProductPage(itemModel: model));
           Navigator.push(context, route);
         },
         splashColor: Colors.pink,
@@ -172,10 +172,10 @@ class _CartPageState extends State<CartPage> {
                 Center(
                   child: Container(
                     constraints:
-                    new BoxConstraints.expand(height: 160.0, width: 160),
+                        new BoxConstraints.expand(height: 160.0, width: 160),
                     alignment: Alignment.bottomLeft,
                     padding:
-                    new EdgeInsets.only(left: 16.0, bottom: 8.0, top: 8.0),
+                        new EdgeInsets.only(left: 16.0, bottom: 8.0, top: 8.0),
                     decoration: new BoxDecoration(
                       borderRadius: BorderRadius.circular(5),
                       image: new DecorationImage(
@@ -292,28 +292,28 @@ class _CartPageState extends State<CartPage> {
                                 alignment: Alignment.centerRight,
                                 child: removeCartFunction == null
                                     ? Container(
-                                    child: IconButton(
-                                      icon: Icon(
-                                        Icons.add_shopping_cart,
-                                        color: Colors.pinkAccent,
-                                      ),
-                                      onPressed: () {
-                                        checkItemInCart(
-                                            model.shortInfo, context);
-                                      },
-                                    ))
+                                        child: IconButton(
+                                        icon: Icon(
+                                          Icons.add_shopping_cart,
+                                          color: Colors.pinkAccent,
+                                        ),
+                                        onPressed: () {
+                                          checkItemInCart(
+                                              model.shortInfo, context);
+                                        },
+                                      ))
                                     : IconButton(
-                                  icon: Icon(
-                                    Icons.delete,
-                                    color: Colors.pinkAccent,
-                                  ),
-                                  onPressed: () {
-                                    removeCartFunction();
-                                    Route route = MaterialPageRoute(
-                                        builder: (c) => StoreHome());
-                                    Navigator.push(context, route);
-                                  },
-                                )),
+                                        icon: Icon(
+                                          Icons.delete,
+                                          color: Colors.pinkAccent,
+                                        ),
+                                        onPressed: () {
+                                          removeCartFunction();
+                                          Route route = MaterialPageRoute(
+                                              builder: (c) => StoreHome());
+                                          Navigator.push(context, route);
+                                        },
+                                      )),
                           ],
                         ),
                       ),
@@ -366,13 +366,13 @@ class _CartPageState extends State<CartPage> {
 
   removeItemFromUserCart(String shortInfoAsId) {
     List tempCartList =
-    EcommerceApp.sharedPreferences.getStringList(EcommerceApp.userCartList);
+        EcommerceApp.sharedPreferences.getStringList(EcommerceApp.userCartList);
     tempCartList.remove(shortInfoAsId);
 
     EcommerceApp.firestore
         .collection(EcommerceApp.collectionUser)
         .document(
-        EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
+            EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
         .updateData({
       EcommerceApp.userCartList: tempCartList,
     }).then((value) {
@@ -388,32 +388,36 @@ class _CartPageState extends State<CartPage> {
 
   addQuantity(List<int> quantity) {
     List tempCartList =
-    EcommerceApp.sharedPreferences.getStringList(EcommerceApp.userCartList);
+        EcommerceApp.sharedPreferences.getStringList(EcommerceApp.userCartList);
 
     //tempCartList.remove(shortInfoAsId);
     int c = 0;
     print(quantity);
+    String info = "";
     List cartWithQuantity = tempCartList
         .map((element) => element != 'garbageValue'
-        ? element + " Quantity:" + quantity[c++].toString()
-        : 'garbageValue')
+            ? element + " Quantity :" + quantity[c++].toString() + ", "
+            : '')
         .toList();
     print(tempCartList);
 
-    EcommerceApp.firestore
-        .collection(EcommerceApp.collectionUser)
-        .document(
-        EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
-        .updateData({
-      EcommerceApp.userCartList: cartWithQuantity,
-    }).then((value) {
-      // Fluttertoast.showToast(msg: "Item Removed Successfully.");
-
-      EcommerceApp.sharedPreferences
-          .setStringList(EcommerceApp.userCartList, cartWithQuantity);
-
-      // Provider.of<CartItemCounter>(context, listen: false).displayResult();
-      // totalAmount = 0;
+    cartWithQuantity.forEach((element) {
+      info = info + element;
     });
+
+    // EcommerceApp.firestore
+    //     .collection(EcommerceApp.collectionUser)
+    //     .document(
+    //         EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
+    //     .updateData({
+    //   EcommerceApp.userCartList: cartWithQuantity,
+    // }).then((value) {
+    // Fluttertoast.showToast(msg: "Item Removed Successfully.");
+
+    EcommerceApp.sharedPreferences.setString(EcommerceApp.cartInfo, info);
+
+    // Provider.of<CartItemCounter>(context, listen: false).displayResult();
+    // totalAmount = 0;
+    // });
   }
 }
