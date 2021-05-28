@@ -378,7 +378,7 @@ class _StoreHomeState extends State<StoreHome> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    Home('Food')),
+                                                    Home('Vegetables')),
                                           );
                                         },
                                         child: ClipOval(
