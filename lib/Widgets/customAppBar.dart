@@ -26,7 +26,7 @@ class MyAppBar extends StatelessWidget with PreferredSizeWidget {
           ),
         ),
         title: Text(
-          "PODILI",
+          "PODILI - ALL IN ONE",
           style: TextStyle(fontSize: 24.0, color: Colors.black),
         ),
         centerTitle: true,

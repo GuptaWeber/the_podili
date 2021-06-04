@@ -93,7 +93,6 @@ class OrderDetails extends StatelessWidget {
                           SizedBox(
                             height: 25.0,
                           ),
-
                           Padding(
                             padding: EdgeInsets.all(4),
                             child: Text(
@@ -109,10 +108,17 @@ class OrderDetails extends StatelessWidget {
                             child: ExpansionTile(
                               title: Text("Track Your Order "),
                               children: [
-                                dataMap['cancellationStatus'] == 'notCancelled'
+                                dataMap['cancellationStatus'] ==
+                                            'notCancelled' &&
+                                        dataMap['adminOrderCancellationStatus'] ==
+                                            'notCancelled'
                                     ? TimelineDelivery(
                                         orderStatus: dataMap['orderStatus'])
-                                    : Text("Order Cancelled", style: TextStyle(fontSize: 20, color: Colors.red),)
+                                    : Text(
+                                        "Order Cancelled",
+                                        style: TextStyle(
+                                            fontSize: 20, color: Colors.red),
+                                      )
                               ],
                             ),
                           ),
@@ -155,8 +161,8 @@ class OrderDetails extends StatelessWidget {
                                           AddressModel.fromJson(snap.data.data),
                                       orderId: orderID,
                                       orderTime: dataMap["orderTime"],
-                                      cancellationStatus : dataMap['cancellationStatus']
-                              )
+                                      cancellationStatus:
+                                          dataMap['cancellationStatus'])
                                   : Center(
                                       child: circularProgress(),
                                     );
@@ -256,7 +262,12 @@ class ShippingDetails extends StatelessWidget {
   final String orderTime;
   final String cancellationStatus;
 
-  ShippingDetails({Key key, this.model, this.orderId, this.orderTime, this.cancellationStatus})
+  ShippingDetails(
+      {Key key,
+      this.model,
+      this.orderId,
+      this.orderTime,
+      this.cancellationStatus})
       : super(key: key);
 
   @override
@@ -329,10 +340,12 @@ class ShippingDetails extends StatelessWidget {
             children: [
               Center(
                 child: InkWell(
-
-                  child: cancellationStatus == 'notCancelled' ? Container(
-
-                  ) : Text("Order Cancelled", style: TextStyle(fontSize: 20, color: Colors.red),),
+                  child: cancellationStatus == 'notCancelled'
+                      ? Container()
+                      : Text(
+                          "Order Cancelled",
+                          style: TextStyle(fontSize: 20, color: Colors.red),
+                        ),
                 ),
               ),
               SizedBox(
@@ -352,7 +365,7 @@ class ShippingDetails extends StatelessWidget {
                         ),
                       ),
                       onPressed: () {
-                        cancelOrder(context, orderId,int.parse(orderTime));
+                        cancelOrder(context, orderId, int.parse(orderTime));
                       },
                       child: Text(
                         'Cancel Order',
@@ -401,11 +414,12 @@ class ShippingDetails extends StatelessWidget {
   }
 
   cancelOrder(BuildContext context, String mOrderId, int orderTime) {
-    if(getMinutesfromOrderTime(orderTime, DateTime.now().millisecondsSinceEpoch)){
+    if (getMinutesfromOrderTime(
+        orderTime, DateTime.now().millisecondsSinceEpoch)) {
       EcommerceApp.firestore
           .collection(EcommerceApp.collectionUser)
           .document(
-          EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
+              EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
           .collection(EcommerceApp.collectionOrders)
           .document(mOrderId)
           .updateData({"cancellationStatus": "cancelled"});
@@ -417,6 +431,5 @@ class ShippingDetails extends StatelessWidget {
 
       Fluttertoast.showToast(msg: "Order has been Canceled.");
     }
-
   }
 }

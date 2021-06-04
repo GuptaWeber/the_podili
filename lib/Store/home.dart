@@ -46,7 +46,7 @@ class _HomeState extends State<Home> {
             ),
           ),
           title: Text(
-            "PODILI",
+            "PODILI - ALL IN ONE",
             style: TextStyle(
                 fontSize: 24.0, color: Colors.black, fontFamily: "Goblin One"),
           ),
@@ -102,7 +102,6 @@ class _HomeState extends State<Home> {
               stream: Firestore.instance
                   .collection("items")
                   .where("category", isEqualTo: widget.category)
-                  .limit(15)
                   .orderBy("publishedDate", descending: true)
                   .snapshots(),
               builder: (context, dataSnapshot) {

@@ -23,7 +23,8 @@ class AdminOrderDetails extends StatefulWidget {
   final String orderBy;
   final String orderStatus;
 
-  AdminOrderDetails({Key key, this.orderID, this.orderBy, this.orderStatus}) : super(key: key);
+  AdminOrderDetails({Key key, this.orderID, this.orderBy, this.orderStatus})
+      : super(key: key);
 
   @override
   _AdminOrderDetailsState createState() => _AdminOrderDetailsState();
@@ -39,14 +40,12 @@ class _AdminOrderDetailsState extends State<AdminOrderDetails> {
 
   @override
   Widget build(BuildContext context) {
-
     return SafeArea(
       child: Scaffold(
         drawer: MyDrawer(),
         appBar: MyAppBar(),
         body: SingleChildScrollView(
           child: FutureBuilder<DocumentSnapshot>(
-
             future: EcommerceApp.firestore
                 .collection(EcommerceApp.collectionUser)
                 .document(widget.orderBy)
@@ -54,261 +53,287 @@ class _AdminOrderDetailsState extends State<AdminOrderDetails> {
                 .document(widget.orderID)
                 .get(),
             builder: (c, snapshot) {
-              print(widget.orderBy);
-              print(widget.orderID);
               Map dataMap;
               if (snapshot.hasData) {
                 dataMap = snapshot.data.data;
                 print(snapshot.data['isSuccess']);
-              }else{
-                print(widget.orderBy);
-                print(widget.orderID);
-                print(snapshot.hasData);
+              } else {
+                // print(widget.orderBy);
+                // print(widget.orderID);
+                // print(snapshot.hasData);
               }
               return snapshot.hasData
                   ? Container(
-                child: Column(
-                  children: [
-                    StatusBanner(
-                      status: dataMap[EcommerceApp.isSuccess],
-                    ),
-                    SizedBox(
-                      height: 10.0,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(4.0),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          " Order Total : ₹ " +
-                              dataMap[EcommerceApp.totalAmount]
-                                  .toString(),
-                          style: TextStyle(
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.bold,
+                      child: Column(
+                        children: [
+                          StatusBanner(
+                            status: dataMap[EcommerceApp.isSuccess],
                           ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(4.0),
-                      child: Text("Order ID: " + widget.orderID),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(4.0),
-                      child: Text(
-                        "Ordered at: " +
-                            DateFormat("dd MMMM, yyyy - hh:mm aa").format(
-                                DateTime.fromMicrosecondsSinceEpoch(
-                                    int.parse(dataMap["orderTime"]) *
-                                        1000)),
-                        style:
-                        TextStyle(color: Colors.grey, fontSize: 16.0),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(4),
-                      child: Text(
-                        "Preferred Time to Deliver : ${dataMap['prefferedTime']}",
-                        style: TextStyle(fontSize: 16),
-                      ),
-                    ),
-
-                    Padding(
-                      padding: EdgeInsets.all(4),
-                      child: Text(
-                        "Order Type : ${dataMap['paymentDetails']}",
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold,  color: Colors.green),
-                      ),
-                    ),
-
-                    dataMap['paymentDetails'] == "Online Payment"? Padding(
-                      padding: EdgeInsets.all(4),
-                      child: Text(
-                        "Payment ID : ${dataMap['paymentId']}",
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, ),
-                      ),
-                    ) : Container(),
-
-                    Padding(
-                      padding: EdgeInsets.all(4),
-                      child: Text(
-                        "Order Info : ${dataMap['cartInfo']}",
-                        style: TextStyle(fontSize: 16),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 25.0,
-                    ),
-
-                    SizedBox(
-                      height: 25.0,
-                    ),
-                    dataMap['cancellationStatus'] == "notCancelled"? Card(
-                      margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                      child: Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Column(
-                          children: [
-                            Text("UPDATE TRACKING DETAILS", style: TextStyle(fontSize: 24),),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "Order Placed : ",
-                                  style: TextStyle(fontSize: 20),
+                          SizedBox(
+                            height: 10.0,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.all(4.0),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                " Order Total : ₹ " +
+                                    dataMap[EcommerceApp.totalAmount]
+                                        .toString(),
+                                style: TextStyle(
+                                  fontSize: 20.0,
+                                  fontWeight: FontWeight.bold,
                                 ),
-                                Radio<String>(
-                                  value: "placed",
-                                  groupValue: _orderStatus,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      _orderStatus = value;
-                                    });
-                                    updateOrderStatus(context, _orderStatus);
-                                  },
-                                ),
-                              ],
+                              ),
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "Order Confirmed : ",
-                                  style: TextStyle(fontSize: 20),
-                                ),
-                                Radio<String>(
-                                  value: 'confirmed',
-                                  groupValue: _orderStatus,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      _orderStatus = value;
-                                    });
-                                    updateOrderStatus(context, _orderStatus);
-                                  },
-                                ),
-                              ],
+                          ),
+                          Padding(
+                            padding: EdgeInsets.all(4.0),
+                            child: Text("Order ID: " + widget.orderID),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.all(4.0),
+                            child: Text(
+                              "Ordered at: " +
+                                  DateFormat("dd MMMM, yyyy - hh:mm aa").format(
+                                      DateTime.fromMicrosecondsSinceEpoch(
+                                          int.parse(dataMap["orderTime"]) *
+                                              1000)),
+                              style:
+                                  TextStyle(color: Colors.grey, fontSize: 16.0),
                             ),
-
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "Order Packed : ",
-                                  style: TextStyle(fontSize: 20),
-                                ),
-                                Radio<String>(
-                                  value: 'packed',
-                                  groupValue: _orderStatus,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      _orderStatus = value;
-                                    });
-                                    updateOrderStatus(context, _orderStatus);
-                                  },
-                                ),
-                              ],
+                          ),
+                          Padding(
+                            padding: EdgeInsets.all(4),
+                            child: Text(
+                              "Preferred Time to Deliver : ${dataMap['prefferedTime']}",
+                              style: TextStyle(fontSize: 16),
                             ),
-
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "Order Shipped : ",
-                                  style: TextStyle(fontSize: 20),
-                                ),
-                                Radio<String>(
-                                  value: 'shipped',
-                                  groupValue: _orderStatus,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      _orderStatus = value;
-                                    });
-                                    updateOrderStatus(context, _orderStatus);
-                                  },
-                                ),
-                              ],
+                          ),
+                          Padding(
+                            padding: EdgeInsets.all(4),
+                            child: Text(
+                              "Order Type : ${dataMap['paymentDetails']}",
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.green),
                             ),
-
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "Order Delivered : ",
-                                  style: TextStyle(fontSize: 20),
-                                ),
-                                Radio<String>(
-                                  value: 'delivered',
-                                  groupValue: _orderStatus,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      _orderStatus = value;
-                                    });
-                                    updateOrderStatus(context, _orderStatus);
-                                  },
-                                ),
-                              ],
+                          ),
+                          dataMap['paymentDetails'] == "Online Payment"
+                              ? Padding(
+                                  padding: EdgeInsets.all(4),
+                                  child: Text(
+                                    "Payment ID : ${dataMap['paymentId']}",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                )
+                              : Container(),
+                          Padding(
+                            padding: EdgeInsets.all(4),
+                            child: Text(
+                              "Order Info : ${dataMap['cartInfo']}",
+                              style: TextStyle(fontSize: 16),
                             ),
-                          ],
-                        ),
-                      )
-                    ) : Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Center(
-                        child: Container( margin:EdgeInsets.all(10) ,child: Text("Order Cancelled", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white, backgroundColor: Colors.red),)),
+                          ),
+                          SizedBox(
+                            height: 25.0,
+                          ),
+                          SizedBox(
+                            height: 25.0,
+                          ),
+                          dataMap['cancellationStatus'] == "notCancelled"
+                              ? Card(
+                                  margin: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                                  child: Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          "UPDATE TRACKING DETAILS",
+                                          style: TextStyle(fontSize: 24),
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              "Order Placed : ",
+                                              style: TextStyle(fontSize: 20),
+                                            ),
+                                            Radio<String>(
+                                              value: "placed",
+                                              groupValue: _orderStatus,
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  _orderStatus = value;
+                                                });
+                                                updateOrderStatus(
+                                                    context, _orderStatus);
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              "Order Confirmed : ",
+                                              style: TextStyle(fontSize: 20),
+                                            ),
+                                            Radio<String>(
+                                              value: 'confirmed',
+                                              groupValue: _orderStatus,
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  _orderStatus = value;
+                                                });
+                                                updateOrderStatus(
+                                                    context, _orderStatus);
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              "Order Packed : ",
+                                              style: TextStyle(fontSize: 20),
+                                            ),
+                                            Radio<String>(
+                                              value: 'packed',
+                                              groupValue: _orderStatus,
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  _orderStatus = value;
+                                                });
+                                                updateOrderStatus(
+                                                    context, _orderStatus);
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              "Order Shipped : ",
+                                              style: TextStyle(fontSize: 20),
+                                            ),
+                                            Radio<String>(
+                                              value: 'shipped',
+                                              groupValue: _orderStatus,
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  _orderStatus = value;
+                                                });
+                                                updateOrderStatus(
+                                                    context, _orderStatus);
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              "Order Delivered : ",
+                                              style: TextStyle(fontSize: 20),
+                                            ),
+                                            Radio<String>(
+                                              value: 'delivered',
+                                              groupValue: _orderStatus,
+                                              onChanged: (value) {
+                                                setState(() {
+                                                  _orderStatus = value;
+                                                });
+                                                updateOrderStatus(
+                                                    context, _orderStatus);
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ))
+                              : Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Center(
+                                    child: Container(
+                                        margin: EdgeInsets.all(10),
+                                        child: Text(
+                                          "Order Cancelled",
+                                          style: TextStyle(
+                                              fontSize: 25,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.white,
+                                              backgroundColor: Colors.red),
+                                        )),
+                                  ),
+                                ),
+                          Divider(
+                            height: 2.0,
+                          ),
+                          FutureBuilder<QuerySnapshot>(
+                            future: EcommerceApp.firestore
+                                .collection("items")
+                                .where("shortInfo",
+                                    whereIn: dataMap[EcommerceApp.productID])
+                                .getDocuments(),
+                            builder: (c, dataSnapshot) {
+                              return dataSnapshot.hasData
+                                  ? SimpleOrderCard(
+                                      itemCount:
+                                          dataSnapshot.data.documents.length,
+                                      data: dataSnapshot.data.documents,
+                                    )
+                                  : Center(
+                                      child: circularProgress(),
+                                    );
+                            },
+                          ),
+                          Divider(
+                            height: 2.0,
+                          ),
+                          FutureBuilder<DocumentSnapshot>(
+                            future: EcommerceApp.firestore
+                                .collection(EcommerceApp.collectionUser)
+                                .document(widget.orderBy)
+                                .collection(EcommerceApp.subCollectionAddress)
+                                .document(dataMap[EcommerceApp.addressID])
+                                .get(),
+                            builder: (c, snap) {
+                              return snap.hasData
+                                  ? ShippingDetails(
+                                      model:
+                                          AddressModel.fromJson(snap.data.data),
+                                      orderId: widget.orderID,
+                                      orderTime: dataMap["orderTime"],
+                                      orderBy: dataMap["orderBy"],
+                                      cancellationStatus:
+                                          dataMap['cancellationStatus'],
+                                      adminOrderCancellationStatus: dataMap[
+                                          'adminOrderCancellationStatus'],
+                                    )
+                                  : Center(
+                                      child: circularProgress(),
+                                    );
+                            },
+                          )
+                        ],
                       ),
-                    ),
-                    Divider(
-                      height: 2.0,
-                    ),
-                    FutureBuilder<QuerySnapshot>(
-                      future: EcommerceApp.firestore
-                          .collection("items")
-                          .where("shortInfo",
-                          whereIn: dataMap[EcommerceApp.productID])
-                          .getDocuments(),
-                      builder: (c, dataSnapshot) {
-                        return dataSnapshot.hasData
-                            ? SimpleOrderCard(
-                          itemCount:
-                          dataSnapshot.data.documents.length,
-                          data: dataSnapshot.data.documents,
-                        )
-                            : Center(
-                          child: circularProgress(),
-                        );
-                      },
-                    ),
-                    Divider(
-                      height: 2.0,
-                    ),
-                    FutureBuilder<DocumentSnapshot>(
-                      future: EcommerceApp.firestore
-                          .collection(EcommerceApp.collectionUser)
-                          .document(widget.orderBy)
-                          .collection(EcommerceApp.subCollectionAddress)
-                          .document(dataMap[EcommerceApp.addressID])
-                          .get(),
-                      builder: (c, snap) {
-                        return snap.hasData
-                            ? ShippingDetails(
-                            model:
-                            AddressModel.fromJson(snap.data.data),
-                            orderId: widget.orderID,
-                            orderTime: dataMap["orderTime"],
-                            cancellationStatus : dataMap['cancellationStatus']
-                        )
-                            : Center(
-                          child: circularProgress(),
-                        );
-                      },
                     )
-                  ],
-                ),
-              )
                   : Center(
-                child: circularProgress(),
-              );
+                      child: circularProgress(),
+                    );
             },
           ),
         ),
@@ -316,8 +341,7 @@ class _AdminOrderDetailsState extends State<AdminOrderDetails> {
     );
   }
 
-  updateOrderStatus(BuildContext context, String status){
-
+  updateOrderStatus(BuildContext context, String status) {
     EcommerceApp.firestore
         .collection(EcommerceApp.collectionUser)
         .document(widget.orderBy)
@@ -327,16 +351,11 @@ class _AdminOrderDetailsState extends State<AdminOrderDetails> {
       getOrderId = "";
 
       Route route = MaterialPageRoute(builder: (c) => AdminShiftOrders());
-      Navigator.pushAndRemoveUntil(context, route,(route) => false);
+      Navigator.pushAndRemoveUntil(context, route, (route) => false);
 
       Fluttertoast.showToast(msg: "Order Status Updated Successfully!");
-
     });
-
-
-
   }
-
 }
 
 class StatusBanner extends StatelessWidget {
@@ -418,8 +437,17 @@ class ShippingDetails extends StatelessWidget {
   final String orderId;
   final String orderTime;
   final String cancellationStatus;
+  final String adminOrderCancellationStatus;
+  final String orderBy;
 
-  ShippingDetails({Key key, this.model, this.orderId, this.orderTime, this.cancellationStatus})
+  ShippingDetails(
+      {Key key,
+      this.model,
+      this.orderId,
+      this.orderTime,
+      this.cancellationStatus,
+      this.adminOrderCancellationStatus,
+      this.orderBy})
       : super(key: key);
 
   @override
@@ -486,76 +514,97 @@ class ShippingDetails extends StatelessWidget {
             ],
           ),
         ),
-        cancellationStatus == 'notCancelled' ?  Padding(
-          padding: EdgeInsets.all(10.0),
-          child: Column(
-            children: [
-              Center(
-                child: InkWell(
-
-                  child: cancellationStatus == 'notCancelled' ? Container(
-
-                  ) : Text("Order Cancelled", style: TextStyle(fontSize: 20, color: Colors.red),),
-                ),
-              ),
-              SizedBox(
-                height: 20,
-              ),
-              getMinutesfromOrderTime(int.parse(orderTime),
-                  DateTime.now().millisecondsSinceEpoch)
-                  ? ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  onPrimary: Colors.black87,
-                  primary: Colors.redAccent,
-                  minimumSize:
-                  Size(MediaQuery.of(context).size.width - 40.0, 50),
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(2)),
-                  ),
-                ),
-                onPressed: () {
-                  cancelOrder(context, orderId,int.parse(orderTime));
-                },
-                child: Text(
-                  'Cancel Order',
-                  style: TextStyle(color: Colors.white, fontSize: 15),
+        cancellationStatus == 'notCancelled'
+            ? Padding(
+                padding: EdgeInsets.all(10.0),
+                child: Column(
+                  children: [
+                    Center(
+                      child: InkWell(
+                        child: cancellationStatus == 'notCancelled'
+                            ? Container()
+                            : Text(
+                                "Order Cancelled",
+                                style:
+                                    TextStyle(fontSize: 20, color: Colors.red),
+                              ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    adminOrderCancellationStatus == "notCancelled"
+                        ? ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              onPrimary: Colors.black87,
+                              primary: Colors.redAccent,
+                              minimumSize: Size(
+                                  MediaQuery.of(context).size.width - 40.0, 50),
+                              padding: EdgeInsets.symmetric(horizontal: 16),
+                              shape: const RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(2)),
+                              ),
+                            ),
+                            onPressed: () {
+                              adminCancelOrderUpdate(
+                                  context, orderId, orderBy, "cancelled");
+                            },
+                            child: Text(
+                              'Cancel Order from Admin',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 15),
+                            ),
+                          )
+                        : ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              onPrimary: Colors.black87,
+                              primary: Colors.green,
+                              minimumSize: Size(
+                                  MediaQuery.of(context).size.width - 40.0, 50),
+                              padding: EdgeInsets.symmetric(horizontal: 16),
+                              shape: const RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(2)),
+                              ),
+                            ),
+                            onPressed: () {
+                              adminCancelOrderUpdate(
+                                  context, orderId, orderBy, "notCancelled");
+                            },
+                            child: Text(
+                              'UnCancel Order from Admin',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 15),
+                            ),
+                          ),
+                  ],
                 ),
               )
-                  : Container(),
-            ],
-          ),
-        ) : Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Center(
-            child: Container( margin:EdgeInsets.all(10) ,child: Text("Order Cancelled", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white, backgroundColor: Colors.red),)),
-          ),
-        ),
+            : Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Center(
+                  child: Container(
+                      margin: EdgeInsets.all(10),
+                      child: Text(
+                        "Order Cancelled",
+                        style: TextStyle(
+                            fontSize: 25,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            backgroundColor: Colors.red),
+                      )),
+                ),
+              ),
       ],
     );
-  }
-
-  bool getMinutesfromOrderTime(int orderTime, int currentTime) {
-    int difference;
-    double difference_minutes;
-    int one_day = 1000 * 60 * 60 * 24;
-
-    print(orderTime);
-    print(currentTime);
-
-    difference = currentTime - orderTime;
-
-    difference_minutes = (difference / one_day) * 24 * 60;
-    print((difference / one_day) * 24 * 60);
-
-    return 5 > difference_minutes;
   }
 
   confirmAdminOrderDelivered(BuildContext context, String mOrderId) {
     EcommerceApp.firestore
         .collection(EcommerceApp.collectionUser)
         .document(
-        EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
+            EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
         .collection(EcommerceApp.collectionOrders)
         .document(mOrderId)
         .updateData({"adminOrderConfirmation": "delivered"});
@@ -568,23 +617,21 @@ class ShippingDetails extends StatelessWidget {
     Fluttertoast.showToast(msg: "Order has been Received, Confirmed.");
   }
 
-  cancelOrder(BuildContext context, String mOrderId, int orderTime) {
-    if(getMinutesfromOrderTime(orderTime, DateTime.now().millisecondsSinceEpoch)){
-      EcommerceApp.firestore
-          .collection(EcommerceApp.collectionUser)
-          .document(
-          EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
-          .collection(EcommerceApp.collectionOrders)
-          .document(mOrderId)
-          .updateData({"cancellationStatus": "cancelled"});
+  adminCancelOrderUpdate(BuildContext context, String mOrderId, String orderBy,
+      String cancelStatus) {
+    print(orderBy);
+    EcommerceApp.firestore
+        .collection(EcommerceApp.collectionUser)
+        .document(orderBy)
+        .collection(EcommerceApp.collectionOrders)
+        .document(mOrderId)
+        .updateData({"adminOrderCancellationStatus": cancelStatus});
 
-      getOrderId = "";
+    getOrderId = "";
 
-      Route route = MaterialPageRoute(builder: (c) => MyOrders());
-      Navigator.pushReplacement(context, route);
+    Route route = MaterialPageRoute(builder: (c) => AdminShiftOrders());
+    Navigator.pushReplacement(context, route);
 
-      Fluttertoast.showToast(msg: "Order has been Canceled.");
-    }
-
+    Fluttertoast.showToast(msg: "Order has been Canceled.");
   }
 }

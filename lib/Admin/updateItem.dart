@@ -6,6 +6,7 @@ import 'package:e_shop/Store/storehome.dart';
 import 'package:e_shop/Widgets/button_widget.dart';
 import 'package:e_shop/Widgets/customAppBar.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:e_shop/Widgets/myDrawer.dart';
 import 'package:flutter/material.dart';
@@ -162,7 +163,9 @@ class _UpdateItemState extends State<UpdateItem> {
                    ),
                  ],
                ),
-             ): Container();
+             ): Center(
+               child: CupertinoActivityIndicator( radius: 30, ),
+             );
            },
          ),
         ),

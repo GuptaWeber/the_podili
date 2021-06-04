@@ -56,6 +56,7 @@ class _MyOrdersState extends State<AdminShiftOrders> {
                             cancellationStatus: snapshot.data[index].cancellationStatus,
                             orderBy: snapshot.data[index].orderBy,
                             addressID: snapshot.data[index].addressID,
+                            adminOrderCancellationStatus: snapshot.data[index].adminOrderCancellationStatus,
                           )
                               : Center(child: circularProgress(),);
                         }

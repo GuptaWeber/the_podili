@@ -14,6 +14,7 @@ String prefferedTime;
 List productIDs;
 double totalAmount;
 String userOrderConfirmation;
+String adminOrderCancellationStatus;
 
   OrderModel({
     this.addressID,
@@ -28,7 +29,8 @@ String userOrderConfirmation;
     this.prefferedTime,
     this.productIDs,
     this.totalAmount,
-    this.userOrderConfirmation
+    this.userOrderConfirmation,
+    this.adminOrderCancellationStatus
   });
 
   OrderModel.fromJson(Map<String, dynamic> json) {
@@ -46,6 +48,7 @@ String userOrderConfirmation;
     productIDs = json['productIDs'];
     totalAmount = json['totalAmount'];
     userOrderConfirmation = json['userOrderConfirmation'];
+    adminOrderCancellationStatus = json['adminOrderCancellationStatus'];
 
   }
 
@@ -87,6 +90,7 @@ String userOrderConfirmation;
     data['paymentDetails'] = this.paymentDetails;
     data['productIDs'] = this.productIDs;
     data['totalAmount'] = this.totalAmount;
+    data['adminOrderCancellationStatus'] = this.adminOrderCancellationStatus;
 
 
     return data;
