@@ -66,6 +66,7 @@ class _MyOrdersState extends State<MyOrders> {
                               orderStatus: snapshot.data.documents[index].data['orderStatus'],
                               cancellationStatus: snapshot.data.documents[index].data['cancellationStatus'],
                               adminOrderCancellationStatus: snapshot.data.documents[index].data['adminOrderCancellationStatus'],
+                              totalPrice: snapshot.data.documents[index].data['totalAmount'].toString(),
                             )
                                 : Center(child: circularProgress(),);
                           }

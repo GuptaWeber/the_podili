@@ -11,6 +11,7 @@ class OrderCard extends StatelessWidget {
   final String cancellationStatus;
   final String orderStatus;
   final String adminOrderCancellationStatus;
+  final String totalPrice;
 
   OrderCard(
       {Key key,
@@ -19,7 +20,9 @@ class OrderCard extends StatelessWidget {
       this.orderID,
       this.cancellationStatus,
       this.orderStatus,
-      this.adminOrderCancellationStatus})
+      this.adminOrderCancellationStatus,
+      this.totalPrice
+      })
       : super(key: key);
 
   @override
@@ -51,7 +54,7 @@ class OrderCard extends StatelessWidget {
             itemBuilder: (c, index) {
               ItemModel model = ItemModel.fromJson(data[index].data);
               return sourceOrderInfo(model, context, cancellationStatus,
-                  orderStatus, adminOrderCancellationStatus);
+                  orderStatus, adminOrderCancellationStatus, totalPrice);
             }),
       ),
     );
@@ -64,6 +67,7 @@ Widget sourceOrderInfo(
     String cancellationStatus,
     String orderStatus,
     String adminOrderCancellationStatus,
+    String totalPrice,
     {Color background}) {
   print(cancellationStatus);
 
@@ -119,35 +123,37 @@ Widget sourceOrderInfo(
             SizedBox(
               height: 20.0,
             ),
-            Row(
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.only(top: 0.0),
-                      child: Row(
-                        children: [
-                          Text(
-                            r"Total Price: ₹ ",
-                            style: TextStyle(
-                              fontSize: 14.0,
-                              color: Colors.grey,
+            Expanded(
+              child: Row(
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: EdgeInsets.only(top: 0.0),
+                        child: Row(
+                          children: [
+                            Text(
+                              r"Total Price: ₹ ",
+                              style: TextStyle(
+                                fontSize: 14.0,
+                                color: Colors.grey,
+                              ),
                             ),
-                          ),
-                          Text(
-                            (model.price).toString(),
-                            style: TextStyle(
-                              fontSize: 14.0,
-                              color: Colors.grey,
+                            Text(
+                              totalPrice,
+                              style: TextStyle(
+                                fontSize: 14.0,
+                                color: Colors.grey,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
-                )
-              ],
+                    ],
+                  )
+                ],
+              ),
             ),
             // SizedBox(height: 30.0,),
             isCancelled(cancellationStatus)
@@ -192,9 +198,11 @@ Widget sourceOrderInfo(
                                   20.0) //         <--- border radius here
                               ),
                         ), //       <--- BoxDecoration here
-                        child: Text(
-                          orderStatus,
-                          style: TextStyle(fontSize: 15.0, color: Colors.white),
+                        child: Center(
+                          child: Text(
+                            orderStatus,
+                            style: TextStyle(fontSize: 15.0, color: Colors.white),
+                          ),
                         ),
                       ),
             Flexible(

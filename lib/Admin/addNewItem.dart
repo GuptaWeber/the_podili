@@ -283,7 +283,7 @@ class _AddNewItemState extends State<AddNewItem> {
 
     SnackBar imageRequired = SnackBar(content: Text('Image is Required'), backgroundColor: Colors.redAccent,);
 
-    return ButtonWidget(text: 'Submit Item',
+    return ButtonWidget(fontSize: 24,text: 'Submit Item',
         onClicked: () {
           final isValid =  formKey.currentState.validate();
           if(isValid){

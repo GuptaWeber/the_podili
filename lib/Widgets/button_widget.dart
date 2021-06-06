@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 class ButtonWidget extends StatelessWidget {
   final String text;
   final VoidCallback onClicked;
+  final double fontSize;
 
   const ButtonWidget({
     @required this.text,
     @required this.onClicked,
+    this.fontSize,
     Key key,
   }) : super(key: key);
 
@@ -14,7 +16,7 @@ class ButtonWidget extends StatelessWidget {
   Widget build(BuildContext context) => RaisedButton(
     child: Text(
       text,
-      style: TextStyle(fontSize: 24),
+      style: TextStyle(fontSize: fontSize),
     ),
     shape: StadiumBorder(),
     color: Theme.of(context).primaryColor,

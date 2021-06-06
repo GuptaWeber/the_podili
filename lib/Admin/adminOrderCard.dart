@@ -13,6 +13,7 @@ class AdminOrderCard extends StatelessWidget {
   final String orderBy;
   final String addressID;
   final String adminOrderCancellationStatus;
+  final String totalAmount;
 
   AdminOrderCard({
     Key key,
@@ -24,6 +25,7 @@ class AdminOrderCard extends StatelessWidget {
     this.orderBy,
     this.addressID,
     this.adminOrderCancellationStatus,
+    this.totalAmount
   }) : super(key: key);
 
   @override
@@ -61,7 +63,7 @@ class AdminOrderCard extends StatelessWidget {
             itemBuilder: (c, index) {
               ItemModel model = ItemModel.fromJson(data[index].data);
               return sourceOrderInfo(model, context, cancellationStatus,
-                  orderStatus, adminOrderCancellationStatus);
+                  orderStatus, adminOrderCancellationStatus, totalAmount);
             }),
       ),
     );
@@ -74,6 +76,7 @@ Widget sourceOrderInfo(
     String cancellationStatus,
     String orderStatus,
     String adminOrderCancellationStatus,
+    String totalAmount,
     {Color background}) {
   print(cancellationStatus);
 
@@ -146,7 +149,7 @@ Widget sourceOrderInfo(
                             ),
                           ),
                           Text(
-                            (model.price).toString(),
+                            totalAmount,
                             style: TextStyle(
                               fontSize: 14.0,
                               color: Colors.grey,

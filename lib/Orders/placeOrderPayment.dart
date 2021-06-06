@@ -3,14 +3,12 @@ import 'package:e_shop/Config/config.dart';
 import 'package:e_shop/Models/address.dart';
 import 'package:e_shop/Store/storehome.dart';
 import 'package:e_shop/Counters/cartitemcounter.dart';
+import 'package:e_shop/Widgets/button_widget.dart';
 import 'package:e_shop/Widgets/customAppBar.dart';
-import 'package:e_shop/main.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
-import 'package:flutter/services.dart';
 import 'package:twilio_flutter/twilio_flutter.dart';
 
 import 'myOrders.dart';
@@ -28,10 +26,13 @@ class PaymentPage extends StatefulWidget {
 }
 
 class _PaymentPageState extends State<PaymentPage> {
+  final formKey = GlobalKey<FormState>();
   int _payment_method = 0;
   Razorpay _razorpay;
   TwilioFlutter twilioFlutter;
   String preferredTime = '7 AM';
+  String couponCode;
+  bool isFree = false;
   int i = 0;
   List productList =
       EcommerceApp.sharedPreferences.getStringList(EcommerceApp.userCartList);
@@ -45,10 +46,17 @@ class _PaymentPageState extends State<PaymentPage> {
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
 
+    setTiwilio();
+  }
+
+  void setTiwilio() async {
+    DocumentSnapshot twilioCreds =
+        await Firestore.instance.collection('keys').document('twilio').get();
+
     twilioFlutter = TwilioFlutter(
-        accountSid: 'AC35db7389289340fd2a6cd6c2bd51602f',
-        authToken: '2b6bba734a2d361e10cbe7803cf29519',
-        twilioNumber: '+12027594159');
+        accountSid: twilioCreds.data['accountSid'],
+        authToken: twilioCreds.data['authToken'],
+        twilioNumber: twilioCreds.data['twilioNumber']);
   }
 
   @override
@@ -56,224 +64,324 @@ class _PaymentPageState extends State<PaymentPage> {
     return Material(
         child: Scaffold(
       appBar: MyAppBar(),
-      body: Container(
-        child: Center(
-          child: Column(
-            children: [
-              // Padding(
-              //   padding: EdgeInsets.all(8.0),
-              //   child: Image.asset("images/cash.png"),
-              // ),
-              SizedBox(
-                height: 10.0,
-              ),
-              Text(
-                "Proceed Checkout",
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
+      body: SingleChildScrollView(
+        child: Container(
+          child: Center(
+            child: Column(
+              children: [
+                // Padding(
+                //   padding: EdgeInsets.all(8.0),
+                //   child: Image.asset("images/cash.png"),
+                // ),
+                SizedBox(
+                  height: 10.0,
                 ),
-              ),
-              SizedBox(
-                height: 10.0,
-              ),
+                Text(
+                  "Proceed Checkout",
+                  style: TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(
+                  height: 10.0,
+                ),
 
-              Card(
-                margin: EdgeInsets.fromLTRB(50.0, 20.0, 50.0, 20.0),
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Order Total : ",
-                            style: TextStyle(fontSize: 20),
-                            textAlign: TextAlign.left,
-                          ),
-                          Text(
-                            "${widget.totalAmount.toString()}",
-                            style: TextStyle(
-                                fontSize: 20,
-                                color: Colors.green,
-                                fontWeight: FontWeight.bold),
-                          )
-                        ],
-                      ),
-                      SizedBox(
-                        height: 10.0,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Delivery Charges : ",
-                            style: TextStyle(fontSize: 20),
-                            textAlign: TextAlign.left,
-                          ),
-                          Text(
-                            "20.0",
-                            style: TextStyle(
-                                fontSize: 20,
-                                color: Colors.green,
-                                fontWeight: FontWeight.bold),
-                          )
-                        ],
-                      ),
-                      SizedBox(
-                        height: 20.0,
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                          child: Divider(
-                            height: 10,
-                            thickness: 3,
-                            color: Colors.black54,
+                Card(
+                  margin: EdgeInsets.fromLTRB(50.0, 20.0, 50.0, 20.0),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Order Total : ",
+                              style: TextStyle(fontSize: 20),
+                              textAlign: TextAlign.left,
+                            ),
+                            Text(
+                              "${widget.totalAmount.toString()}",
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.green,
+                                  fontWeight: FontWeight.bold),
+                            )
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10.0,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Delivery Charges : ",
+                              style: TextStyle(fontSize: 20),
+                              textAlign: TextAlign.left,
+                            ),
+                            Text(
+                              "20.0",
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.green,
+                                  fontWeight: FontWeight.bold),
+                            )
+                          ],
+                        ),
+                        SizedBox(
+                          height: 20.0,
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                            child: Divider(
+                              height: 10,
+                              thickness: 3,
+                              color: Colors.black54,
+                            ),
                           ),
                         ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Total Amount : ",
-                            style: TextStyle(fontSize: 20),
-                            textAlign: TextAlign.left,
-                          ),
-                          Text(
-                            "${widget.totalAmount + 20}",
-                            style: TextStyle(
-                                fontSize: 20,
-                                color: Colors.green,
-                                fontWeight: FontWeight.bold),
-                          )
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Card(
-                margin: EdgeInsets.fromLTRB(16.0, 20.0, 16.0, 20.0),
-                child: Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Column(
-                    children: [
-                      // Table(
-                      //   children: [
-                      //     TableRow(
-
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Choose Delivery Time : ",
-                            style: TextStyle(fontSize: 20),
-                          ),
-                          DropdownButton<String>(
-                            value: preferredTime,
-                            icon: const Icon(Icons.arrow_downward),
-                            iconSize: 24,
-                            elevation: 16,
-                            style: const TextStyle(color: Colors.deepPurple),
-                            underline: Container(
-                              height: 2,
-                              color: Colors.deepPurpleAccent,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Total Amount : ",
+                              style: TextStyle(fontSize: 20),
+                              textAlign: TextAlign.left,
                             ),
-                            onChanged: (newValue) {
-                              setState(() {
-                                preferredTime = newValue;
-                              });
-                            },
-                            items: <String>[
-                              '7 AM',
-                              '8 AM',
-                              '9 AM',
-                              '10 AM',
-                              '11 AM',
-                              '12 PM',
-                              '1 PM',
-                              '2 PM',
-                              '3 PM',
-                              '4 PM',
-                              '5 PM',
-                              '6 PM',
-                              '7 PM',
-                              '8 PM',
-                              '9 PM'
-                            ].map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
-                          )
-                        ],
-                      ),
-
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Online Payment : ",
-                            style: TextStyle(fontSize: 20),
-                          ),
-                          Radio<int>(
-                            value: 1,
-                            groupValue: _payment_method,
-                            onChanged: (value) {
-                              setState(() {
-                                _payment_method = value;
-                              });
-                            },
-                          ),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Cash On Delivery : ",
-                            style: TextStyle(fontSize: 20),
-                          ),
-                          Radio<int>(
-                            value: 2,
-                            groupValue: _payment_method,
-                            onChanged: (value) {
-                              setState(() {
-                                _payment_method = value;
-                              });
-                            },
-                          ),
-                        ],
-                      )
-                    ],
+                            Text(
+                              "${widget.totalAmount + 20}",
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.green,
+                                  fontWeight: FontWeight.bold),
+                            )
+                          ],
+                        ),
+                        isFree
+                            ? Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "Discount Amount : ",
+                                        style: TextStyle(fontSize: 20),
+                                        textAlign: TextAlign.left,
+                                      ),
+                                      Text(
+                                        "- ${widget.totalAmount + 20}",
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            color: Colors.green,
+                                            fontWeight: FontWeight.bold),
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: 20.0,
+                                    child: Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          10, 0, 10, 0),
+                                      child: Divider(
+                                        height: 10,
+                                        thickness: 3,
+                                        color: Colors.black54,
+                                      ),
+                                    ),
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "Final Amount : ",
+                                        style: TextStyle(fontSize: 20),
+                                        textAlign: TextAlign.left,
+                                      ),
+                                      Text(
+                                        "0",
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            color: Colors.green,
+                                            fontWeight: FontWeight.bold),
+                                      )
+                                    ],
+                                  ),
+                                ],
+                              )
+                            : Container(),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              TextButton(
-                  onPressed: () {
-                    if (_payment_method == 1) {
-                      openCheckout();
-                    } else if (_payment_method == 2) {
-                      addOrderDetails();
-                    } else {
-                      Fluttertoast.showToast(
-                          msg: "Please Select a Payment Method",
-                          timeInSecForIos: 4);
-                    }
-                  },
-                  style: TextButton.styleFrom(
-                      primary: Colors.purple,
-                      backgroundColor: Colors.green,
-                      elevation: 5,
-                      textStyle:
-                          TextStyle(fontSize: 24, fontStyle: FontStyle.italic)),
-                  child: Text(
-                    "Place Order",
-                    style: TextStyle(fontSize: 30.0, color: Colors.white),
-                  ))
-            ],
+
+                Card(
+                  margin: EdgeInsets.fromLTRB(25.0, 20.0, 25.0, 20.0),
+                  child: Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Column(
+                      children: [
+                        Form(
+                          key: formKey,
+                          child: Column(
+                            children: [
+                              TextFormField(
+                                decoration: InputDecoration(
+                                  labelText: 'Have a Coupon ?',
+                                ),
+                                onSaved: (value) =>
+                                    setState(() => couponCode = value.trim()),
+                                validator: (value) {
+                                  if (value.length < 4) {
+                                    return "Coupon Code must be more than 3 characters";
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              submitButton()
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Card(
+                  margin: EdgeInsets.fromLTRB(16.0, 20.0, 16.0, 20.0),
+                  child: Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Choose Delivery Time : ",
+                              style: TextStyle(fontSize: 20),
+                            ),
+                            DropdownButton<String>(
+                              value: preferredTime,
+                              icon: const Icon(Icons.arrow_downward),
+                              iconSize: 24,
+                              elevation: 16,
+                              style: const TextStyle(color: Colors.deepPurple),
+                              underline: Container(
+                                height: 2,
+                                color: Colors.deepPurpleAccent,
+                              ),
+                              onChanged: (newValue) {
+                                setState(() {
+                                  preferredTime = newValue;
+                                });
+                              },
+                              items: <String>[
+                                '7 AM',
+                                '8 AM',
+                                '9 AM',
+                                '10 AM',
+                                '11 AM',
+                                '12 PM',
+                                '1 PM',
+                                '2 PM',
+                                '3 PM',
+                                '4 PM',
+                                '5 PM',
+                                '6 PM',
+                                '7 PM',
+                                '8 PM',
+                                '9 PM'
+                              ].map<DropdownMenuItem<String>>((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                );
+                              }).toList(),
+                            )
+                          ],
+                        ),
+                        !isFree
+                            ? Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "Online Payment : ",
+                                        style: TextStyle(fontSize: 20),
+                                      ),
+                                      Radio<int>(
+                                        value: 1,
+                                        groupValue: _payment_method,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            _payment_method = value;
+                                          });
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "Cash On Delivery : ",
+                                        style: TextStyle(fontSize: 20),
+                                      ),
+                                      Radio<int>(
+                                        value: 2,
+                                        groupValue: _payment_method,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            _payment_method = value;
+                                          });
+                                        },
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              )
+                            : Container(
+                                margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
+                                child: Text(
+                                  ' 🎉 Hurray! The Item is Free 🥳 ',
+                                  style: TextStyle(
+                                      fontSize: 22, color: Colors.green),
+                                ),
+                              )
+                      ],
+                    ),
+                  ),
+                ),
+                TextButton(
+                    onPressed: () {
+                      if (_payment_method == 1) {
+                        openCheckout();
+                      } else if (_payment_method == 2) {
+                        addOrderDetails();
+                      } else if (isFree) {
+                        placeFreeOrder();
+                      } else {
+                        Fluttertoast.showToast(
+                            msg: "Please Select a Payment Method",
+                            timeInSecForIos: 4);
+                      }
+                    },
+                    style: TextButton.styleFrom(
+                        primary: Colors.purple,
+                        backgroundColor: Colors.green,
+                        elevation: 5,
+                        textStyle: TextStyle(
+                            fontSize: 24, fontStyle: FontStyle.italic)),
+                    child: Text(
+                      "Place Order",
+                      style: TextStyle(fontSize: 30.0, color: Colors.white),
+                    ))
+              ],
+            ),
           ),
         ),
       ),
@@ -282,8 +390,9 @@ class _PaymentPageState extends State<PaymentPage> {
 
   addOrderDetails() {
     String productDescription = '';
-    String orderID= EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID) +
-        DateTime.now().millisecondsSinceEpoch.toString();
+    String orderID =
+        EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID) +
+            DateTime.now().millisecondsSinceEpoch.toString();
 
     for (i = 1; i < productList.length; i++) {
       productDescription = productDescription + productList[i] + ' ';
@@ -293,11 +402,11 @@ class _PaymentPageState extends State<PaymentPage> {
       EcommerceApp.addressID: widget.addressId,
       EcommerceApp.totalAmount: widget.totalAmount + 20,
       "orderBy": EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID),
-      "orderID":orderID,
+      "orderID": orderID,
       "prefferedTime": preferredTime,
       "adminOrderCancellationStatus": "notCancelled",
       "cartInfo":
-      EcommerceApp.sharedPreferences.getString(EcommerceApp.cartInfo),
+          EcommerceApp.sharedPreferences.getString(EcommerceApp.cartInfo),
       EcommerceApp.cancellationStatus: "notCancelled",
       EcommerceApp.userOrderConfirmation: "Not Received",
       EcommerceApp.orderStatus: "placed",
@@ -312,11 +421,11 @@ class _PaymentPageState extends State<PaymentPage> {
       EcommerceApp.addressID: widget.addressId,
       EcommerceApp.totalAmount: widget.totalAmount + 20,
       "orderBy": EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID),
-      "orderID":orderID,
+      "orderID": orderID,
       "prefferedTime": preferredTime,
       "adminOrderCancellationStatus": "notCancelled",
       "cartInfo":
-      EcommerceApp.sharedPreferences.getString(EcommerceApp.cartInfo),
+          EcommerceApp.sharedPreferences.getString(EcommerceApp.cartInfo),
       EcommerceApp.orderStatus: "placed",
       EcommerceApp.cancellationStatus: "notCancelled",
       EcommerceApp.userOrderConfirmation: "Not Received",
@@ -329,8 +438,62 @@ class _PaymentPageState extends State<PaymentPage> {
 
     phonenumbers.forEach((phone) {
       sendSms(phone,
-          "${widget.model.name} has ordered ${productDescription} at a price ${widget.totalAmount + 20} with Cash on Delivery! contact at ${widget.model.phoneNumber}");
+          "${widget.model.name} has ordered $productDescription at a price ${widget.totalAmount + 20} with Cash on Delivery! contact at ${widget.model.phoneNumber}");
     });
+  }
+
+  placeFreeOrder() async {
+    String productDescription = '';
+    String orderID =
+        EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID) +
+            DateTime.now().millisecondsSinceEpoch.toString();
+
+    for (i = 1; i < productList.length; i++) {
+      productDescription = productDescription + productList[i] + ' ';
+    }
+
+    writeOrderDetailsForUser({
+      EcommerceApp.addressID: widget.addressId,
+      EcommerceApp.totalAmount: widget.totalAmount - widget.totalAmount,
+      "orderBy": EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID),
+      "orderID": orderID,
+      "prefferedTime": preferredTime,
+      "adminOrderCancellationStatus": "notCancelled",
+      "cartInfo":
+          EcommerceApp.sharedPreferences.getString(EcommerceApp.cartInfo),
+      EcommerceApp.cancellationStatus: "notCancelled",
+      EcommerceApp.userOrderConfirmation: "Not Received",
+      EcommerceApp.orderStatus: "placed",
+      EcommerceApp.productID: EcommerceApp.sharedPreferences
+          .getStringList(EcommerceApp.userCartList),
+      EcommerceApp.paymentDetails: "FREE ORDER WITH COUPON",
+      EcommerceApp.orderTime: DateTime.now().millisecondsSinceEpoch.toString(),
+      EcommerceApp.isSuccess: true,
+    }).whenComplete(() => {emptyCartNow()});
+
+    DocumentSnapshot userData = await Firestore.instance
+        .collection('users')
+        .document(
+        EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID)).get();
+
+    List couponHistory = userData.data['couponHistory'];
+
+    couponHistory.add(couponCode);
+
+    print(couponHistory);
+
+    await Firestore.instance
+        .collection('users')
+        .document(
+            EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
+        .updateData({ "couponHistory" : couponHistory});
+
+    phonenumbers.forEach((phone) {
+      sendSms(phone,
+          "${widget.model.name} has placed a free order product : $productDescription with the coupon code $couponCode contact at ${widget.model.phoneNumber}");
+    });
+
+    _onOrderSuccess();
   }
 
   emptyCartNow() {
@@ -377,16 +540,19 @@ class _PaymentPageState extends State<PaymentPage> {
   void openCheckout() async {
     String productDescription = '';
 
+    DocumentSnapshot snapshot =
+        await Firestore.instance.collection('keys').document('razor_pay').get();
+
+    String razorPayKey = snapshot.data['key'];
+
     for (i = 1; i < productList.length; i++) {
       productDescription = productDescription + productList[i] + ' ';
     }
 
     print(widget.model.phoneNumber);
 
-    debugPrint(widget.model.phoneNumber);
-
     var options = {
-      'key': 'rzp_test_Y0GRKKJ2grMEYj',
+      'key': razorPayKey,
       'amount': (widget.totalAmount + 20) * 100,
       'name': widget.model.name,
       'description': productDescription,
@@ -408,8 +574,9 @@ class _PaymentPageState extends State<PaymentPage> {
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) {
     String productDescription = '';
-    String orderID= EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID) +
-        DateTime.now().millisecondsSinceEpoch.toString();
+    String orderID =
+        EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID) +
+            DateTime.now().millisecondsSinceEpoch.toString();
 
     for (i = 1; i < productList.length; i++) {
       productDescription = productDescription + productList[i] + ' ';
@@ -422,10 +589,10 @@ class _PaymentPageState extends State<PaymentPage> {
       EcommerceApp.addressID: widget.addressId,
       EcommerceApp.totalAmount: widget.totalAmount + 20,
       "orderBy": EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID),
-      "orderID":orderID,
+      "orderID": orderID,
       "adminOrderCancellationStatus": "notCancelled",
       "cartInfo":
-      EcommerceApp.sharedPreferences.getString(EcommerceApp.cartInfo),
+          EcommerceApp.sharedPreferences.getString(EcommerceApp.cartInfo),
       "prefferedTime": preferredTime,
       EcommerceApp.cancellationStatus: "notCancelled",
       EcommerceApp.userOrderConfirmation: "Not Received",
@@ -442,10 +609,10 @@ class _PaymentPageState extends State<PaymentPage> {
       EcommerceApp.addressID: widget.addressId,
       EcommerceApp.totalAmount: widget.totalAmount + 20,
       "orderBy": EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID),
-      "orderID":orderID,
+      "orderID": orderID,
       "adminOrderCancellationStatus": "notCancelled",
       "cartInfo":
-      EcommerceApp.sharedPreferences.getString(EcommerceApp.cartInfo),
+          EcommerceApp.sharedPreferences.getString(EcommerceApp.cartInfo),
       "prefferedTime": preferredTime,
       EcommerceApp.orderStatus: "placed",
       EcommerceApp.cancellationStatus: "notCancelled",
@@ -460,7 +627,7 @@ class _PaymentPageState extends State<PaymentPage> {
 
     phonenumbers.forEach((phone) {
       sendSms(phone,
-          "${widget.model.name} has ordered ${productDescription} at a price ${widget.totalAmount + 20} and paid online! contact at ${widget.model.phoneNumber}");
+          "${widget.model.name} has ordered $productDescription at a price ${widget.totalAmount + 20} and paid online! contact at ${widget.model.phoneNumber}");
     });
   }
 
@@ -560,5 +727,117 @@ class _PaymentPageState extends State<PaymentPage> {
         );
       },
     );
+  }
+
+  Widget submitButton() {
+    // SnackBar imageRequired = SnackBar(content: Text('Coupon is Empty'), backgroundColor: Colors.redAccent,);
+    // ScaffoldMessenger.of(context).showSnackBar(imageRequired);
+    return ButtonWidget(
+        fontSize: 12,
+        text: 'APPLY COUPON',
+        onClicked: () async {
+          final isValid = formKey.currentState.validate();
+          if (isValid) {
+            formKey.currentState.save();
+
+            bool isExists = await checkRecordExists();
+
+            if (isExists) {
+              applyCoupon();
+            } else {
+
+              setState(() {
+                isFree = false;
+              });
+
+              SnackBar couponNotExists = SnackBar(
+                content: Text('The Coupon code is Invalid'),
+                backgroundColor: Colors.redAccent,
+              );
+              ScaffoldMessenger.of(context).showSnackBar(couponNotExists);
+            }
+
+            // applyCoupon();
+
+          }
+        });
+  }
+
+  Future<bool> checkRecordExists() async {
+    DocumentSnapshot couponSnapshot = await Firestore.instance
+        .collection('coupon_codes')
+        .document(couponCode.trim())
+        .get();
+    return couponSnapshot.exists;
+  }
+
+  applyCoupon() async {
+    DocumentSnapshot couponSnapshot = await Firestore.instance
+        .collection('coupon_codes')
+        .document(couponCode)
+        .get();
+    DocumentSnapshot userSnapshot = await Firestore.instance
+        .collection('users')
+        .document(
+            EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
+        .get();
+
+    List couponHistory = userSnapshot.data['couponHistory'];
+    String itemInfo = couponSnapshot.data['shortInfo'];
+    int items = couponSnapshot.data['items'];
+    List cartList =
+        EcommerceApp.sharedPreferences.getStringList(EcommerceApp.userCartList);
+
+    if (items != cartList.length - 1) {
+
+      setState(() {
+        isFree = false;
+      });
+
+      SnackBar singleItem = SnackBar(
+        content: Text('There can only be $items items in the cart'),
+        backgroundColor: Colors.redAccent,
+      );
+      ScaffoldMessenger.of(context).showSnackBar(singleItem);
+    } else {
+      if (checkItemExists(couponHistory, couponCode.trim())) {
+        setState(() {
+          isFree = false;
+        });
+
+        SnackBar couponExists = SnackBar(
+          content: Text('The Coupon is already used!'),
+          backgroundColor: Colors.redAccent,
+        );
+        ScaffoldMessenger.of(context).showSnackBar(couponExists);
+      } else {
+        if (checkItemExists(cartList, itemInfo)) {
+          SnackBar itemFree = SnackBar(
+            content: Text(' 🎉 Hurray! The Item is Free 🥳 '),
+            backgroundColor: Colors.green,
+          );
+          ScaffoldMessenger.of(context).showSnackBar(itemFree);
+
+          setState(() {
+            isFree = true;
+          });
+        } else {
+
+          setState(() {
+            isFree = false;
+          });
+
+          SnackBar itemNotEligible = SnackBar(
+            content: Text('This Item is not Eligible for the Offer'),
+            backgroundColor: Colors.redAccent,
+          );
+          ScaffoldMessenger.of(context).showSnackBar(itemNotEligible);
+        }
+      }
+    }
+  }
+
+  checkItemExists(List array, String item) {
+    return array.contains(item);
   }
 }

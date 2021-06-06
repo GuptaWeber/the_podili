@@ -35,20 +35,37 @@ String adminOrderCancellationStatus;
 
   OrderModel.fromJson(Map<String, dynamic> json) {
 
+    print('ram ram ram 1');
+
     addressID = json['addressID'];
+    print('ram ram ram 2');
     cancellationStatus = json['cancellationStatus'];
+    print('ram ram ram 3');
     isSuccess = json['isSuccess'];
+    print('ram ram ram 4');
     orderBy = json['orderBy'];
+    print('ram ram ram 5');
     orderID = json['orderID'];
+    print('ram ram ram 6');
     orderStatus = json['orderStatus'];
+    print('ram ram ram 7');
     orderTime = json['orderTime'];
+    print('ram ram ram 8');
     paymentId = json['paymentId'];
+    print('ram ram ram 9');
     paymentDetails = json['paymentDetails'];
+    print('ram ram ram 10');
     prefferedTime = json['prefferedTime'];
+    print('ram ram ram 11');
     productIDs = json['productIDs'];
+    print('ram ram ram 12');
     totalAmount = json['totalAmount'];
+    print('ram ram ram 13');
     userOrderConfirmation = json['userOrderConfirmation'];
+    print('ram ram ram 14');
     adminOrderCancellationStatus = json['adminOrderCancellationStatus'];
+
+    print('dom dom dom');
 
   }
 

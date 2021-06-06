@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_shop/Admin/adminOrderCard.dart';
 import 'package:e_shop/Config/config.dart';
@@ -8,9 +6,7 @@ import 'package:e_shop/Widgets/customAppBar.dart';
 import 'package:e_shop/Widgets/myDrawer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import '../Widgets/loadingWidget.dart';
-import '../Widgets/orderCard.dart';
 
 class AdminShiftOrders extends StatefulWidget {
   @override
@@ -28,7 +24,6 @@ class _MyOrdersState extends State<AdminShiftOrders> {
           drawer: MyDrawer(),
           body: Container(
             // child: ListView.builder(itemBuilder: itemBuilder),
-
 
             child: FutureBuilder(
               future: getDocuments(),
@@ -57,6 +52,7 @@ class _MyOrdersState extends State<AdminShiftOrders> {
                             orderBy: snapshot.data[index].orderBy,
                             addressID: snapshot.data[index].addressID,
                             adminOrderCancellationStatus: snapshot.data[index].adminOrderCancellationStatus,
+                            totalAmount: snapshot.data[index].totalAmount.toString(),
                           )
                               : Center(child: circularProgress(),);
                         }
@@ -123,6 +119,8 @@ class _MyOrdersState extends State<AdminShiftOrders> {
           ? weber.forEach((element) {
 
             if(element.data['orderStatus']!='delivered'){
+              print('Jai Bolo Ganesh Maharaj ki !!');
+              print(element.data);
               orders.add(OrderModel.fromJson(element.data));
             }
       })
