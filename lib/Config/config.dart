@@ -16,6 +16,7 @@ class EcommerceApp {
   static String userCartList = 'userCart';
   static String subCollectionAddress = 'userAddress';
   static String cartInfo = 'cartInfo';
+  static String deliveryCharges = 'deliveryCharges';
 
   static final String userName = 'name';
   static final String userEmail = 'email';

@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_shop/Admin/adminOrderCard.dart';
 import 'package:e_shop/Config/config.dart';
@@ -8,6 +10,7 @@ import 'package:e_shop/Models/item.dart';
 import 'package:e_shop/Counters/cartitemcounter.dart';
 import 'package:e_shop/Counters/totalMoney.dart';
 import 'package:e_shop/Widgets/myDrawer.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:e_shop/Store/storehome.dart';
@@ -24,11 +27,13 @@ class _CartPageState extends State<CartPage> {
   double totalAmount;
   int count;
   List<int> counter = List.filled(100, 1);
+  HashSet<String> category = HashSet<String>();
 
   @override
   void initState() {
     super.initState();
     totalAmount = 0;
+
     count = 1;
 
     Provider.of<TotalAmount>(context, listen: false).display(0);
@@ -45,7 +50,7 @@ class _CartPageState extends State<CartPage> {
               1) {
             Fluttertoast.showToast(msg: "Your cart is Empty");
           } else {
-            addQuantity(counter);
+            addQuantity(counter, category);
             Route route = MaterialPageRoute(builder: (c) {
               return Address(
                 totalAmount: totalAmount,
@@ -111,6 +116,9 @@ class _CartPageState extends State<CartPage> {
                                   totalAmount = model.price * counter[index] +
                                       totalAmount;
                                 }
+
+                                category.add(model.category);
+
                                 if (snapshot.data.documents.length - 1 ==
                                     index) {
                                   WidgetsBinding.instance
@@ -223,7 +231,7 @@ class _CartPageState extends State<CartPage> {
                       Text(
                         model.title,
                         style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
+                            fontSize: 14, fontWeight: FontWeight.bold),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 2.0),
@@ -386,12 +394,13 @@ class _CartPageState extends State<CartPage> {
     });
   }
 
-  addQuantity(List<int> quantity) {
+  addQuantity(List<int> quantity, HashSet<String> category) {
     List tempCartList =
         EcommerceApp.sharedPreferences.getStringList(EcommerceApp.userCartList);
 
     //tempCartList.remove(shortInfoAsId);
     int c = 0;
+    int delcharges;
     print(quantity);
     String info = "";
     List cartWithQuantity = tempCartList
@@ -400,6 +409,41 @@ class _CartPageState extends State<CartPage> {
             : '')
         .toList();
     print(tempCartList);
+    print(category);
+
+    if (category.length == 1) {
+      if (totalAmount > 500) {
+        if (totalAmount > 500 && totalAmount < 1000) {
+          delcharges = 40;
+        } else {
+          delcharges = 50;
+        }
+      } else {
+        if (category.contains('Groceries')) {
+          delcharges = 30;
+        } else if (category.contains('Meat') || category.contains('Food')) {
+          delcharges = 0;
+        } else if (category.contains('Ice Creams') ||
+            category.contains('Cool Drinks') ||
+            category.contains('Milk Products') ||
+            category.contains('Vegetables')) {
+          delcharges = 20;
+        }
+      }
+    } else {
+      if (totalAmount <= 500) {
+        delcharges = 20;
+      } else if (totalAmount > 500 && totalAmount < 1000) {
+        delcharges = 40;
+      } else {
+        delcharges = 50;
+      }
+    }
+
+    print(delcharges);
+
+    EcommerceApp.sharedPreferences
+        .setString(EcommerceApp.deliveryCharges, delcharges.toString());
 
     cartWithQuantity.forEach((element) {
       info = info + element;

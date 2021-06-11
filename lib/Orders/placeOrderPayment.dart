@@ -37,6 +37,8 @@ class _PaymentPageState extends State<PaymentPage> {
   List productList =
       EcommerceApp.sharedPreferences.getStringList(EcommerceApp.userCartList);
   List phonenumbers = ['+918501014199', '+919848208168', '+918106089784'];
+  int deliveryCharges = int.parse(
+      EcommerceApp.sharedPreferences.getString(EcommerceApp.deliveryCharges));
 
   @override
   void initState() {
@@ -122,7 +124,9 @@ class _PaymentPageState extends State<PaymentPage> {
                               textAlign: TextAlign.left,
                             ),
                             Text(
-                              "20.0",
+                              // "20.0",
+                              EcommerceApp.sharedPreferences
+                                  .getString(EcommerceApp.deliveryCharges),
                               style: TextStyle(
                                   fontSize: 20,
                                   color: Colors.green,
@@ -150,7 +154,7 @@ class _PaymentPageState extends State<PaymentPage> {
                               textAlign: TextAlign.left,
                             ),
                             Text(
-                              "${widget.totalAmount + 20}",
+                              "${widget.totalAmount + int.parse(EcommerceApp.sharedPreferences.getString(EcommerceApp.deliveryCharges))}",
                               style: TextStyle(
                                   fontSize: 20,
                                   color: Colors.green,
@@ -474,7 +478,8 @@ class _PaymentPageState extends State<PaymentPage> {
     DocumentSnapshot userData = await Firestore.instance
         .collection('users')
         .document(
-        EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID)).get();
+            EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
+        .get();
 
     List couponHistory = userData.data['couponHistory'];
 
@@ -486,7 +491,7 @@ class _PaymentPageState extends State<PaymentPage> {
         .collection('users')
         .document(
             EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
-        .updateData({ "couponHistory" : couponHistory});
+        .updateData({"couponHistory": couponHistory});
 
     phonenumbers.forEach((phone) {
       sendSms(phone,
@@ -745,7 +750,6 @@ class _PaymentPageState extends State<PaymentPage> {
             if (isExists) {
               applyCoupon();
             } else {
-
               setState(() {
                 isFree = false;
               });
@@ -789,7 +793,6 @@ class _PaymentPageState extends State<PaymentPage> {
         EcommerceApp.sharedPreferences.getStringList(EcommerceApp.userCartList);
 
     if (items != cartList.length - 1) {
-
       setState(() {
         isFree = false;
       });
@@ -822,7 +825,6 @@ class _PaymentPageState extends State<PaymentPage> {
             isFree = true;
           });
         } else {
-
           setState(() {
             isFree = false;
           });
