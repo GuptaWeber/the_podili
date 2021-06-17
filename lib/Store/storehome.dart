@@ -135,13 +135,13 @@ class _StoreHomeState extends State<StoreHome> {
                                               CrossAxisAlignment.start,
                                           children: <Widget>[
                                             new Text(
-                                              'Trending this\nWeek',
+                                              '',
                                               style: TextStyle(
                                                   color: Colors.white,
                                                   fontWeight: FontWeight.bold,
                                                   fontSize: 20),
                                             ),
-                                            Text('30 Places')
+                                            Text('')
                                           ],
                                         ),
                                       ),
@@ -173,13 +173,13 @@ class _StoreHomeState extends State<StoreHome> {
                                               CrossAxisAlignment.start,
                                           children: <Widget>[
                                             new Text(
-                                              "Bengaluru's \nFinest",
+                                              "",
                                               style: TextStyle(
                                                   color: Colors.white,
                                                   fontWeight: FontWeight.bold,
                                                   fontSize: 20),
                                             ),
-                                            Text('124 Places')
+                                            Text('')
                                           ],
                                         ),
                                       ),
@@ -211,13 +211,13 @@ class _StoreHomeState extends State<StoreHome> {
                                               CrossAxisAlignment.start,
                                           children: <Widget>[
                                             new Text(
-                                              'Newly Opened',
+                                              '',
                                               style: TextStyle(
                                                   color: Colors.white,
                                                   fontWeight: FontWeight.bold,
                                                   fontSize: 20),
                                             ),
-                                            Text('6 Places')
+                                            Text('')
                                           ],
                                         ),
                                       ),
@@ -249,13 +249,13 @@ class _StoreHomeState extends State<StoreHome> {
                                               CrossAxisAlignment.start,
                                           children: <Widget>[
                                             new Text(
-                                              'Just Delivery',
+                                              '',
                                               style: TextStyle(
                                                   color: Colors.white,
                                                   fontWeight: FontWeight.bold,
                                                   fontSize: 20),
                                             ),
-                                            Text('10 Places')
+                                            Text('')
                                           ],
                                         ),
                                       ),
@@ -287,13 +287,13 @@ class _StoreHomeState extends State<StoreHome> {
                                               CrossAxisAlignment.start,
                                           children: <Widget>[
                                             new Text(
-                                              'Legends of \nGold',
+                                              '',
                                               style: TextStyle(
                                                   color: Colors.white,
                                                   fontWeight: FontWeight.bold,
                                                   fontSize: 20),
                                             ),
-                                            Text('10 Places')
+                                            Text('')
                                           ],
                                         ),
                                       ),
@@ -444,12 +444,12 @@ class _StoreHomeState extends State<StoreHome> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    Home('Medicines')),
+                                                    Home('LadiesEmporium')),
                                           );
                                         },
                                         child: ClipOval(
                                             child: Image.network(
-                                          'https://www.empr.com/wp-content/uploads/sites/7/2018/12/medicine-bottles-pills-tablets_762263.jpg',
+                                          'https://firebasestorage.googleapis.com/v0/b/projectpodili.appspot.com/o/icon%2Fladiesemporium.jpg?alt=media&token=7ee1f15b-b744-4557-a5ad-da5c47111fe1',
                                           height: 90,
                                           width: 90,
                                           fit: BoxFit.cover,
@@ -457,7 +457,7 @@ class _StoreHomeState extends State<StoreHome> {
                                     SizedBox(
                                       height: 5.0,
                                     ),
-                                    Text('Medicines')
+                                    Text('LadiesEmporium')
                                   ],
                                 ),
                                 Column(
@@ -586,7 +586,6 @@ class _StoreHomeState extends State<StoreHome> {
                             ),
                           ),
                         ),
-
                         Container(
                           child: Padding(
                             padding: const EdgeInsets.all(10.0),
@@ -601,18 +600,16 @@ class _StoreHomeState extends State<StoreHome> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    UserService()
-                                            ),
+                                                    UserService()),
                                           );
                                         },
                                         child: ClipOval(
                                             child: Image.network(
-                                              'https://firebasestorage.googleapis.com/v0/b/projectpodili.appspot.com/o/icon%2Fservices.png?alt=media&token=0977ff66-b869-4279-93ca-5b0ae86832cb',
-                                              height: 90,
-                                              width: 90,
-                                              fit: BoxFit.cover,
-                                            )
-                                        )),
+                                          'https://firebasestorage.googleapis.com/v0/b/projectpodili.appspot.com/o/icon%2Fservices.png?alt=media&token=0977ff66-b869-4279-93ca-5b0ae86832cb',
+                                          height: 90,
+                                          width: 90,
+                                          fit: BoxFit.cover,
+                                        ))),
                                     SizedBox(
                                       height: 5.0,
                                     ),
@@ -623,7 +620,6 @@ class _StoreHomeState extends State<StoreHome> {
                             ),
                           ),
                         ),
-
                       ],
                     ))),
             // StreamBuilder<QuerySnapshot>(

@@ -35,120 +35,123 @@ class _AddNewItemState extends State<AddNewItem> {
         appBar: MyAppBar(),
         drawer: MyDrawer(),
         body: SingleChildScrollView(
-         child: Column(
-           children: [
-             Container( margin: EdgeInsets.only(top: 20.0 ), child: Text("ADD NEW ITEM", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26),)),
-             file!=null?Container(
-               height: 230.0,
-               width: MediaQuery.of(context).size.width * 0.8,
-               child: Center(
-                 child: AspectRatio(
-                   aspectRatio: 16 / 9,
-                   child: Container(
-                     decoration: BoxDecoration(
-                         image: DecorationImage(
-                             image: FileImage(file), fit: BoxFit.cover)),
-                   ),
-                 ),
-               ),
-             ) : Column(
-               children: [
-                 Icon(
-                   Icons.image_rounded,
-                   color: Colors.green,
-                   size: 200.0,
-                 ),
+          child: Column(
+            children: [
+              Container(
+                  margin: EdgeInsets.only(top: 20.0),
+                  child: Text(
+                    "ADD NEW ITEM",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26),
+                  )),
+              file != null
+                  ? Container(
+                      height: 230.0,
+                      width: MediaQuery.of(context).size.width * 0.8,
+                      child: Center(
+                        child: AspectRatio(
+                          aspectRatio: 16 / 9,
+                          child: Container(
+                            decoration: BoxDecoration(
+                                image: DecorationImage(
+                                    image: FileImage(file), fit: BoxFit.cover)),
+                          ),
+                        ),
+                      ),
+                    )
+                  : Column(
+                      children: [
+                        Icon(
+                          Icons.image_rounded,
+                          color: Colors.green,
+                          size: 200.0,
+                        ),
+                      ],
+                    ),
+              Padding(
+                padding: EdgeInsets.only(top: 8.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    takeImage(context);
+                  },
+                  child: Text(
+                    "Upload Image",
+                    style: TextStyle(fontSize: 20.0, color: Colors.white),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(9.0)),
+                    primary: Colors.green,
+                  ),
+                ),
+              ),
+              Form(
+                key: formKey,
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    children: [
+                      shortInfoField(),
+                      SizedBox(
+                        height: 16,
+                      ),
+                      titleField(),
+                      SizedBox(
+                        height: 16,
+                      ),
+                      priceField(),
+                      SizedBox(
+                        height: 16,
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(10.0),
+                        child: DropdownButton<String>(
+                          value: _category,
+                          //elevation: 5,
+                          style: TextStyle(color: Colors.black),
 
-               ],
-             ),
-             Padding(
-               padding: EdgeInsets.only(top: 8.0),
-               child: ElevatedButton(
-                 onPressed: () {
-                   takeImage(context);
-                 },
-                 child: Text(
-                   "Upload Image",
-                   style: TextStyle(fontSize: 20.0, color: Colors.white),
-                 ),
-                 style: ElevatedButton.styleFrom(
-                   shape: RoundedRectangleBorder(
-                       borderRadius: BorderRadius.circular(9.0)),
-                   primary: Colors.green,
-                 ),
-               ),
-             ),
-             Form(
-               key: formKey,
-               child: Padding(
-                 padding: const EdgeInsets.all(20.0),
-                 child: Column(
-
-                   children: [
-                     shortInfoField(),
-                     SizedBox(
-                       height: 16,
-                     ),
-                     titleField(),
-                     SizedBox(
-                       height: 16,
-                     ),
-                     priceField(),
-                     SizedBox(
-                       height: 16,
-                     ),
-
-                     Container(
-                       padding: const EdgeInsets.all(10.0),
-                       child: DropdownButton<String>(
-                         value: _category,
-                         //elevation: 5,
-                         style: TextStyle(color: Colors.black),
-
-                         items: <String>[
-                           'Food',
-                           'Groceries',
-                           'Meat',
-                           'Vegetables',
-                           'Fast Food',
-                           'Ice Creams',
-                           'Medicines',
-                           'Cool Drinks'
-                         ].map<DropdownMenuItem<String>>((String value) {
-                           return DropdownMenuItem<String>(
-                             value: value,
-                             child: Text(value),
-                           );
-                         }).toList(),
-                         hint: Text(
-                           "Please choose Category",
-                           style: TextStyle(
-                               color: Colors.black,
-                               fontSize: 16,
-                               fontWeight: FontWeight.w400),
-                         ),
-                         onChanged: (String value) {
-                           setState(() {
-                             _category = value;
-                           });
-                         },
-                       ),
-                     ),
-
-                     SizedBox(
-                       height: 16,
-                     ),
-                     longDescription(),
-                     SizedBox(
-                       height: 16,
-                     ),
-                     submitButton()
-                   ],
-                 ),
-               ),
-             ),
-           ],
-         ),
+                          items: <String>[
+                            'Food',
+                            'Groceries',
+                            'Meat',
+                            'Vegetables',
+                            'Fast Food',
+                            'Ice Creams',
+                            'LadiesEmporium',
+                            'Cool Drinks'
+                          ].map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                          hint: Text(
+                            "Please choose Category",
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400),
+                          ),
+                          onChanged: (String value) {
+                            setState(() {
+                              _category = value;
+                            });
+                          },
+                        ),
+                      ),
+                      SizedBox(
+                        height: 16,
+                      ),
+                      longDescription(),
+                      SizedBox(
+                        height: 16,
+                      ),
+                      submitButton()
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -169,8 +172,8 @@ class _AddNewItemState extends State<AddNewItem> {
     Navigator.pop(context);
     File imageFile = File(await ImagePicker()
         .getImage(
-      source: ImageSource.gallery,
-    )
+          source: ImageSource.gallery,
+        )
         .then((pickedFile) => pickedFile.path));
 
     setState(() {
@@ -186,7 +189,7 @@ class _AddNewItemState extends State<AddNewItem> {
             title: Text(
               "Item Image",
               style:
-              TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
+                  TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
             ),
             children: [
               SimpleDialogOption(
@@ -259,7 +262,7 @@ class _AddNewItemState extends State<AddNewItem> {
           InputDecoration(labelText: 'Price', border: OutlineInputBorder()),
       onSaved: (value) => setState(() => price = value),
       validator: (value) {
-        if (value.length<=0) {
+        if (value.length <= 0) {
           return "Price is Required";
         } else {
           return null;
@@ -275,22 +278,25 @@ class _AddNewItemState extends State<AddNewItem> {
       onSaved: (value) => setState(() => description = value),
       maxLines: 5,
       keyboardType: TextInputType.multiline,
-
     );
   }
 
   Widget submitButton() {
+    SnackBar imageRequired = SnackBar(
+      content: Text('Image is Required'),
+      backgroundColor: Colors.redAccent,
+    );
 
-    SnackBar imageRequired = SnackBar(content: Text('Image is Required'), backgroundColor: Colors.redAccent,);
-
-    return ButtonWidget(fontSize: 24,text: 'Submit Item',
+    return ButtonWidget(
+        fontSize: 24,
+        text: 'Submit Item',
         onClicked: () {
-          final isValid =  formKey.currentState.validate();
-          if(isValid){
+          final isValid = formKey.currentState.validate();
+          if (isValid) {
             formKey.currentState.save();
-            if(file == null){
+            if (file == null) {
               ScaffoldMessenger.of(context).showSnackBar(imageRequired);
-            }else if(uploading==false){
+            } else if (uploading == false) {
               uploadImageAndSaveItemInfo();
             }
           }
@@ -309,9 +315,9 @@ class _AddNewItemState extends State<AddNewItem> {
 
   Future<String> uploadItemImage(mFileImage) async {
     final StorageReference storageReference =
-    FirebaseStorage.instance.ref().child("Items");
+        FirebaseStorage.instance.ref().child("Items");
     StorageUploadTask uploadTask =
-    storageReference.child("product_$productId.jpg").putFile(mFileImage);
+        storageReference.child("product_$productId.jpg").putFile(mFileImage);
     StorageTaskSnapshot taskSnapshot = await uploadTask.onComplete;
     String downloadUrl = await taskSnapshot.ref.getDownloadURL();
     return downloadUrl;
@@ -331,22 +337,16 @@ class _AddNewItemState extends State<AddNewItem> {
       "category": _category,
       "quantity": quantity
     }).whenComplete(() {
-      Route route =
-      MaterialPageRoute(builder: (c) => StoreHome());
+      Route route = MaterialPageRoute(builder: (c) => StoreHome());
       Navigator.pushReplacement(context, route);
-
-
-
     });
 
     setState(() {
       file = null;
       uploading = false;
       productId = DateTime.now().millisecondsSinceEpoch.toString();
-      title="";
+      title = "";
       quantity = 0;
     });
-
-
   }
 }

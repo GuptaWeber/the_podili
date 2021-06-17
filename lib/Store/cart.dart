@@ -428,6 +428,8 @@ class _CartPageState extends State<CartPage> {
             category.contains('Milk Products') ||
             category.contains('Vegetables')) {
           delcharges = 20;
+        } else {
+          delcharges = 0;
         }
       }
     } else {

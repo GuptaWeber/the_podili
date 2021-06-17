@@ -40,7 +40,7 @@ class _PhoneAuthState extends State<PhoneAuth> {
     this._firebaseUser = await FirebaseAuth.instance.currentUser();
     setState(() {
       _status =
-      (_firebaseUser == null) ? 'Not Logged In\n' : 'Already LoggedIn\n';
+          (_firebaseUser == null) ? 'Not Logged In\n' : 'Already LoggedIn\n';
     });
   }
 
@@ -137,7 +137,7 @@ class _PhoneAuthState extends State<PhoneAuth> {
     // print(f);
     // Firestore.instance.collection("users").document(fUser.uid).get()
     DocumentSnapshot variable =
-    await Firestore.instance.collection('users').document(fUser.uid).get();
+        await Firestore.instance.collection('users').document(fUser.uid).get();
 
     await EcommerceApp.sharedPreferences.setString("uid", fUser.uid);
     await EcommerceApp.sharedPreferences
@@ -298,7 +298,7 @@ class _PhoneAuthState extends State<PhoneAuth> {
         padding: EdgeInsets.all(16),
         // mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          SizedBox(height: 64),
+          SizedBox(height: 120),
           Image.asset(
             "images/logo.png",
             width: 100,
@@ -308,16 +308,19 @@ class _PhoneAuthState extends State<PhoneAuth> {
           //   height: 20.0,
           // ),
           Padding(
-            padding: EdgeInsets.only(left: 89, top: 10, bottom: 50),
+            padding: EdgeInsets.only(
+                left: MediaQuery.of(context).size.width / 6,
+                top: 10,
+                bottom: 50),
             child: Text(
-              "Welcome to Podili",
+              "Welcome to Podili All in One",
               style: TextStyle(
                   color: Colors.black,
                   fontSize: 18,
                   fontWeight: FontWeight.bold),
             ),
           ),
-
+          SizedBox(height: 70),
           Row(
             children: <Widget>[
               Expanded(
@@ -347,31 +350,31 @@ class _PhoneAuthState extends State<PhoneAuth> {
           SizedBox(height: 28),
           _code != 0
               ? Row(
-            children: <Widget>[
-              Expanded(
-                flex: 2,
-                child: TextField(
-                  controller: _otpController,
-                  decoration: InputDecoration(
-                    hintText: 'OTP',
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-              ),
-              Spacer(),
-              Expanded(
-                flex: 1,
-                child: MaterialButton(
-                  onPressed: _submitPhoneNumber,
-                  child: Text(
-                    'Resend',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  color: Colors.black,
-                ),
-              ),
-            ],
-          )
+                  children: <Widget>[
+                    Expanded(
+                      flex: 2,
+                      child: TextField(
+                        controller: _otpController,
+                        decoration: InputDecoration(
+                          hintText: 'OTP',
+                          border: OutlineInputBorder(),
+                        ),
+                      ),
+                    ),
+                    Spacer(),
+                    Expanded(
+                      flex: 1,
+                      child: MaterialButton(
+                        onPressed: _submitPhoneNumber,
+                        child: Text(
+                          'Resend',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        color: Colors.black,
+                      ),
+                    ),
+                  ],
+                )
               : Container(),
           SizedBox(height: 28),
           // Text('$_status'),

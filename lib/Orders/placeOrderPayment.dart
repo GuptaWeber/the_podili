@@ -404,7 +404,9 @@ class _PaymentPageState extends State<PaymentPage> {
 
     writeOrderDetailsForUser({
       EcommerceApp.addressID: widget.addressId,
-      EcommerceApp.totalAmount: widget.totalAmount + 20,
+      EcommerceApp.totalAmount: widget.totalAmount +
+          int.parse(EcommerceApp.sharedPreferences
+              .getString(EcommerceApp.deliveryCharges)),
       "orderBy": EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID),
       "orderID": orderID,
       "prefferedTime": preferredTime,
@@ -423,7 +425,9 @@ class _PaymentPageState extends State<PaymentPage> {
 
     writeOrderDetailsForAdmin({
       EcommerceApp.addressID: widget.addressId,
-      EcommerceApp.totalAmount: widget.totalAmount + 20,
+      EcommerceApp.totalAmount: widget.totalAmount +
+          int.parse(EcommerceApp.sharedPreferences
+              .getString(EcommerceApp.deliveryCharges)),
       "orderBy": EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID),
       "orderID": orderID,
       "prefferedTime": preferredTime,
@@ -442,7 +446,7 @@ class _PaymentPageState extends State<PaymentPage> {
 
     phonenumbers.forEach((phone) {
       sendSms(phone,
-          "${widget.model.name} has ordered $productDescription at a price ${widget.totalAmount + 20} with Cash on Delivery! contact at ${widget.model.phoneNumber}");
+          "${widget.model.name} has ordered $productDescription at a price ${widget.totalAmount + int.parse(EcommerceApp.sharedPreferences.getString(EcommerceApp.deliveryCharges))} with Cash on Delivery! contact at ${widget.model.phoneNumber}");
     });
   }
 
@@ -558,7 +562,10 @@ class _PaymentPageState extends State<PaymentPage> {
 
     var options = {
       'key': razorPayKey,
-      'amount': (widget.totalAmount + 20) * 100,
+      'amount': (widget.totalAmount +
+              int.parse(EcommerceApp.sharedPreferences
+                  .getString(EcommerceApp.deliveryCharges))) *
+          100,
       'name': widget.model.name,
       'description': productDescription,
       'prefill': {
@@ -592,7 +599,9 @@ class _PaymentPageState extends State<PaymentPage> {
 
     writeOrderDetailsForUser({
       EcommerceApp.addressID: widget.addressId,
-      EcommerceApp.totalAmount: widget.totalAmount + 20,
+      EcommerceApp.totalAmount: widget.totalAmount +
+          int.parse(EcommerceApp.sharedPreferences
+              .getString(EcommerceApp.deliveryCharges)),
       "orderBy": EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID),
       "orderID": orderID,
       "adminOrderCancellationStatus": "notCancelled",
@@ -612,7 +621,9 @@ class _PaymentPageState extends State<PaymentPage> {
 
     writeOrderDetailsForAdmin({
       EcommerceApp.addressID: widget.addressId,
-      EcommerceApp.totalAmount: widget.totalAmount + 20,
+      EcommerceApp.totalAmount: widget.totalAmount +
+          int.parse(EcommerceApp.sharedPreferences
+              .getString(EcommerceApp.deliveryCharges)),
       "orderBy": EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID),
       "orderID": orderID,
       "adminOrderCancellationStatus": "notCancelled",
@@ -632,7 +643,7 @@ class _PaymentPageState extends State<PaymentPage> {
 
     phonenumbers.forEach((phone) {
       sendSms(phone,
-          "${widget.model.name} has ordered $productDescription at a price ${widget.totalAmount + 20} and paid online! contact at ${widget.model.phoneNumber}");
+          "${widget.model.name} has ordered $productDescription at a price ${widget.totalAmount + int.parse(EcommerceApp.sharedPreferences.getString(EcommerceApp.deliveryCharges))} and paid online! contact at ${widget.model.phoneNumber}");
     });
   }
 

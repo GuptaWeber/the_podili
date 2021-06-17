@@ -70,6 +70,7 @@ class _SplashScreenState extends State<SplashScreen> {
         Navigator.pushReplacement(context, route);
       } else {
         Route route = MaterialPageRoute(builder: (_) => PhoneAuth());
+        //Route route = MaterialPageRoute(builder: (_) => StoreHome());
         Navigator.pushReplacement(context, route);
       }
     });
@@ -99,10 +100,21 @@ class _SplashScreenState extends State<SplashScreen> {
             //   height: 20.0,
             // ),
             Text(
-              "Welcome to Podili",
+              "Welcome to Podili All in One",
               style: TextStyle(
                   color: Colors.black,
                   fontSize: 18,
+                  fontWeight: FontWeight.bold),
+            ),
+            SizedBox(
+              height: 100,
+            ),
+
+            Text(
+              "Developed by Drugtive Technologies",
+              style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 14,
                   fontWeight: FontWeight.bold),
             )
           ],

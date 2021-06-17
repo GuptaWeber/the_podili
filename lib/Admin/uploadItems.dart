@@ -273,7 +273,7 @@ class _UploadPageState extends State<UploadPage>
                 'Vegetables',
                 'Fast Food',
                 'Ice Creams',
-                'Medicines',
+                'LadiesEmporium',
                 'Cool Drinks',
               ].map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
