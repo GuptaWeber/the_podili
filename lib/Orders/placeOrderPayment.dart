@@ -174,7 +174,8 @@ class _PaymentPageState extends State<PaymentPage> {
                                         textAlign: TextAlign.left,
                                       ),
                                       Text(
-                                        "- ${widget.totalAmount + 20}",
+                                        "- ${widget.totalAmount + int.parse(EcommerceApp.sharedPreferences
+                                            .getString(EcommerceApp.deliveryCharges))}",
                                         style: TextStyle(
                                             fontSize: 20,
                                             color: Colors.green,
