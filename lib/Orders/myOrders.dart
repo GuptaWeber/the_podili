@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_shop/Widgets/customAppBar.dart';
+import 'package:e_shop/Widgets/myDrawer.dart';
 import 'package:flutter/material.dart';
 import 'package:e_shop/Config/config.dart';
 import 'package:flutter/services.dart';
@@ -17,29 +19,8 @@ class _MyOrdersState extends State<MyOrders> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          iconTheme: IconThemeData(color: Colors.black),
-          flexibleSpace: Container(
-            decoration: new BoxDecoration(
-              gradient: new LinearGradient(
-                colors: [Colors.yellow.shade300, Colors.yellow.shade300],
-                begin: const FractionalOffset(0.0, 0.0),
-                end: const FractionalOffset(1.0, 0.0),
-                stops: [0.0, 1.0],
-                tileMode: TileMode.clamp,
-              ),
-            ),
-          ),
-          centerTitle: true,
-          title: Text("My Orders", style: TextStyle(color: Colors.black),),
-          actions: [
-            IconButton(
-                icon: Icon(Icons.arrow_drop_down_circle, color: Colors.white,),
-                onPressed: (){
-                  SystemNavigator.pop();
-                })
-          ],
-        ),
+        appBar: MyAppBar(),
+        drawer: MyDrawer(),
         body: StreamBuilder<QuerySnapshot>(
           stream: EcommerceApp.firestore
             .collection(EcommerceApp.collectionUser)
