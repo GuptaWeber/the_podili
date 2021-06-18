@@ -327,7 +327,7 @@ class _StoreHomeState extends State<StoreHome> {
                                         },
                                         child: ClipOval(
                                             child: Image.network(
-                                          'https://rs.projects-abroad.net/v1/hero/indian-cuisine-south-africa-food-tours-product-5e146c7a97eb2.[1600].jpeg',
+                                          'https://firebasestorage.googleapis.com/v0/b/projectpodili.appspot.com/o/icon%2Ffood-icon.jpeg?alt=media&token=35a92da8-ad1a-4ef5-adc9-bbef64ec9602',
                                           height: 90,
                                           width: 90,
                                           fit: BoxFit.cover,
@@ -355,7 +355,7 @@ class _StoreHomeState extends State<StoreHome> {
                                         },
                                         child: ClipOval(
                                             child: Image.network(
-                                          'https://review.chinabrands.com/chinabrands/seo/image/20181116/wholesalegroceries.jpg',
+                                          'https://firebasestorage.googleapis.com/v0/b/projectpodili.appspot.com/o/icon%2Fgroceries-icon.jpg?alt=media&token=3bb36283-cc43-4f24-9bad-49c004353aa0',
                                           height: 90,
                                           width: 90,
                                           fit: BoxFit.cover,
@@ -383,7 +383,7 @@ class _StoreHomeState extends State<StoreHome> {
                                         },
                                         child: ClipOval(
                                             child: Image.network(
-                                          'https://fyi.extension.wisc.edu/safefood/files/2019/04/CDC_produce.png',
+                                          'https://firebasestorage.googleapis.com/v0/b/projectpodili.appspot.com/o/icon%2Fvegetables-icon.png?alt=media&token=53c9fb50-87ce-43c6-8061-c7dd784f265b',
                                           height: 90,
                                           width: 90,
                                           fit: BoxFit.cover,
@@ -421,7 +421,7 @@ class _StoreHomeState extends State<StoreHome> {
                                         },
                                         child: ClipOval(
                                             child: Image.network(
-                                          'https://img.huffingtonpost.com/asset/5cd366a42300003100b78725.jpeg',
+                                          'https://firebasestorage.googleapis.com/v0/b/projectpodili.appspot.com/o/icon%2Fmeat-icon.jpeg?alt=media&token=52d0f233-f78c-44c9-b0ac-2be5e220a215',
                                           height: 90,
                                           width: 90,
                                           fit: BoxFit.cover,
@@ -477,7 +477,7 @@ class _StoreHomeState extends State<StoreHome> {
                                         },
                                         child: ClipOval(
                                             child: Image.network(
-                                          'https://www.heritagefoods.in/static/images/detailslider/milk/tonemilk.png',
+                                          'https://firebasestorage.googleapis.com/v0/b/projectpodili.appspot.com/o/icon%2Fmilk-icon.png?alt=media&token=fd269c14-651d-4801-bd3b-973fe77ce48d',
                                           height: 90,
                                           width: 90,
                                           fit: BoxFit.cover,
@@ -515,7 +515,7 @@ class _StoreHomeState extends State<StoreHome> {
                                         },
                                         child: ClipOval(
                                             child: Image.network(
-                                          'https://img1.10bestmedia.com/Images/Photos/380699/GettyImages-855447930_54_990x660.jpg',
+                                          'https://firebasestorage.googleapis.com/v0/b/projectpodili.appspot.com/o/icon%2Fice-creams-icon.jpg?alt=media&token=aa4816fd-b78f-4c10-8c62-437416c03a3e',
                                           height: 90,
                                           width: 90,
                                           fit: BoxFit.cover,
@@ -543,7 +543,7 @@ class _StoreHomeState extends State<StoreHome> {
                                         },
                                         child: ClipOval(
                                             child: Image.network(
-                                          'https://i.pinimg.com/originals/4c/90/69/4c906919db5ec51de6a7bcafc76e2812.png',
+                                          'https://firebasestorage.googleapis.com/v0/b/projectpodili.appspot.com/o/icon%2Fcool-drinks-icon.png?alt=media&token=60de2b95-4b37-4c67-9514-273875c8e417',
                                           height: 90,
                                           width: 90,
                                           fit: BoxFit.cover,
@@ -571,7 +571,7 @@ class _StoreHomeState extends State<StoreHome> {
                                         },
                                         child: ClipOval(
                                             child: Image.network(
-                                          'https://www.zinmobi.com/wp-content/uploads/2015/05/online-ordering.jpg',
+                                          'https://firebasestorage.googleapis.com/v0/b/projectpodili.appspot.com/o/icon%2Ffast-food-icon.jpg?alt=media&token=3404aa23-2b1d-4f13-8d98-edacecde85da',
                                           height: 90,
                                           width: 90,
                                           fit: BoxFit.cover,

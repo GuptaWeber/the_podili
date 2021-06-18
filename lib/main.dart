@@ -80,41 +80,61 @@ class _SplashScreenState extends State<SplashScreen> {
     return Material(
         child: Container(
       decoration: new BoxDecoration(
-          gradient: new LinearGradient(
-        colors: [Colors.yellow.shade300, Colors.yellow.shade300],
-        begin: const FractionalOffset(0.0, 0.0),
-        end: const FractionalOffset(1.0, 0.0),
-        stops: [0.0, 1.0],
-        tileMode: TileMode.clamp,
-      )),
+        image: DecorationImage(
+          image: AssetImage("assets/podili_village.jpg"),
+          colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.7), BlendMode.dstATop),
+          fit: BoxFit.cover,
+        ),
+      ),
       child: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            SizedBox(height: MediaQuery.of(context).size.height/5,),
             Image.asset(
-              "images/logo.png",
-              width: 100,
-              height: 100,
+              "assets/podili_icon.png",
+              width: 200,
+              height: 200,
             ),
-            // SizedBox(
-            //   height: 20.0,
-            // ),
+            SizedBox(height: MediaQuery.of(context).size.height/8,),
             Text(
               "Welcome to Podili All in One",
               style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 18,
+                  color: Colors.white,
+                  fontSize: MediaQuery.of(context).size.width/17,
                   fontWeight: FontWeight.bold),
             ),
             SizedBox(
-              height: 100,
+              height: MediaQuery.of(context).size.height/4,
             ),
 
             Text(
-              "Developed by Drugtive Technologies",
+              "Developed by",
               style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 14,
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold),
+            ),
+
+            SizedBox(
+              height: 10,
+            ),
+
+            Text(
+              "❤",
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold),
+            ),
+
+            SizedBox(
+              height: 20,
+            ),
+            Text(
+              "Drugtive Technologies PVT LTD",
+              style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
                   fontWeight: FontWeight.bold),
             )
           ],

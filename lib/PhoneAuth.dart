@@ -284,6 +284,7 @@ class _PhoneAuthState extends State<PhoneAuth> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // backgroundColor: Colors.yellow[300],
       // appBar: AppBar(
       //   actions: [
       //     GestureDetector(
@@ -292,112 +293,127 @@ class _PhoneAuthState extends State<PhoneAuth> {
       //     ),
       //   ],
       // ),
+      body: Container(
+        decoration: new BoxDecoration(
+          color: Colors.yellow[300],
 
-      backgroundColor: Colors.yellow.shade300,
-      body: ListView(
-        padding: EdgeInsets.all(16),
-        // mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          SizedBox(height: 120),
-          Image.asset(
-            "images/logo.png",
-            width: 100,
-            height: 100,
-          ),
-          // SizedBox(
-          //   height: 20.0,
+          // image: DecorationImage(
+          //   image: AssetImage("assets/login-background.jpg"),
+          //   colorFilter: new ColorFilter.mode(Colors.black.withOpacity(0.7), BlendMode.dstATop),
+          //   fit: BoxFit.cover,
           // ),
-          Padding(
-            padding: EdgeInsets.only(
-                left: MediaQuery.of(context).size.width / 6,
-                top: 10,
-                bottom: 50),
-            child: Text(
-              "Welcome to Podili All in One",
-              style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold),
+        ),
+
+        child: ListView(
+          padding: EdgeInsets.all(16),
+          // mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            SizedBox(height: 120),
+            Image.asset(
+              "assets/podili_icon.png",
+              width: 200,
+              height: 200,
             ),
-          ),
-          SizedBox(height: 70),
-          Row(
-            children: <Widget>[
-              Expanded(
-                flex: 2,
-                child: TextField(
-                  controller: _phoneNumberController,
-                  decoration: InputDecoration(
-                    hintText: 'Phone Number',
-                    border: OutlineInputBorder(),
-                  ),
+            // SizedBox(
+            //   height: 20.0,
+            // ),
+            Padding(
+              padding: EdgeInsets.only(
+                  left: MediaQuery.of(context).size.width / 7,
+                  right: MediaQuery.of(context).size.width / 7,
+                  top: 10,
+                  bottom: 50),
+              child: Text(
+                "Welcome to Podili All in One",
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: MediaQuery.of(context).size.width / 22,
+                    fontWeight: FontWeight.bold,
+                    fontStyle: FontStyle.italic
                 ),
               ),
-              Spacer(),
-              Expanded(
-                flex: 1,
-                child: MaterialButton(
-                  onPressed: _submitPhoneNumber,
-                  child: Text(
-                    'Verify',
-                    style: TextStyle(color: Colors.white),
+            ),
+            SizedBox(height: 70),
+            Row(
+              children: <Widget>[
+                Expanded(
+                  flex: 2,
+                  child: TextField(
+                    controller: _phoneNumberController,
+                    decoration: InputDecoration(
+                      hintText: 'Phone Number',
+                      border: OutlineInputBorder(),
+                      fillColor: Colors.white,
+
+                    ),
                   ),
-                  color: Colors.black,
                 ),
+                Spacer(),
+                Expanded(
+                  flex: 1,
+                  child: MaterialButton(
+                    onPressed: _submitPhoneNumber,
+                    child: Text(
+                      'Verify',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    color: Colors.black,
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 28),
+            _code != 0
+                ? Row(
+                    children: <Widget>[
+                      Expanded(
+                        flex: 2,
+                        child: TextField(
+                          controller: _otpController,
+                          decoration: InputDecoration(
+                            hintText: 'OTP',
+                            border: OutlineInputBorder(),
+                          ),
+                        ),
+                      ),
+                      Spacer(),
+                      Expanded(
+                        flex: 1,
+                        child: MaterialButton(
+                          onPressed: _submitPhoneNumber,
+                          child: Text(
+                            'Resend',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          color: Colors.black,
+                        ),
+                      ),
+                    ],
+                  )
+                : Container(),
+            SizedBox(height: 28),
+            // Text('$_status'),
+            MaterialButton(
+              height: 50,
+              onPressed: _submitOTP,
+              child: Text(
+                'Login',
+                style: TextStyle(color: Colors.white),
               ),
-            ],
-          ),
-          SizedBox(height: 28),
-          _code != 0
-              ? Row(
-                  children: <Widget>[
-                    Expanded(
-                      flex: 2,
-                      child: TextField(
-                        controller: _otpController,
-                        decoration: InputDecoration(
-                          hintText: 'OTP',
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
-                    ),
-                    Spacer(),
-                    Expanded(
-                      flex: 1,
-                      child: MaterialButton(
-                        onPressed: _submitPhoneNumber,
-                        child: Text(
-                          'Resend',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                        color: Colors.black,
-                      ),
-                    ),
-                  ],
-                )
-              : Container(),
-          SizedBox(height: 28),
-          // Text('$_status'),
-          MaterialButton(
-            height: 50,
-            onPressed: _submitOTP,
-            child: Text(
-              'Login',
-              style: TextStyle(color: Colors.white),
+              color: Colors.black,
             ),
-            color: Colors.black,
-          ),
-          SizedBox(
-            height: 30,
-          ),
-          GestureDetector(
-            child: Icon(
-              Icons.refresh,
-              size: 40,
+            SizedBox(
+              height: 30,
             ),
-            onTap: _reset,
-          ),
-        ],
+            GestureDetector(
+              child: Icon(
+                Icons.refresh,
+                size: 40,
+              ),
+              onTap: _reset,
+            ),
+          ],
+        ),
       ),
     );
   }
