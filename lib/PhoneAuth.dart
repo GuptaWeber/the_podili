@@ -111,6 +111,7 @@ class _PhoneAuthState extends State<PhoneAuth> {
       "uid": fUser.uid,
       "phonenumber": fUser.phoneNumber,
       "isAdmin": "0",
+      "couponHistory": [],
 
       // "name": _nameTextEditingController.text.trim(),
       // "url": userImageUrl,
