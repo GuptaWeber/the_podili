@@ -28,11 +28,13 @@ class PaymentPage extends StatefulWidget {
 class _PaymentPageState extends State<PaymentPage> {
   final formKey = GlobalKey<FormState>();
   int _payment_method = 0;
+  int discountAmount = 0;
   Razorpay _razorpay;
   TwilioFlutter twilioFlutter;
   String preferredTime = '7 AM';
   String couponCode;
-  bool isFree = false;
+  String successText;
+  bool isDiscount = false;
   int i = 0;
   List productList =
       EcommerceApp.sharedPreferences.getStringList(EcommerceApp.userCartList);
@@ -55,10 +57,15 @@ class _PaymentPageState extends State<PaymentPage> {
     DocumentSnapshot twilioCreds =
         await Firestore.instance.collection('keys').document('twilio').get();
 
+    DocumentSnapshot phoneNumbersFB =
+    await Firestore.instance.collection('keys').document('phoneNumbers').get();
+
     twilioFlutter = TwilioFlutter(
         accountSid: twilioCreds.data['accountSid'],
         authToken: twilioCreds.data['authToken'],
         twilioNumber: twilioCreds.data['twilioNumber']);
+
+    phonenumbers = phoneNumbersFB.data['phoneNumbers'];
   }
 
   @override
@@ -162,7 +169,7 @@ class _PaymentPageState extends State<PaymentPage> {
                             )
                           ],
                         ),
-                        isFree
+                        isDiscount
                             ? Column(
                                 children: [
                                   Row(
@@ -174,8 +181,7 @@ class _PaymentPageState extends State<PaymentPage> {
                                         textAlign: TextAlign.left,
                                       ),
                                       Text(
-                                        "- ${widget.totalAmount + int.parse(EcommerceApp.sharedPreferences
-                                            .getString(EcommerceApp.deliveryCharges))}",
+                                        "- $discountAmount",
                                         style: TextStyle(
                                             fontSize: 20,
                                             color: Colors.green,
@@ -204,7 +210,8 @@ class _PaymentPageState extends State<PaymentPage> {
                                         textAlign: TextAlign.left,
                                       ),
                                       Text(
-                                        "0",
+                                        "${widget.totalAmount + int.parse(EcommerceApp.sharedPreferences
+                                            .getString(EcommerceApp.deliveryCharges)) -discountAmount }",
                                         style: TextStyle(
                                             fontSize: 20,
                                             color: Colors.green,
@@ -247,7 +254,7 @@ class _PaymentPageState extends State<PaymentPage> {
                               SizedBox(
                                 height: 10,
                               ),
-                              submitButton()
+                              submitCoupon()
                             ],
                           ),
                         ),
@@ -308,8 +315,7 @@ class _PaymentPageState extends State<PaymentPage> {
                             )
                           ],
                         ),
-                        !isFree
-                            ? Column(
+                         Column(
                                 children: [
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -349,14 +355,7 @@ class _PaymentPageState extends State<PaymentPage> {
                                   )
                                 ],
                               )
-                            : Container(
-                                margin: EdgeInsets.fromLTRB(0, 20, 0, 0),
-                                child: Text(
-                                  ' 🎉 Hurray! The Item is Free 🥳 ',
-                                  style: TextStyle(
-                                      fontSize: 22, color: Colors.green),
-                                ),
-                              )
+
                       ],
                     ),
                   ),
@@ -367,8 +366,8 @@ class _PaymentPageState extends State<PaymentPage> {
                         openCheckout();
                       } else if (_payment_method == 2) {
                         addOrderDetails();
-                      } else if (isFree) {
-                        placeFreeOrder();
+                      } else if (isDiscount) {
+                        placeDiscountOrder();
                       } else {
                         Fluttertoast.showToast(
                             msg: "Please Select a Payment Method",
@@ -407,7 +406,7 @@ class _PaymentPageState extends State<PaymentPage> {
       EcommerceApp.addressID: widget.addressId,
       EcommerceApp.totalAmount: widget.totalAmount +
           int.parse(EcommerceApp.sharedPreferences
-              .getString(EcommerceApp.deliveryCharges)),
+              .getString(EcommerceApp.deliveryCharges)) - discountAmount,
       "orderBy": EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID),
       "orderID": orderID,
       "prefferedTime": preferredTime,
@@ -428,7 +427,7 @@ class _PaymentPageState extends State<PaymentPage> {
       EcommerceApp.addressID: widget.addressId,
       EcommerceApp.totalAmount: widget.totalAmount +
           int.parse(EcommerceApp.sharedPreferences
-              .getString(EcommerceApp.deliveryCharges)),
+              .getString(EcommerceApp.deliveryCharges)) - discountAmount,
       "orderBy": EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID),
       "orderID": orderID,
       "prefferedTime": preferredTime,
@@ -451,7 +450,7 @@ class _PaymentPageState extends State<PaymentPage> {
     });
   }
 
-  placeFreeOrder() async {
+  placeDiscountOrder() async {
     String productDescription = '';
     String orderID =
         EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID) +
@@ -463,7 +462,9 @@ class _PaymentPageState extends State<PaymentPage> {
 
     writeOrderDetailsForUser({
       EcommerceApp.addressID: widget.addressId,
-      EcommerceApp.totalAmount: widget.totalAmount - widget.totalAmount,
+      EcommerceApp.totalAmount: widget.totalAmount +
+          int.parse(EcommerceApp.sharedPreferences
+              .getString(EcommerceApp.deliveryCharges)) - discountAmount,
       "orderBy": EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID),
       "orderID": orderID,
       "prefferedTime": preferredTime,
@@ -500,7 +501,7 @@ class _PaymentPageState extends State<PaymentPage> {
 
     phonenumbers.forEach((phone) {
       sendSms(phone,
-          "${widget.model.name} has placed a free order product : $productDescription with the coupon code $couponCode contact at ${widget.model.phoneNumber}");
+          "${widget.model.name} has placed a discount order product : $productDescription with the coupon code $couponCode contact at ${widget.model.phoneNumber}");
     });
 
     _onOrderSuccess();
@@ -563,7 +564,7 @@ class _PaymentPageState extends State<PaymentPage> {
 
     var options = {
       'key': razorPayKey,
-      'amount': (widget.totalAmount +
+      'amount': (widget.totalAmount - discountAmount +
               int.parse(EcommerceApp.sharedPreferences
                   .getString(EcommerceApp.deliveryCharges))) *
           100,
@@ -602,7 +603,7 @@ class _PaymentPageState extends State<PaymentPage> {
       EcommerceApp.addressID: widget.addressId,
       EcommerceApp.totalAmount: widget.totalAmount +
           int.parse(EcommerceApp.sharedPreferences
-              .getString(EcommerceApp.deliveryCharges)),
+              .getString(EcommerceApp.deliveryCharges)) - discountAmount,
       "orderBy": EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID),
       "orderID": orderID,
       "adminOrderCancellationStatus": "notCancelled",
@@ -624,7 +625,7 @@ class _PaymentPageState extends State<PaymentPage> {
       EcommerceApp.addressID: widget.addressId,
       EcommerceApp.totalAmount: widget.totalAmount +
           int.parse(EcommerceApp.sharedPreferences
-              .getString(EcommerceApp.deliveryCharges)),
+              .getString(EcommerceApp.deliveryCharges)) - discountAmount,
       "orderBy": EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID),
       "orderID": orderID,
       "adminOrderCancellationStatus": "notCancelled",
@@ -746,7 +747,7 @@ class _PaymentPageState extends State<PaymentPage> {
     );
   }
 
-  Widget submitButton() {
+  Widget submitCoupon() {
     // SnackBar imageRequired = SnackBar(content: Text('Coupon is Empty'), backgroundColor: Colors.redAccent,);
     // ScaffoldMessenger.of(context).showSnackBar(imageRequired);
     return ButtonWidget(
@@ -763,7 +764,7 @@ class _PaymentPageState extends State<PaymentPage> {
               applyCoupon();
             } else {
               setState(() {
-                isFree = false;
+                isDiscount = false;
               });
 
               SnackBar couponNotExists = SnackBar(
@@ -782,7 +783,7 @@ class _PaymentPageState extends State<PaymentPage> {
   Future<bool> checkRecordExists() async {
     DocumentSnapshot couponSnapshot = await Firestore.instance
         .collection('coupon_codes')
-        .document(couponCode.trim())
+        .document(couponCode.trim().toUpperCase())
         .get();
     return couponSnapshot.exists;
   }
@@ -790,55 +791,115 @@ class _PaymentPageState extends State<PaymentPage> {
   applyCoupon() async {
     DocumentSnapshot couponSnapshot = await Firestore.instance
         .collection('coupon_codes')
-        .document(couponCode)
-        .get();
-    DocumentSnapshot userSnapshot = await Firestore.instance
-        .collection('users')
-        .document(
-            EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
+        .document(couponCode.trim().toUpperCase())
         .get();
 
-    List couponHistory = userSnapshot.data['couponHistory'];
-    String itemInfo = couponSnapshot.data['shortInfo'];
-    int items = couponSnapshot.data['items'];
-    List cartList =
-        EcommerceApp.sharedPreferences.getStringList(EcommerceApp.userCartList);
+    if(couponSnapshot.data['type']=="first"){
 
-    if (items != cartList.length - 1) {
+      successText = couponSnapshot.data['successText'];
+
       setState(() {
-        isFree = false;
+        discountAmount = couponSnapshot.data['discountAmount'];
       });
 
-      SnackBar singleItem = SnackBar(
-        content: Text('There can only be $items items in the cart'),
-        backgroundColor: Colors.redAccent,
-      );
-      ScaffoldMessenger.of(context).showSnackBar(singleItem);
-    } else {
-      if (checkItemExists(couponHistory, couponCode.trim())) {
+      DocumentSnapshot userSnapshot = await Firestore.instance
+          .collection('users')
+          .document(
+          EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
+          .get();
+
+      List couponHistory = userSnapshot.data['couponHistory'];
+      String itemInfo = couponSnapshot.data['shortInfo'];
+      int items = couponSnapshot.data['items'];
+      List cartList =
+      EcommerceApp.sharedPreferences.getStringList(EcommerceApp.userCartList);
+
+      if (items != cartList.length - 1) {
         setState(() {
-          isFree = false;
+          isDiscount = false;
         });
 
-        SnackBar couponExists = SnackBar(
-          content: Text('The Coupon is already used!'),
+        SnackBar singleItem = SnackBar(
+          content: Text('There can only be $items items in the cart'),
           backgroundColor: Colors.redAccent,
         );
-        ScaffoldMessenger.of(context).showSnackBar(couponExists);
+        ScaffoldMessenger.of(context).showSnackBar(singleItem);
       } else {
-        if (checkItemExists(cartList, itemInfo)) {
+        if (checkItemExists(couponHistory, couponCode.trim())) {
+          setState(() {
+            isDiscount = false;
+          });
+
+          SnackBar couponExists = SnackBar(
+            content: Text('The Coupon is already used!'),
+            backgroundColor: Colors.redAccent,
+          );
+          ScaffoldMessenger.of(context).showSnackBar(couponExists);
+        } else {
+          if (checkItemExists(cartList, itemInfo)) {
+            SnackBar itemFree = SnackBar(
+              content: Text(successText),
+              backgroundColor: Colors.green,
+            );
+            ScaffoldMessenger.of(context).showSnackBar(itemFree);
+
+            setState(() {
+              isDiscount = true;
+            });
+          } else {
+            setState(() {
+              isDiscount = false;
+            });
+
+            SnackBar itemNotEligible = SnackBar(
+              content: Text('This Item is not Eligible for the Offer'),
+              backgroundColor: Colors.redAccent,
+            );
+            ScaffoldMessenger.of(context).showSnackBar(itemNotEligible);
+          }
+        }
+      }
+
+    }else if(couponSnapshot.data['type']=="delivery"){
+
+      successText = couponSnapshot.data['successText'];
+
+      setState(() {
+        discountAmount = couponSnapshot.data['discountAmount'];
+      });
+
+
+
+      List itemInfo = couponSnapshot.data['itemList'];
+      int items = couponSnapshot.data['items'];
+      List<String> cartList =
+      EcommerceApp.sharedPreferences.getStringList(EcommerceApp.userCartList);
+
+      if (items != cartList.length - 1) {
+        setState(() {
+          isDiscount = false;
+        });
+
+        SnackBar singleItem = SnackBar(
+          content: Text('There can only be $items items in the cart'),
+          backgroundColor: Colors.redAccent,
+        );
+        ScaffoldMessenger.of(context).showSnackBar(singleItem);
+      } else {
+
+        if (isSubset(itemInfo, cartList.sublist(1), itemInfo.length, cartList.length -1 )) {
           SnackBar itemFree = SnackBar(
-            content: Text(' 🎉 Hurray! The Item is Free 🥳 '),
+            content: Text(successText),
             backgroundColor: Colors.green,
           );
           ScaffoldMessenger.of(context).showSnackBar(itemFree);
 
           setState(() {
-            isFree = true;
+            isDiscount = true;
           });
         } else {
           setState(() {
-            isFree = false;
+            isDiscount = false;
           });
 
           SnackBar itemNotEligible = SnackBar(
@@ -848,10 +909,79 @@ class _PaymentPageState extends State<PaymentPage> {
           ScaffoldMessenger.of(context).showSnackBar(itemNotEligible);
         }
       }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
+
+
   }
 
   checkItemExists(List array, String item) {
     return array.contains(item);
+  }
+
+
+  isSubset(List array1, List array2,
+  int m, int n)
+  {
+  int i = 0;
+  int j = 0;
+  for (i = 0; i < n; i++) {
+  for (j = 0; j < m; j++) {
+  if (array2[i] == array1[j])
+  break;
+  }
+
+  /* If the above inner loop was
+        not broken at all then arr2[i]
+        is not present in arr1[] */
+  if (j == m)
+  return false;
+  }
+
+  /* If we reach here then all
+    elements of arr2[] are present
+    in arr1[] */
+  return true;
   }
 }
