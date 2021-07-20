@@ -366,8 +366,6 @@ class _PaymentPageState extends State<PaymentPage> {
                         openCheckout();
                       } else if (_payment_method == 2) {
                         addOrderDetails();
-                      } else if (isDiscount) {
-                        placeDiscountOrder();
                       } else {
                         Fluttertoast.showToast(
                             msg: "Please Select a Payment Method",
@@ -392,7 +390,7 @@ class _PaymentPageState extends State<PaymentPage> {
     ));
   }
 
-  addOrderDetails() {
+  addOrderDetails() async {
     String productDescription = '';
     String orderID =
         EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID) +
@@ -444,10 +442,36 @@ class _PaymentPageState extends State<PaymentPage> {
       EcommerceApp.isSuccess: true,
     }).whenComplete(() => {emptyCartNow()});
 
-    phonenumbers.forEach((phone) {
-      sendSms(phone,
-          "${widget.model.name} has ordered $productDescription at a price ${widget.totalAmount + int.parse(EcommerceApp.sharedPreferences.getString(EcommerceApp.deliveryCharges))} with Cash on Delivery! contact at ${widget.model.phoneNumber}");
-    });
+    if(isDiscount){
+      DocumentSnapshot userData = await Firestore.instance
+          .collection('users')
+          .document(
+          EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
+          .get();
+
+      List couponHistory = userData.data['couponHistory'];
+
+      couponHistory.add(couponCode.trim().toUpperCase());
+
+      await Firestore.instance
+          .collection('users')
+          .document(
+          EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
+          .updateData({"couponHistory": couponHistory});
+
+
+      phonenumbers.forEach((phone) {
+        sendSms(phone,
+            "${widget.model.name} has placed a discount order product : $productDescription with the coupon code $couponCode contact at ${widget.model.phoneNumber}");
+      });
+
+    }else{
+      phonenumbers.forEach((phone) {
+        sendSms(phone,
+            "${widget.model.name} has ordered $productDescription at a price ${widget.totalAmount + int.parse(EcommerceApp.sharedPreferences.getString(EcommerceApp.deliveryCharges))} with Cash on Delivery! contact at ${widget.model.phoneNumber}");
+      });
+    }
+
   }
 
   placeDiscountOrder() async {
@@ -489,9 +513,7 @@ class _PaymentPageState extends State<PaymentPage> {
 
     List couponHistory = userData.data['couponHistory'];
 
-    couponHistory.add(couponCode);
-
-    print(couponHistory);
+    couponHistory.add(couponCode.trim().toUpperCase());
 
     await Firestore.instance
         .collection('users')
@@ -586,7 +608,7 @@ class _PaymentPageState extends State<PaymentPage> {
     }
   }
 
-  void _handlePaymentSuccess(PaymentSuccessResponse response) {
+  void _handlePaymentSuccess(PaymentSuccessResponse response) async {
     String productDescription = '';
     String orderID =
         EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID) +
@@ -643,10 +665,42 @@ class _PaymentPageState extends State<PaymentPage> {
       'paymentId': response.paymentId
     }).whenComplete(() => {emptyCartNow()});
 
-    phonenumbers.forEach((phone) {
-      sendSms(phone,
-          "${widget.model.name} has ordered $productDescription at a price ${widget.totalAmount + int.parse(EcommerceApp.sharedPreferences.getString(EcommerceApp.deliveryCharges))} and paid online! contact at ${widget.model.phoneNumber}");
-    });
+    if(isDiscount){
+      DocumentSnapshot userData = await Firestore.instance
+          .collection('users')
+          .document(
+          EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
+          .get();
+
+      List couponHistory = userData.data['couponHistory'];
+
+      couponHistory.add(couponCode.trim().toUpperCase());
+
+      await Firestore.instance
+          .collection('users')
+          .document(
+          EcommerceApp.sharedPreferences.getString(EcommerceApp.userUID))
+          .updateData({"couponHistory": couponHistory});
+
+
+      phonenumbers.forEach((phone) {
+        sendSms(phone,
+            "${widget.model.name} has placed a discount order product : $productDescription with the coupon code $couponCode contact at ${widget.model.phoneNumber}");
+      });
+
+    }else{
+      phonenumbers.forEach((phone) {
+        sendSms(phone,
+            "${widget.model.name} has ordered $productDescription at a price ${widget.totalAmount + int.parse(EcommerceApp.sharedPreferences.getString(EcommerceApp.deliveryCharges))} and paid online! contact at ${widget.model.phoneNumber}");
+      });
+    }
+
+
+
+
+
+
+
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
@@ -825,7 +879,7 @@ class _PaymentPageState extends State<PaymentPage> {
         );
         ScaffoldMessenger.of(context).showSnackBar(singleItem);
       } else {
-        if (checkItemExists(couponHistory, couponCode.trim())) {
+        if (checkItemExists(couponHistory, couponCode.trim().toUpperCase())) {
           setState(() {
             isDiscount = false;
           });
