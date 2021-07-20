@@ -29,6 +29,20 @@ class _CartPageState extends State<CartPage> {
   List<int> counter = List.filled(100, 1);
   HashSet<String> category = HashSet<String>();
 
+  int above_1000;
+  int above_2000;
+  int below_1000;
+  int below_500;
+  int cool_drinks;
+  int eggs;
+  int fast_foods;
+  int food;
+  int groceries;
+  int ice_creams;
+  int ladies_emporium;
+  int milk;
+  int vegetables;
+
   @override
   void initState() {
     super.initState();
@@ -37,6 +51,32 @@ class _CartPageState extends State<CartPage> {
     count = 1;
 
     Provider.of<TotalAmount>(context, listen: false).display(0);
+
+
+    loadValues();
+  }
+
+  void loadValues() async {
+
+    DocumentSnapshot serviceCharges =
+    await Firestore.instance.collection('keys').document('service_charges').get();
+
+    above_1000 = int.parse(serviceCharges.data['']);
+    above_2000 = int.parse(serviceCharges.data['']);
+    below_1000 = int.parse(serviceCharges.data['']);
+    below_500 = int.parse(serviceCharges.data['']);
+    cool_drinks = int.parse(serviceCharges.data['']);
+    eggs = int.parse(serviceCharges.data['']);
+    fast_foods = int.parse(serviceCharges.data['']);
+    food = int.parse(serviceCharges.data['']);
+    groceries = int.parse(serviceCharges.data['']);
+    ice_creams = int.parse(serviceCharges.data['']);
+    ladies_emporium = int.parse(serviceCharges.data['']);
+    milk = int.parse(serviceCharges.data['']);
+    vegetables = int.parse(serviceCharges.data['']);
+
+
+
   }
 
   @override
