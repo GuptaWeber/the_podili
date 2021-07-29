@@ -62,7 +62,8 @@ class _UserServiceState extends State<UserService> {
                             'Plumbing',
                             'Electrical',
                             'Painting',
-                            'House Keeping' 
+                            'House Keeping',
+                            'Other'
                           ].map<DropdownMenuItem<String>>((String value) {
                             return DropdownMenuItem<String>(
                               value: value,
