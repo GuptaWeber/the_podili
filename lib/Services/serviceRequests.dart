@@ -17,7 +17,7 @@ class _ServiceRequestsState extends State<ServiceRequests> {
         child: Scaffold(
           appBar: MyAppBar(),
           drawer: MyDrawer(),
-          body: StreamBuilder(
+          body: StreamBuilder<QuerySnapshot>(
             stream: Firestore.instance.collection('services').snapshots(),
             builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (!snapshot.hasData) {
@@ -35,7 +35,12 @@ class _ServiceRequestsState extends State<ServiceRequests> {
                         backgroundImage: NetworkImage('https://firebasestorage.googleapis.com/v0/b/projectpodili.appspot.com/o/icon%2Fservices.png?alt=media&token=0977ff66-b869-4279-93ca-5b0ae86832cb'),
                       ),
                       title: Text("Name : " + document["name"]),
-                      subtitle: Text("Service : " + document['category']),
+                      subtitle: Text((() {
+                        if(document["category"] == null){
+                          return "Service : not selected";}
+
+                        return "Service : " + document["category"];
+                      })()),
                       // trailing: Wrap(
                       //   spacing: 22,
                       //   children: [
