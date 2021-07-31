@@ -741,7 +741,7 @@ Widget sourceInfo(ItemModel model, BuildContext context,
       Navigator.push(context, route);
     },
     splashColor: Colors.pink,
-    child: Padding(
+    child: !model.isHide? Padding(
       padding: EdgeInsets.all(6.0),
       child: Container(
         height: 190.0,
@@ -866,7 +866,7 @@ Widget sourceInfo(ItemModel model, BuildContext context,
           ],
         ),
       ),
-    ),
+    ) : Container(),
   );
 }
 
