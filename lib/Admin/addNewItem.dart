@@ -117,7 +117,11 @@ class _AddNewItemState extends State<AddNewItem> {
                             'Fast Food',
                             'Ice Creams',
                             'LadiesEmporium',
-                            'Cool Drinks'
+                            'Cool Drinks',
+                            'Vegetables Fruits',
+                            'Bakery Items Cool Drinks',
+                            'Sai Ganesh Dry Fruits',
+                            'Todays Special'
                           ].map<DropdownMenuItem<String>>((String value) {
                             return DropdownMenuItem<String>(
                               value: value,

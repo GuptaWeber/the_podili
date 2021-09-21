@@ -140,7 +140,11 @@ class _UpdateItemState extends State<UpdateItem> {
                                         'Fast Food',
                                         'Ice Creams',
                                         'LadiesEmporium',
-                                        'Cool Drinks'
+                                        'Cool Drinks',
+                                        'Vegetables Fruits',
+                                        'Bakery Items Cool Drinks',
+                                        'Sai Ganesh Dry Fruits',
+                                        'Todays Special'
                                       ].map<DropdownMenuItem<String>>(
                                           (String value) {
                                         return DropdownMenuItem<String>(

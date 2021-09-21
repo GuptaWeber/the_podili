@@ -13,6 +13,7 @@ import '../Widgets/myDrawer.dart';
 import '../Widgets/searchBox.dart';
 import '../Models/item.dart';
 import 'home.dart';
+import 'package:new_version/new_version.dart';
 
 double width;
 
@@ -22,6 +23,21 @@ class StoreHome extends StatefulWidget {
 }
 
 class _StoreHomeState extends State<StoreHome> {
+
+  @override
+  void initState() {
+    super.initState();
+    _checkVersion();
+  }
+
+  void _checkVersion() async {
+    final newVersion = NewVersion( context:context, androidId: 'com.muhammadali.eshop');
+    final status = await newVersion.getVersionStatus();
+    newVersion.showUpdateDialog(status);
+    print(" DEVICE " + status.localVersion);
+    print(" STORE " + status.storeVersion);
+  }
+
   @override
   Widget build(BuildContext context) {
     width = MediaQuery.of(context).size.width;
@@ -378,7 +394,7 @@ class _StoreHomeState extends State<StoreHome> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    Home('Vegetables')),
+                                                    Home('Vegetables Fruits')),
                                           );
                                         },
                                         child: ClipOval(
@@ -391,7 +407,7 @@ class _StoreHomeState extends State<StoreHome> {
                                     SizedBox(
                                       height: 5.0,
                                     ),
-                                    Text('Vegetables')
+                                    Text('Vegetables \n & Fruits', textAlign: TextAlign.center,)
                                   ],
                                 ),
                               ],
@@ -510,12 +526,12 @@ class _StoreHomeState extends State<StoreHome> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    Home('Ice Creams')),
+                                                    Home('Sai Ganesh Dry Fruits')),
                                           );
                                         },
                                         child: ClipOval(
                                             child: Image.network(
-                                          'https://firebasestorage.googleapis.com/v0/b/projectpodili.appspot.com/o/icon%2Fice-creams-icon.jpg?alt=media&token=aa4816fd-b78f-4c10-8c62-437416c03a3e',
+                                          'https://firebasestorage.googleapis.com/v0/b/projectpodili.appspot.com/o/icon%2Fdry_fruits.jpg?alt=media&token=21c522ec-b6f8-412c-9d9d-f96bdbae39b9',
                                           height: 90,
                                           width: 90,
                                           fit: BoxFit.cover,
@@ -523,7 +539,7 @@ class _StoreHomeState extends State<StoreHome> {
                                     SizedBox(
                                       height: 5.0,
                                     ),
-                                    Text('Ice Creams')
+                                    Text('Sai Ganesh \n Dry Fruits', textAlign: TextAlign.center,)
                                   ],
                                 ),
                                 Column(
@@ -538,12 +554,12 @@ class _StoreHomeState extends State<StoreHome> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    Home('Cool Drinks')),
+                                                    Home('Todays Special')),
                                           );
                                         },
                                         child: ClipOval(
                                             child: Image.network(
-                                          'https://firebasestorage.googleapis.com/v0/b/projectpodili.appspot.com/o/icon%2Fcool-drinks-icon.png?alt=media&token=60de2b95-4b37-4c67-9514-273875c8e417',
+                                          'https://firebasestorage.googleapis.com/v0/b/projectpodili.appspot.com/o/icon%2Fspecial.jpg?alt=media&token=01b20447-57f7-42ce-92c1-c58350d4b441',
                                           height: 90,
                                           width: 90,
                                           fit: BoxFit.cover,
@@ -551,7 +567,7 @@ class _StoreHomeState extends State<StoreHome> {
                                     SizedBox(
                                       height: 5.0,
                                     ),
-                                    Text('Cool Drinks')
+                                    Text("Today's Special")
                                   ],
                                 ),
                                 Column(
@@ -566,12 +582,12 @@ class _StoreHomeState extends State<StoreHome> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    Home('Fast Food')),
+                                                    Home('Bakery Items Cool Drinks')),
                                           );
                                         },
                                         child: ClipOval(
                                             child: Image.network(
-                                          'https://firebasestorage.googleapis.com/v0/b/projectpodili.appspot.com/o/icon%2Ffast-food-icon.jpg?alt=media&token=3404aa23-2b1d-4f13-8d98-edacecde85da',
+                                          'https://firebasestorage.googleapis.com/v0/b/projectpodili.appspot.com/o/icon%2Fbakery.jpg?alt=media&token=8012c9aa-7722-42fd-ac93-12fd3786bce1',
                                           height: 90,
                                           width: 90,
                                           fit: BoxFit.cover,
@@ -579,7 +595,7 @@ class _StoreHomeState extends State<StoreHome> {
                                     SizedBox(
                                       height: 5.0,
                                     ),
-                                    Text('Fast Food')
+                                    Text('Bakery Items & \n Cool Drinks', textAlign: TextAlign.center,)
                                   ],
                                 ),
                               ],

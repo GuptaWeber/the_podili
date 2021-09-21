@@ -18,7 +18,7 @@ class _DisplayItemsState extends State<DisplayItems> {
       appBar: MyAppBar(),
       drawer: MyDrawer(),
       body: StreamBuilder(
-        stream: Firestore.instance.collection('items').snapshots(),
+        stream: Firestore.instance.collection('items').orderBy("publishedDate", descending: true).snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) {
             return Center(
