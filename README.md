@@ -1,6 +1,3 @@
-
-
-
-Flutter Android & iOS eCommerce App like Amazon | FlipKart | AliExpress | Daraz using Firebase Firestore.
+This is The Podili All in One Service Application
 Developed by: FROTELA
 Mail us at: frotelacoders@gmail.com
